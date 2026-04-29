@@ -3,224 +3,169 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <meta name="theme-color" content="#080808" />
+  <meta name="theme-color" content="#0c0a06" />
   <title>LG Estate — Colazione in Camera</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --black:       #080808;
-      --black2:      #0f0f0f;
-      --black3:      #161616;
-      --black4:      #1e1e1e;
       --gold:        #c8951c;
-      --gold-light:  #e0b84a;
-      --gold-pale:   #f0d48a;
-      --gold-dim:    rgba(200,149,28,0.18);
-      --gold-border: rgba(200,149,28,0.35);
-      --gold-glow:   rgba(200,149,28,0.12);
-      --white:       #ffffff;
-      --white-dim:   rgba(255,255,255,0.06);
-      --white-soft:  rgba(255,255,255,0.85);
-      --text:        rgba(255,255,255,0.88);
-      --text-muted:  rgba(255,255,255,0.45);
-      --text-faint:  rgba(255,255,255,0.25);
-      --radius-sm:   14px;
-      --radius-md:   22px;
-      --radius-lg:   30px;
-      --radius-xl:   40px;
+      --gold-light:  #dba832;
+      --gold-bright: #f0c84a;
+      --gold-dim:    rgba(200,149,28,0.15);
+      --gold-border: rgba(200,149,28,0.40);
+
+      --dark:        #0c0a06;
+      --dark2:       #15120a;
+
+      --cream:       #faf6ef;
+      --cream2:      #f3ece0;
+      --cream3:      #e8dece;
+      --card-bg:     #ffffff;
+
+      --text-dark:   #1a130a;
+      --text-mid:    #6b5a3e;
+      --text-soft:   #a08060;
+
+      --r-sm: 14px;
+      --r-md: 20px;
+      --r-lg: 28px;
     }
 
     *, *::before, *::after {
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
     }
-
-    html {
-      -webkit-text-size-adjust: 100%;
-    }
+    html { -webkit-text-size-adjust: 100%; }
 
     body {
       margin: 0;
       min-height: 100vh;
       font-family: "Jost", sans-serif;
-      color: var(--text);
-      background: var(--black);
+      background: var(--cream);
+      color: var(--text-dark);
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ── Background texture & noise ── */
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(200,149,28,0.09) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(200,149,28,0.05) 0%, transparent 50%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* ── Grain overlay ── */
-    body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      opacity: 0.032;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-      background-size: 180px;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* ── Layout ── */
     .page {
-      position: relative;
-      z-index: 1;
-      width: 100%;
       max-width: 520px;
       margin: 0 auto;
-      padding: 0 0 40px;
+      padding-bottom: 50px;
     }
 
-    /* ── Hero ── */
+    /* ═══════════════════════════════
+       HERO
+    ═══════════════════════════════ */
     .hero {
       position: relative;
       overflow: hidden;
-      padding: 44px 24px 36px;
+      min-height: 320px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 0 44px;
       background:
-        linear-gradient(175deg, rgba(200,149,28,0.04) 0%, transparent 60%),
-        var(--black);
-      border-bottom: 1px solid var(--gold-border);
+        url("https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=900&q=80")
+        center 40% / cover no-repeat;
     }
 
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(12,10,6,0.45) 0%,
+          rgba(12,10,6,0.70) 50%,
+          rgba(12,10,6,0.94) 100%
+        );
+      z-index: 1;
+    }
+
+    /* gold glow bottom */
     .hero::after {
       content: "";
       position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 60%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      bottom: 0; left: 0; right: 0;
+      height: 100px;
+      background: linear-gradient(to top, rgba(200,149,28,0.10), transparent);
+      z-index: 2;
     }
 
-    /* decorative corner lines */
-    .hero-corner {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      pointer-events: none;
-    }
-    .hero-corner.tl { top: 18px; left: 18px; border-top: 1px solid var(--gold); border-left: 1px solid var(--gold); }
-    .hero-corner.tr { top: 18px; right: 18px; border-top: 1px solid var(--gold); border-right: 1px solid var(--gold); }
-
-    .brand-logo {
-      width: 120px;
-      height: 120px;
-      border-radius: 24px;
-      border: 1px solid var(--gold-border);
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      margin-bottom: 24px;
-      box-shadow:
-        0 0 0 1px rgba(200,149,28,0.08),
-        0 20px 50px rgba(0,0,0,0.5),
-        inset 0 1px 0 rgba(200,149,28,0.12);
-      background: #050505;
-      animation: fadeUp 0.6s ease both;
+    .hero-inner {
+      position: relative;
+      z-index: 3;
+      width: 100%;
+      padding: 0 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 14px;
     }
 
-    .brand-logo img {
-      width: 90%;
-      height: 90%;
+    .brand-logo-wide {
+      width: 100%;
+      max-width: 280px;
+      height: auto;
+      display: block;
       object-fit: contain;
+      filter: drop-shadow(0 6px 24px rgba(0,0,0,0.55));
+      animation: fadeDown 0.65s ease both;
     }
 
     .tag {
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      padding: 5px 12px;
+      padding: 5px 14px;
       border-radius: 999px;
       border: 1px solid var(--gold-border);
-      background: var(--gold-dim);
+      background: rgba(200,149,28,0.14);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       font-size: 10px;
       font-weight: 600;
-      letter-spacing: 1.8px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--gold-light);
-      margin-bottom: 14px;
-      animation: fadeUp 0.6s 0.1s ease both;
+      color: var(--gold-bright);
+      animation: fadeDown 0.65s 0.1s ease both;
     }
 
     .tag-dot {
-      width: 5px;
-      height: 5px;
+      width: 5px; height: 5px;
       border-radius: 50%;
-      background: var(--gold);
-      box-shadow: 0 0 6px var(--gold);
-      animation: pulse 2s infinite;
+      background: var(--gold-bright);
+      box-shadow: 0 0 8px var(--gold-bright);
+      animation: blink 2s infinite;
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.4; }
-    }
+    @keyframes blink  { 0%,100%{opacity:1} 50%{opacity:.3} }
+    @keyframes fadeDown { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeUp   { from{opacity:0;transform:translateY(16px)}  to{opacity:1;transform:translateY(0)} }
 
-    h1 {
-      margin: 0;
-      font-family: "Cormorant Garamond", serif;
-      font-size: 42px;
-      font-weight: 600;
-      line-height: 1.1;
-      letter-spacing: -0.5px;
-      color: var(--white);
-      animation: fadeUp 0.6s 0.15s ease both;
-    }
-
-    h1 em {
-      font-style: italic;
-      color: var(--gold-light);
-    }
-
-    .subtitle {
-      margin: 12px 0 0;
-      font-size: 13px;
-      font-weight: 300;
-      line-height: 1.65;
-      color: var(--text-muted);
-      max-width: 320px;
-      animation: fadeUp 0.6s 0.2s ease both;
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(14px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── Room Card ── */
+    /* ═══════════════════════════════
+       ROOM CARD
+    ═══════════════════════════════ */
     .room-card {
-      margin: 0 16px;
-      transform: translateY(-20px);
       position: relative;
-      z-index: 3;
-      background: var(--black3);
-      border: 1px solid var(--gold-border);
-      border-radius: var(--radius-md);
+      z-index: 10;
+      margin: -34px 16px 0;
+      background: var(--card-bg);
+      border: 1px solid var(--cream3);
+      border-radius: var(--r-lg);
       padding: 16px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow:
-        0 0 0 1px rgba(200,149,28,0.06),
-        0 20px 50px rgba(0,0,0,0.5);
-      animation: fadeUp 0.6s 0.25s ease both;
+      box-shadow: 0 20px 50px rgba(26,19,10,0.14), 0 2px 0 var(--cream3);
+      animation: fadeUp 0.6s 0.2s ease both;
     }
 
     .room-label {
@@ -228,108 +173,168 @@
       color: var(--gold);
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-bottom: 4px;
+      letter-spacing: 2.2px;
+      margin-bottom: 3px;
     }
 
     .room-number {
       font-family: "Cormorant Garamond", serif;
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 600;
-      color: var(--white);
-      letter-spacing: 0.3px;
+      color: var(--text-dark);
       line-height: 1.1;
     }
 
     .structure-name {
       font-size: 11px;
       font-weight: 400;
-      color: var(--text-muted);
+      color: var(--text-soft);
       margin-top: 2px;
-      letter-spacing: 0.3px;
     }
 
     .room-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--gold-border);
-      background: var(--gold-dim);
+      width: 50px; height: 50px;
+      border-radius: var(--r-sm);
+      background: linear-gradient(135deg, #fdf0d5, #f5d98a);
+      border: 1px solid rgba(200,149,28,0.28);
       display: grid;
       place-items: center;
       font-size: 22px;
-      box-shadow: inset 0 1px 0 rgba(200,149,28,0.15);
+      box-shadow: 0 6px 18px rgba(200,149,28,0.18);
     }
 
-    /* ── Status Box ── */
+    /* ═══════════════════════════════
+       GREETING BAND
+    ═══════════════════════════════ */
+    .greeting-band {
+      margin: 20px 16px 0;
+      padding: 20px 22px;
+      background: linear-gradient(135deg, var(--dark), #231a0c 80%, #2e2008);
+      border-radius: var(--r-lg);
+      box-shadow: 0 12px 36px rgba(12,10,6,0.18);
+      animation: fadeUp 0.6s 0.25s ease both;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* decorative corner */
+    .greeting-band::before {
+      content: "";
+      position: absolute;
+      top: 12px; right: 12px;
+      width: 32px; height: 32px;
+      border-top: 1px solid var(--gold-border);
+      border-right: 1px solid var(--gold-border);
+    }
+
+    .greeting-band::after {
+      content: "";
+      position: absolute;
+      bottom: 12px; left: 12px;
+      width: 32px; height: 32px;
+      border-bottom: 1px solid var(--gold-border);
+      border-left: 1px solid var(--gold-border);
+    }
+
+    .greeting-band h1 {
+      margin: 0 0 8px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 36px;
+      font-weight: 600;
+      line-height: 1.1;
+      color: #fff;
+    }
+
+    .greeting-band h1 em {
+      font-style: italic;
+      color: var(--gold-bright);
+    }
+
+    .greeting-band p {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.52);
+      line-height: 1.65;
+    }
+
+    /* ═══════════════════════════════
+       STATUS BOX
+    ═══════════════════════════════ */
     .status-box {
       display: none;
-      margin: 0 16px 4px;
-      padding: 16px 18px;
-      border-radius: var(--radius-md);
-      background: var(--black3);
-      border: 1px solid rgba(200,149,28,0.55);
-      box-shadow:
-        0 0 30px rgba(200,149,28,0.08),
-        0 10px 30px rgba(0,0,0,0.3);
+      margin: 12px 16px 0;
+      padding: 14px 18px;
+      border-radius: var(--r-md);
+      background: #fff8eb;
+      border: 1px solid rgba(200,149,28,0.45);
+      box-shadow: 0 6px 20px rgba(200,149,28,0.10);
     }
 
     .status-box.show { display: block; }
 
     .status-title {
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 600;
-      letter-spacing: 1.5px;
+      letter-spacing: 1.8px;
       text-transform: uppercase;
-      color: var(--gold-light);
-      margin-bottom: 6px;
+      color: var(--gold);
+      margin-bottom: 4px;
     }
 
     .countdown {
       font-family: "Cormorant Garamond", serif;
-      font-size: 36px;
-      font-weight: 500;
-      color: var(--gold-light);
+      font-size: 34px;
+      font-weight: 600;
+      color: var(--text-dark);
       letter-spacing: 2px;
       line-height: 1;
     }
 
     .status-note {
-      margin-top: 6px;
+      margin-top: 5px;
       font-size: 11px;
-      color: var(--text-muted);
+      color: var(--text-soft);
       line-height: 1.5;
       font-weight: 300;
     }
 
-    /* ── Section title ── */
+    /* ═══════════════════════════════
+       SECTION TITLE
+    ═══════════════════════════════ */
+    .divider {
+      margin: 22px 16px 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cream3), transparent);
+    }
+
     .section-title {
-      margin: 4px 16px 14px;
+      margin: 18px 16px 12px;
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      gap: 10px;
     }
 
     .section-title h2 {
       margin: 0;
       font-family: "Cormorant Garamond", serif;
-      font-size: 30px;
+      font-size: 28px;
       font-weight: 600;
-      color: var(--white);
-      letter-spacing: -0.3px;
+      color: var(--text-dark);
     }
 
     .section-title span {
       font-size: 10px;
-      color: var(--text-faint);
+      color: var(--text-soft);
       font-weight: 500;
-      letter-spacing: 0.8px;
+      letter-spacing: 0.6px;
       text-transform: uppercase;
       padding-bottom: 5px;
     }
 
-    /* ── Food cards ── */
+    /* ═══════════════════════════════
+       FOOD CARDS
+    ═══════════════════════════════ */
     .foods {
       display: flex;
       flex-direction: column;
@@ -337,73 +342,63 @@
       padding: 0 16px;
     }
 
-    .food-card input {
-      display: none;
-    }
+    .food-card input { display: none; }
 
     .food-content {
       cursor: pointer;
-      border-radius: var(--radius-md);
-      background: var(--black3);
-      border: 1px solid rgba(255,255,255,0.06);
-      padding: 14px;
+      border-radius: var(--r-md);
+      background: var(--card-bg);
+      border: 1.5px solid var(--cream3);
+      padding: 12px 14px;
       display: flex;
-      gap: 14px;
+      gap: 13px;
       align-items: center;
-      transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+      transition: border-color .2s ease, box-shadow .2s ease, transform .15s ease;
       -webkit-user-select: none;
       user-select: none;
+      box-shadow: 0 2px 10px rgba(26,19,10,0.06);
     }
 
-    .food-content:active {
-      transform: scale(0.99);
-    }
+    .food-content:active { transform: scale(0.985); }
 
     @media (hover: hover) {
       .food-content:hover {
-        border-color: var(--gold-border);
-        box-shadow: 0 0 0 1px var(--gold-dim);
+        border-color: rgba(200,149,28,0.4);
+        box-shadow: 0 4px 20px rgba(200,149,28,0.10);
       }
     }
 
     .food-card input:checked + .food-content {
-      background: var(--black4);
       border-color: var(--gold);
-      box-shadow:
-        0 0 0 1px rgba(200,149,28,0.15),
-        0 10px 30px rgba(0,0,0,0.3),
-        inset 0 0 30px rgba(200,149,28,0.04);
+      background: #fffbf2;
+      box-shadow: 0 0 0 1px rgba(200,149,28,0.15), 0 6px 24px rgba(200,149,28,0.12);
     }
 
     .emoji {
-      width: 54px;
-      height: 54px;
-      min-width: 54px;
-      border-radius: var(--radius-sm);
+      width: 52px; height: 52px;
+      min-width: 52px;
+      border-radius: var(--r-sm);
       display: grid;
       place-items: center;
-      font-size: 26px;
-      background: var(--black4);
-      border: 1px solid rgba(255,255,255,0.06);
-      transition: border-color 0.2s ease;
+      font-size: 24px;
+      background: var(--cream2);
+      border: 1px solid var(--cream3);
+      transition: background .2s, border-color .2s;
     }
 
     .food-card input:checked + .food-content .emoji {
-      border-color: var(--gold-border);
-      background: var(--gold-dim);
+      background: #fdf0d5;
+      border-color: rgba(200,149,28,0.3);
     }
 
-    .food-info {
-      flex: 1;
-      min-width: 0;
-    }
+    .food-info { flex: 1; min-width: 0; }
 
     .food-title {
       font-family: "Cormorant Garamond", serif;
       font-weight: 600;
-      font-size: 17px;
-      color: var(--white);
-      margin-bottom: 3px;
+      font-size: 18px;
+      color: var(--text-dark);
+      margin-bottom: 2px;
       line-height: 1.2;
     }
 
@@ -411,62 +406,61 @@
       font-size: 11px;
       font-weight: 300;
       line-height: 1.45;
-      color: var(--text-muted);
+      color: var(--text-soft);
     }
 
-    /* Check circle */
     .check {
       margin-left: auto;
-      width: 26px;
-      height: 26px;
+      width: 26px; height: 26px;
       min-width: 26px;
       border-radius: 50%;
-      border: 1.5px solid rgba(255,255,255,0.15);
+      border: 1.5px solid var(--cream3);
       display: grid;
       place-items: center;
       font-size: 12px;
       color: transparent;
-      transition: all 0.2s ease;
-      background: transparent;
+      transition: all .2s ease;
     }
 
     .food-card input:checked + .food-content .check {
       background: var(--gold);
       border-color: var(--gold);
-      color: #000;
-      box-shadow: 0 0 12px rgba(200,149,28,0.4);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(200,149,28,0.35);
     }
 
-    /* ── Textarea ── */
+    /* ═══════════════════════════════
+       TEXTAREA
+    ═══════════════════════════════ */
     textarea {
-      margin: 14px 16px 0;
+      display: block;
+      margin: 12px 16px 0;
       width: calc(100% - 32px);
-      min-height: 88px;
+      min-height: 84px;
       resize: none;
-      border: 1px solid rgba(255,255,255,0.08);
+      border: 1.5px solid var(--cream3);
       outline: none;
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
+      border-radius: var(--r-md);
+      padding: 13px 15px;
       font-family: "Jost", sans-serif;
       font-size: 13px;
       font-weight: 300;
-      background: var(--black3);
-      color: var(--white);
-      transition: border-color 0.2s ease;
-      display: block;
+      background: var(--card-bg);
+      color: var(--text-dark);
+      box-shadow: 0 2px 10px rgba(26,19,10,0.05);
+      transition: border-color .2s, box-shadow .2s;
       -webkit-appearance: none;
     }
 
-    textarea::placeholder {
-      color: var(--text-faint);
-    }
-
+    textarea::placeholder { color: var(--text-soft); }
     textarea:focus {
-      border-color: var(--gold-border);
-      box-shadow: 0 0 0 1px var(--gold-dim);
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(200,149,28,0.08);
     }
 
-    /* ── Actions ── */
+    /* ═══════════════════════════════
+       BUTTONS
+    ═══════════════════════════════ */
     .actions {
       display: flex;
       flex-direction: column;
@@ -477,463 +471,378 @@
     button {
       width: 100%;
       border: none;
-      border-radius: var(--radius-sm);
+      border-radius: var(--r-sm);
       padding: 16px 20px;
       font-family: "Jost", sans-serif;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
-      letter-spacing: 1.4px;
+      letter-spacing: 1.8px;
       text-transform: uppercase;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all .2s ease;
       -webkit-appearance: none;
     }
 
-    button:active {
-      transform: scale(0.985);
-    }
+    button:active { transform: scale(0.983); }
 
     .send-btn {
-      color: #000;
-      background: linear-gradient(135deg, var(--gold-light), var(--gold));
-      box-shadow:
-        0 0 0 1px rgba(200,149,28,0.3),
-        0 16px 40px rgba(200,149,28,0.2);
-    }
-
-    .send-btn:hover {
-      box-shadow:
-        0 0 0 1px rgba(200,149,28,0.5),
-        0 16px 40px rgba(200,149,28,0.3);
+      color: #fff;
+      background: linear-gradient(135deg, #1a110a, #3d2a0f, var(--gold-light));
+      box-shadow: 0 14px 36px rgba(12,10,6,0.22), inset 0 1px 0 rgba(255,255,255,0.08);
     }
 
     .edit-btn {
       display: none;
-      color: var(--gold-light);
-      background: var(--black3);
-      border: 1px solid var(--gold-border);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      color: var(--gold);
+      background: var(--card-bg);
+      border: 1.5px solid rgba(200,149,28,0.45);
+      box-shadow: 0 4px 16px rgba(26,19,10,0.06);
     }
 
-    .edit-btn.show {
-      display: block;
-    }
+    .edit-btn.show { display: block; }
 
-    /* ── Small note ── */
     .small-note {
       margin: 10px 16px 0;
       text-align: center;
       font-size: 11px;
       font-weight: 300;
-      line-height: 1.55;
-      color: var(--text-faint);
+      line-height: 1.6;
+      color: var(--text-soft);
     }
 
-    /* ── Loader ── */
     .loader {
-      margin: 22px 0;
+      margin: 24px 0;
       text-align: center;
       font-size: 12px;
-      font-weight: 400;
-      letter-spacing: 1px;
-      color: var(--text-muted);
+      letter-spacing: .8px;
+      color: var(--text-soft);
     }
 
-    /* ── Divider ── */
-    .gold-divider {
-      margin: 20px 16px 18px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold-border), transparent);
-    }
-
-    /* ── Footer ── */
+    /* ═══════════════════════════════
+       FOOTER
+    ═══════════════════════════════ */
     .footer {
-      margin-top: 24px;
+      margin-top: 32px;
+      padding: 20px 16px;
       text-align: center;
-      font-size: 10px;
-      font-weight: 400;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--text-faint);
+      border-top: 1px solid var(--cream3);
     }
 
-    .footer-logo {
-      font-family: "Cormorant Garamond", serif;
-      font-size: 13px;
-      font-style: italic;
-      color: var(--gold-border);
+    .footer-logo-img {
+      width: 150px;
+      height: auto;
       display: block;
-      margin-bottom: 3px;
-      letter-spacing: 0.5px;
+      margin: 0 auto 8px;
+      opacity: 0.55;
+      object-fit: contain;
     }
 
-    /* ── Toast ── */
+    .footer-copy {
+      font-size: 10px;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+
+    /* ═══════════════════════════════
+       TOAST
+    ═══════════════════════════════ */
     .toast {
       position: fixed;
       left: 50%;
       bottom: 24px;
       transform: translateX(-50%) translateY(120px);
       width: calc(100% - 32px);
-      max-width: 460px;
+      max-width: 440px;
       padding: 14px 18px;
-      border-radius: var(--radius-sm);
-      background: var(--black3);
+      border-radius: var(--r-sm);
+      background: var(--dark);
       border: 1px solid var(--gold-border);
-      color: var(--white);
-      box-shadow:
-        0 0 0 1px var(--gold-dim),
-        0 20px 50px rgba(0,0,0,0.6);
+      color: rgba(255,255,255,0.9);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
       font-size: 13px;
-      font-weight: 400;
       z-index: 50;
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: transform .35s cubic-bezier(.34,1.56,.64,1);
       text-align: center;
     }
 
-    .toast.show {
-      transform: translateX(-50%) translateY(0);
-    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
 
-    /* ── Desktop ── */
+    /* ═══════════════════════════════
+       DESKTOP
+    ═══════════════════════════════ */
     @media (min-width: 600px) {
-      .page { padding-bottom: 56px; }
-      .hero  { padding: 56px 32px 44px; }
-      h1     { font-size: 52px; }
-      .room-card { margin: 0 24px; }
-      .section-title,
-      .foods,
-      .actions { padding-left: 24px; padding-right: 24px; }
-      .section-title { margin-left: 24px; margin-right: 24px; }
-      .gold-divider { margin-left: 24px; margin-right: 24px; }
-      .small-note { margin-left: 24px; margin-right: 24px; }
+      .hero { min-height: 380px; }
+      .brand-logo-wide { max-width: 340px; }
+      .greeting-band h1 { font-size: 44px; }
+      .room-card, .greeting-band, .status-box,
+      .section-title, .actions, .small-note, .divider { margin-left: 24px; margin-right: 24px; }
+      .foods { padding: 0 24px; }
       textarea { margin-left: 24px; margin-right: 24px; width: calc(100% - 48px); }
     }
   </style>
 </head>
 
 <body>
+<main class="page">
 
-  <main class="page">
-
-    <section class="hero">
-      <div class="hero-corner tl"></div>
-      <div class="hero-corner tr"></div>
-
-      <div class="brand-logo">
-        <img src="assets/logo-lg-estate.png" alt="LG Estate">
-      </div>
-
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="hero-inner">
+      <img
+        src="assets/LG_ESTATE_Logo_esteso_oro.png"
+        alt="LG Estate — Residenze nelle Marche"
+        class="brand-logo-wide"
+      >
       <div class="tag">
         <span class="tag-dot"></span>
         Colazione in camera
       </div>
+    </div>
+  </section>
 
-      <h1>Buongiorno,<br><em>scegli la tua<br>colazione</em></h1>
+  <!-- ── ROOM CARD ── -->
+  <section class="room-card">
+    <div>
+      <div class="room-label">Camera rilevata</div>
+      <div class="room-number" id="roomNumber">Camera —</div>
+      <div class="structure-name" id="structureName">Struttura —</div>
+    </div>
+    <div class="room-icon">🛎️</div>
+  </section>
 
-      <p class="subtitle">
-        Seleziona cosa desideri ricevere. Il tuo ordine sarà inviato direttamente alla reception.
-      </p>
-    </section>
+  <!-- ── GREETING ── -->
+  <div class="greeting-band">
+    <h1>Buongiorno,<br><em>cosa desideri?</em></h1>
+    <p>Seleziona i prodotti desiderati. Il tuo ordine sarà inviato direttamente alla reception.</p>
+  </div>
 
-    <section class="room-card">
-      <div>
-        <div class="room-label">Camera rilevata</div>
-        <div class="room-number" id="roomNumber">Camera —</div>
-        <div class="structure-name" id="structureName">Struttura —</div>
-      </div>
-      <div class="room-icon">🛎️</div>
-    </section>
+  <!-- ── STATUS ── -->
+  <section class="status-box" id="statusBox">
+    <div class="status-title">Ordine ancora modificabile</div>
+    <div class="countdown" id="countdown">10:00</div>
+    <div class="status-note">
+      Puoi modificare l'ordine entro 10 minuti dall'invio. Dopo sarà considerato confermato.
+    </div>
+  </section>
 
-    <section class="status-box" id="statusBox">
-      <div class="status-title">Ordine ancora modificabile</div>
-      <div class="countdown" id="countdown">10:00</div>
-      <div class="status-note">
-        Puoi modificare l'ordine entro 10 minuti dall'invio. Dopo questo tempo sarà considerato confermato.
-      </div>
-    </section>
+  <!-- ── MENU ── -->
+  <div class="divider"></div>
 
-    <div class="gold-divider"></div>
+  <div class="section-title">
+    <h2>Menù breakfast</h2>
+    <span>Scegli uno o più</span>
+  </div>
 
-    <div class="section-title">
-      <h2>Menù breakfast</h2>
-      <span>Scegli una o più voci</span>
+  <form id="breakfastForm">
+    <div id="loader" class="loader">Caricamento menù…</div>
+    <div class="foods" id="foods"></div>
+
+    <textarea id="notes" placeholder="Note o richieste particolari… es. senza lattosio, orario preferito, allergie"></textarea>
+
+    <div class="actions">
+      <button class="send-btn" id="sendBtn" type="submit">Invia ordine colazione</button>
+      <button class="edit-btn" id="editBtn" type="button">Modifica ordine</button>
     </div>
 
-    <form id="breakfastForm">
-      <div id="loader" class="loader">Caricamento menù…</div>
-      <div class="foods" id="foods"></div>
+    <p class="small-note">
+      È consentito un solo ordine al giorno per camera.<br>
+      L'ordine può essere modificato entro 10 minuti dall'invio.
+    </p>
+  </form>
 
-      <textarea id="notes" placeholder="Note o richieste particolari… es. senza lattosio, orario preferito, allergie"></textarea>
+  <!-- ── FOOTER ── -->
+  <div class="footer">
+    <img src="assets/LG_ESTATE_Logo_esteso_oro.png" alt="LG Estate" class="footer-logo-img">
+    <div class="footer-copy">Breakfast Ordering · V3</div>
+  </div>
 
-      <div class="actions">
-        <button class="send-btn" id="sendBtn" type="submit">Invia ordine colazione</button>
-        <button class="edit-btn" id="editBtn" type="button">Modifica ordine</button>
-      </div>
+</main>
 
-      <p class="small-note">
-        È consentito un solo ordine al giorno per camera. L'ordine può essere modificato entro 10 minuti dall'invio.
-      </p>
-    </form>
+<div class="toast" id="toast"></div>
 
-    <div class="footer">
-      <span class="footer-logo">LG Estate — Residenze nelle Marche</span>
-      Breakfast Ordering · V3
-    </div>
+<script>
+  const CONFIG = {
+    webAppUrl: "https://script.google.com/macros/s/AKfycbzw-Jsstxe-RTU1Fg4OQDOchR5UpO9C3I_p158Y6STDwyJ0pfad-JeftyvnABtHMj8YPg/exec",
+    nomeBB: "LG Estate Colazioni"
+  };
 
-  </main>
+  const state = {
+    struttura: null, room: null, key: null,
+    menu: [], ordineAperto: null, countdownInterval: null
+  };
 
-  <div class="toast" id="toast"></div>
+  const els = {
+    roomNumber:    document.getElementById("roomNumber"),
+    structureName: document.getElementById("structureName"),
+    foods:         document.getElementById("foods"),
+    loader:        document.getElementById("loader"),
+    notes:         document.getElementById("notes"),
+    form:          document.getElementById("breakfastForm"),
+    sendBtn:       document.getElementById("sendBtn"),
+    editBtn:       document.getElementById("editBtn"),
+    toast:         document.getElementById("toast"),
+    statusBox:     document.getElementById("statusBox"),
+    countdown:     document.getElementById("countdown")
+  };
 
-  <script>
-    const CONFIG = {
-      webAppUrl: "https://script.google.com/macros/s/AKfycbzw-Jsstxe-RTU1Fg4OQDOchR5UpO9C3I_p158Y6STDwyJ0pfad-JeftyvnABtHMj8YPg/exec",
-      nomeBB: "LG Estate Colazioni"
-    };
+  init();
 
-    const state = {
-      struttura: null,
-      room: null,
-      key: null,
-      menu: [],
-      ordineAperto: null,
-      countdownInterval: null
-    };
+  async function init() {
+    const p = new URLSearchParams(window.location.search);
+    state.struttura = p.get("struttura") || "";
+    state.room      = p.get("room") || p.get("camera") || "";
+    state.key       = p.get("key") || "";
 
-    const els = {
-      roomNumber:    document.getElementById("roomNumber"),
-      structureName: document.getElementById("structureName"),
-      foods:         document.getElementById("foods"),
-      loader:        document.getElementById("loader"),
-      notes:         document.getElementById("notes"),
-      form:          document.getElementById("breakfastForm"),
-      sendBtn:       document.getElementById("sendBtn"),
-      editBtn:       document.getElementById("editBtn"),
-      toast:         document.getElementById("toast"),
-      statusBox:     document.getElementById("statusBox"),
-      countdown:     document.getElementById("countdown")
-    };
+    els.roomNumber.textContent    = state.room      ? "Camera " + state.room : "Camera non rilevata";
+    els.structureName.textContent = state.struttura ? state.struttura        : "Struttura non rilevata";
 
-    init();
+    if (!state.struttura || !state.room || !state.key)
+      showToast("QR non valido: struttura, camera o codice mancanti.");
 
-    async function init() {
-      const params = new URLSearchParams(window.location.search);
+    await loadMenu();
+    await checkOrdineAperto();
+  }
 
-      state.struttura = params.get("struttura") || "";
-      state.room      = params.get("room") || params.get("camera") || "";
-      state.key       = params.get("key") || "";
-
-      els.roomNumber.textContent    = state.room      ? "Camera " + state.room : "Camera non rilevata";
-      els.structureName.textContent = state.struttura ? state.struttura        : "Struttura non rilevata";
-
-      if (!state.struttura || !state.room || !state.key) {
-        showToast("QR non valido: struttura, camera o codice mancanti.");
-      }
-
-      await loadMenu();
-      await checkOrdineAperto();
+  async function loadMenu() {
+    try {
+      const res  = await fetch(CONFIG.webAppUrl + "?action=menu");
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.error || "Errore caricamento menù");
+      state.menu = data.menu || [];
+      renderMenu(state.menu);
+    } catch (err) {
+      els.loader.textContent = "Errore caricamento menù.";
+      showToast(err.message);
     }
+  }
 
-    async function loadMenu() {
-      try {
-        const url = CONFIG.webAppUrl + "?action=menu";
-        const res  = await fetch(url);
-        const data = await res.json();
-
-        if (!data.ok) throw new Error(data.error || "Errore caricamento menù");
-
-        state.menu = data.menu || [];
-        renderMenu(state.menu);
-
-      } catch (err) {
-        els.loader.textContent = "Errore caricamento menù.";
-        showToast(err.message);
-      }
+  function renderMenu(menu) {
+    els.loader.style.display = "none";
+    els.foods.innerHTML = "";
+    if (!menu.length) {
+      els.foods.innerHTML = "<div class='loader'>Nessun prodotto disponibile.</div>";
+      return;
     }
-
-    function renderMenu(menu) {
-      els.loader.style.display = "none";
-      els.foods.innerHTML = "";
-
-      if (!menu.length) {
-        els.foods.innerHTML = "<div class='loader'>Nessun prodotto disponibile.</div>";
-        return;
-      }
-
-      menu.forEach((item, index) => {
-        const id    = "food_" + index;
-        const label = document.createElement("label");
-        label.className = "food-card";
-
-        label.innerHTML = `
-          <input type="checkbox" name="food" id="${id}" value="${escapeHtml(item.nome)}">
-          <div class="food-content">
-            <div class="emoji">${escapeHtml(item.emoji || "🍽️")}</div>
-            <div class="food-info">
-              <div class="food-title">${escapeHtml(item.nome)}</div>
-              <div class="food-desc">${escapeHtml(item.descrizione || "")}</div>
-            </div>
-            <div class="check">✓</div>
+    menu.forEach((item, i) => {
+      const label = document.createElement("label");
+      label.className = "food-card";
+      label.innerHTML = `
+        <input type="checkbox" name="food" id="food_${i}" value="${escapeHtml(item.nome)}">
+        <div class="food-content">
+          <div class="emoji">${escapeHtml(item.emoji || "🍽️")}</div>
+          <div class="food-info">
+            <div class="food-title">${escapeHtml(item.nome)}</div>
+            <div class="food-desc">${escapeHtml(item.descrizione || "")}</div>
           </div>
-        `;
-
-        els.foods.appendChild(label);
-      });
-    }
-
-    async function checkOrdineAperto() {
-      if (!state.struttura || !state.room || !state.key) return;
-
-      try {
-        const url =
-          CONFIG.webAppUrl +
-          "?action=ordineAperto" +
-          "&struttura=" + encodeURIComponent(state.struttura) +
-          "&camera="    + encodeURIComponent(state.room) +
-          "&key="       + encodeURIComponent(state.key);
-
-        const res  = await fetch(url);
-        const data = await res.json();
-
-        if (!data.ok) {
-          showToast(data.error || "QR non autorizzato.");
-          return;
-        }
-
-        if (data.ordine) {
-          state.ordineAperto = data.ordine;
-          applyOrdineToForm(data.ordine);
-          startCountdown(data.ordine.secondiRimanenti);
-          setEditMode(true);
-        }
-
-      } catch (err) {
-        showToast("Impossibile controllare ordini aperti.");
-      }
-    }
-
-    function applyOrdineToForm(ordine) {
-      const prodotti = ordine.prodotti || [];
-      document.querySelectorAll('input[name="food"]').forEach(input => {
-        input.checked = prodotti.includes(input.value);
-      });
-      els.notes.value = ordine.note || "";
-    }
-
-    function setEditMode(active) {
-      if (active) {
-        els.statusBox.classList.add("show");
-        els.editBtn.classList.add("show");
-        els.sendBtn.textContent = "Nuovo ordine non disponibile";
-      } else {
-        els.statusBox.classList.remove("show");
-        els.editBtn.classList.remove("show");
-        els.sendBtn.textContent = "Invia ordine colazione";
-      }
-    }
-
-    function startCountdown(seconds) {
-      clearInterval(state.countdownInterval);
-      let remaining = Math.max(0, Number(seconds || 0));
-      updateCountdownText(remaining);
-
-      state.countdownInterval = setInterval(() => {
-        remaining--;
-        if (remaining <= 0) {
-          clearInterval(state.countdownInterval);
-          state.ordineAperto = null;
-          setEditMode(false);
-          updateCountdownText(0);
-          showToast("Tempo di modifica scaduto.");
-          return;
-        }
-        updateCountdownText(remaining);
-      }, 1000);
-    }
-
-    function updateCountdownText(seconds) {
-      const m = Math.floor(seconds / 60);
-      const s = seconds % 60;
-      els.countdown.textContent = `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
-    }
-
-    els.form.addEventListener("submit", async function(e) {
-      e.preventDefault();
-      if (state.ordineAperto) {
-        showToast("Hai già un ordine aperto. Usa il pulsante Modifica ordine.");
-        return;
-      }
-      await sendOrder("creaOrdine");
+          <div class="check">✓</div>
+        </div>`;
+      els.foods.appendChild(label);
     });
+  }
 
-    els.editBtn.addEventListener("click", async function() {
-      if (!state.ordineAperto) {
-        showToast("Nessun ordine modificabile trovato.");
+  async function checkOrdineAperto() {
+    if (!state.struttura || !state.room || !state.key) return;
+    try {
+      const url = CONFIG.webAppUrl
+        + "?action=ordineAperto"
+        + "&struttura=" + encodeURIComponent(state.struttura)
+        + "&camera="    + encodeURIComponent(state.room)
+        + "&key="       + encodeURIComponent(state.key);
+      const res  = await fetch(url);
+      const data = await res.json();
+      if (!data.ok) { showToast(data.error || "QR non autorizzato."); return; }
+      if (data.ordine) {
+        state.ordineAperto = data.ordine;
+        applyOrdineToForm(data.ordine);
+        startCountdown(data.ordine.secondiRimanenti);
+        setEditMode(true);
+      }
+    } catch { showToast("Impossibile controllare ordini aperti."); }
+  }
+
+  function applyOrdineToForm(ordine) {
+    const p = ordine.prodotti || [];
+    document.querySelectorAll('input[name="food"]').forEach(i => { i.checked = p.includes(i.value); });
+    els.notes.value = ordine.note || "";
+  }
+
+  function setEditMode(active) {
+    els.statusBox.classList.toggle("show", active);
+    els.editBtn.classList.toggle("show", active);
+    els.sendBtn.textContent = active ? "Nuovo ordine non disponibile" : "Invia ordine colazione";
+  }
+
+  function startCountdown(seconds) {
+    clearInterval(state.countdownInterval);
+    let r = Math.max(0, Number(seconds || 0));
+    updateCountdownText(r);
+    state.countdownInterval = setInterval(() => {
+      r--;
+      if (r <= 0) {
+        clearInterval(state.countdownInterval);
+        state.ordineAperto = null;
+        setEditMode(false);
+        updateCountdownText(0);
+        showToast("Tempo di modifica scaduto.");
         return;
       }
-      await sendOrder("modificaOrdine");
-    });
+      updateCountdownText(r);
+    }, 1000);
+  }
 
-    async function sendOrder(action) {
-      const prodotti = Array.from(document.querySelectorAll('input[name="food"]:checked'))
-        .map(input => input.value);
-      const note = els.notes.value.trim();
+  function updateCountdownText(s) {
+    const m = Math.floor(s / 60), ss = s % 60;
+    els.countdown.textContent = `${String(m).padStart(2,"0")}:${String(ss).padStart(2,"0")}`;
+  }
 
-      if (!state.struttura || !state.room || !state.key) {
-        showToast("QR non valido: struttura, camera o codice mancanti.");
-        return;
-      }
-      if (!prodotti.length) {
-        showToast("Seleziona almeno una voce per la colazione.");
-        return;
-      }
+  els.form.addEventListener("submit", async e => {
+    e.preventDefault();
+    if (state.ordineAperto) { showToast("Hai già un ordine aperto. Usa il pulsante Modifica ordine."); return; }
+    await sendOrder("creaOrdine");
+  });
 
-      const payload = { action, struttura: state.struttura, camera: state.room, key: state.key, prodotti, note };
-      if (action === "modificaOrdine") payload.orderId = state.ordineAperto.orderId;
+  els.editBtn.addEventListener("click", async () => {
+    if (!state.ordineAperto) { showToast("Nessun ordine modificabile trovato."); return; }
+    await sendOrder("modificaOrdine");
+  });
 
-      try {
-        setButtonsDisabled(true);
-        const res  = await fetch(CONFIG.webAppUrl, { method: "POST", body: JSON.stringify(payload) });
-        const data = await res.json();
+  async function sendOrder(action) {
+    const prodotti = Array.from(document.querySelectorAll('input[name="food"]:checked')).map(i => i.value);
+    const note = els.notes.value.trim();
+    if (!state.struttura || !state.room || !state.key) { showToast("QR non valido."); return; }
+    if (!prodotti.length) { showToast("Seleziona almeno una voce per la colazione."); return; }
 
-        if (!data.ok) {
-          showToast(data.error || "Errore invio ordine.");
-          return;
-        }
-        if (data.ordine) {
-          state.ordineAperto = data.ordine;
-          startCountdown(data.ordine.secondiRimanenti);
-          setEditMode(true);
-        }
-        showToast(data.message || "Operazione completata.");
+    const payload = { action, struttura: state.struttura, camera: state.room, key: state.key, prodotti, note };
+    if (action === "modificaOrdine") payload.orderId = state.ordineAperto.orderId;
 
-      } catch (err) {
-        showToast("Errore di collegamento. Riprova.");
-      } finally {
-        setButtonsDisabled(false);
-      }
-    }
+    try {
+      setButtonsDisabled(true);
+      const res  = await fetch(CONFIG.webAppUrl, { method: "POST", body: JSON.stringify(payload) });
+      const data = await res.json();
+      if (!data.ok) { showToast(data.error || "Errore invio ordine."); return; }
+      if (data.ordine) { state.ordineAperto = data.ordine; startCountdown(data.ordine.secondiRimanenti); setEditMode(true); }
+      showToast(data.message || "Operazione completata.");
+    } catch { showToast("Errore di collegamento. Riprova.");
+    } finally { setButtonsDisabled(false); }
+  }
 
-    function setButtonsDisabled(disabled) {
-      els.sendBtn.disabled = disabled;
-      els.editBtn.disabled = disabled;
-      els.sendBtn.style.opacity = disabled ? "0.55" : "1";
-      els.editBtn.style.opacity = disabled ? "0.55" : "1";
-    }
+  function setButtonsDisabled(d) {
+    els.sendBtn.disabled = d; els.editBtn.disabled = d;
+    els.sendBtn.style.opacity = d ? ".55" : "1";
+    els.editBtn.style.opacity = d ? ".55" : "1";
+  }
 
-    function showToast(message) {
-      els.toast.textContent = message;
-      els.toast.classList.add("show");
-      setTimeout(() => els.toast.classList.remove("show"), 3300);
-    }
+  function showToast(msg) {
+    els.toast.textContent = msg;
+    els.toast.classList.add("show");
+    setTimeout(() => els.toast.classList.remove("show"), 3300);
+  }
 
-    function escapeHtml(str) {
-      return String(str || "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-  </script>
+  function escapeHtml(s) {
+    return String(s||"").replaceAll("&","&amp;").replaceAll("<","&lt;")
+      .replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+  }
+</script>
 </body>
 </html>
