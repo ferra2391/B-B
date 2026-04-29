@@ -233,19 +233,24 @@
       return;
     }
 
+    // 1. Facciamo partire un timer ASSOLUTO per lo splash screen (es. 2.8 secondi)
+    // Allo scadere di questo tempo, il logo sparisce indipendentemente da Google.
+    setTimeout(() => {
+      els.splash.classList.add("hidden");
+    }, 2800); 
+
     try {
       const url = `${CONFIG.webAppUrl}?action=init&struttura=${encodeURIComponent(state.struttura)}&camera=${encodeURIComponent(state.room)}&key=${encodeURIComponent(state.key)}&t=${Date.now()}`;
       
-      // IL TRUCCO MAGICO: Aspettiamo ENTRAMBI (Il caricamento dati E almeno 2.5 secondi di animazione)
-      const minimumSplashTime = new Promise(resolve => setTimeout(resolve, 1500));
-      const fetchDati = fetch(url).then(res => res.json()).catch(err => { throw err; });
-      
-      const [_, data] = await Promise.all([minimumSplashTime, fetchDati]);
+      // 2. Scarichiamo i dati da Google
+      const res = await fetch(url);
+      const data = await res.json();
 
       if (!data.ok) {
         showToast(data.error || "Errore di caricamento.");
       }
 
+      // 3. Stampiamo i dati appena arrivano
       state.menu = data.menu || [];
       renderMenu(state.menu);
 
@@ -255,12 +260,14 @@
         startCountdown(data.ordine.secondiRimanenti);
         setEditMode(true);
       }
+      
+      // Aggiorniamo i testi se l'ordine non c'era
+      els.roomNumber.textContent = "Camera " + state.room;
+      els.structureName.textContent = state.struttura;
 
     } catch (err) {
       showToast("Errore di connessione al server.");
-    } finally {
-      // Alla fine di tutto, facciamo sfumare lo splash screen all'indietro
-      els.splash.classList.add("hidden");
+      els.roomNumber.textContent = "Errore di connessione";
     }
   }
 
