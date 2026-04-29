@@ -4,579 +4,103 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <meta name="theme-color" content="#0c0a06" />
-  <title>LG Estate — Colazione in Camera</title>
-
+  <title>LG Estate — Colazione</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Jost:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --gold:        #c8951c;
-      --gold-light:  #dba832;
-      --gold-bright: #f0c84a;
-      --gold-dim:    rgba(200,149,28,0.15);
-      --gold-border: rgba(200,149,28,0.40);
-
-      --dark:        #0c0a06;
-      --dark2:       #15120a;
-
-      --cream:       #faf6ef;
-      --cream2:      #f3ece0;
-      --cream3:      #e8dece;
-      --card-bg:     #ffffff;
-
-      --text-dark:   #1a130a;
-      --text-mid:    #6b5a3e;
-      --text-soft:   #a08060;
-
-      --r-sm: 14px;
-      --r-md: 20px;
-      --r-lg: 28px;
+      --gold: #c8951c; --gold-light: #dba832; --gold-bright: #f0c84a;
+      --gold-border: rgba(200,149,28,0.40); --dark: #0c0a06;
+      --cream: #faf6ef; --cream2: #f3ece0; --cream3: #e8dece;
+      --card-bg: #ffffff; --text-dark: #1a130a; --text-soft: #a08060;
+      --r-md: 20px; --r-lg: 28px;
     }
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-    html { -webkit-text-size-adjust: 100%; }
+    *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { margin: 0; min-height: 100vh; font-family: "Jost", sans-serif; background: var(--cream); color: var(--text-dark); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    .page { max-width: 520px; margin: 0 auto; padding-bottom: 50px; }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: "Jost", sans-serif;
-      background: var(--cream);
-      color: var(--text-dark);
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    .page {
-      max-width: 520px;
-      margin: 0 auto;
-      padding-bottom: 50px;
-    }
-
-    /* ═══════════════════════════════
-       HERO
-    ═══════════════════════════════ */
-    .hero {
-      position: relative;
-      overflow: hidden;
-      min-height: 260px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 48px 0 52px;
-      background: var(--dark);
-    }
-
-    /* subtle radial gold glow behind logo */
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 70% 60% at 50% 50%, rgba(200,149,28,0.09) 0%, transparent 70%),
-        radial-gradient(ellipse 100% 40% at 50% 100%, rgba(200,149,28,0.06) 0%, transparent 60%);
-      z-index: 1;
-    }
-
-    /* gold line at bottom */
-    .hero::after {
-      content: "";
-      position: absolute;
-      bottom: 0; left: 10%; right: 10%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold-border), transparent);
-      z-index: 2;
-    }
-
-    .hero-inner {
-      position: relative;
-      z-index: 3;
-      width: 100%;
-      padding: 0 22px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 14px;
-    }
-
-    .brand-logo-wide {
-      width: 100%;
-      max-width: 310px;
-      height: auto;
-      display: block;
-      object-fit: contain;
-      filter: drop-shadow(0 0 40px rgba(200,149,28,0.22)) drop-shadow(0 8px 20px rgba(0,0,0,0.4));
-      animation: fadeDown 0.65s ease both;
-    }
-
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 5px 14px;
-      border-radius: 999px;
-      border: 1px solid var(--gold-border);
-      background: rgba(200,149,28,0.14);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--gold-bright);
-      animation: fadeDown 0.65s 0.1s ease both;
-    }
-
-    .tag-dot {
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: var(--gold-bright);
-      box-shadow: 0 0 8px var(--gold-bright);
-      animation: blink 2s infinite;
-    }
-
-    @keyframes blink  { 0%,100%{opacity:1} 50%{opacity:.3} }
+    /* HERO */
+    .hero { position: relative; overflow: hidden; min-height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 0 52px; background: var(--dark); }
+    .hero::before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(200,149,28,0.09) 0%, transparent 70%); z-index: 1; }
+    .hero::after { content: ""; position: absolute; bottom: 0; left: 10%; right: 10%; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-border), transparent); z-index: 2; }
+    .hero-inner { position: relative; z-index: 3; width: 100%; padding: 0 22px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; }
+    .brand-logo-wide { width: 100%; max-width: 310px; height: auto; display: block; object-fit: contain; filter: drop-shadow(0 0 40px rgba(200,149,28,0.22)) drop-shadow(0 8px 20px rgba(0,0,0,0.4)); animation: fadeDown 0.65s ease both; }
+    .tag { display: inline-flex; align-items: center; gap: 7px; padding: 5px 14px; border-radius: 999px; border: 1px solid var(--gold-border); background: rgba(200,149,28,0.14); backdrop-filter: blur(10px); font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-bright); animation: fadeDown 0.65s 0.1s ease both; }
+    
     @keyframes fadeDown { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
     @keyframes fadeUp   { from{opacity:0;transform:translateY(16px)}  to{opacity:1;transform:translateY(0)} }
 
-    /* ═══════════════════════════════
-       ROOM CARD
-    ═══════════════════════════════ */
-    .room-card {
-      position: relative;
-      z-index: 10;
-      margin: -34px 16px 0;
-      background: var(--card-bg);
-      border: 1px solid var(--cream3);
-      border-radius: var(--r-lg);
-      padding: 16px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 20px 50px rgba(26,19,10,0.14), 0 2px 0 var(--cream3);
-      animation: fadeUp 0.6s 0.2s ease both;
-    }
+    /* ROOM CARD */
+    .room-card { position: relative; z-index: 10; margin: -34px 16px 0; background: var(--card-bg); border: 1px solid var(--cream3); border-radius: var(--r-lg); padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 20px 50px rgba(26,19,10,0.14), 0 2px 0 var(--cream3); animation: fadeUp 0.6s 0.2s ease both; }
+    .room-label { font-size: 9px; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: 2.2px; margin-bottom: 3px; }
+    .room-number { font-family: "Cormorant Garamond", serif; font-size: 22px; font-weight: 600; line-height: 1.1; }
+    .structure-name { font-size: 11px; color: var(--text-soft); margin-top: 2px; }
+    .room-icon { width: 50px; height: 50px; border-radius: 14px; background: linear-gradient(135deg, #fdf0d5, #f5d98a); border: 1px solid rgba(200,149,28,0.28); display: grid; place-items: center; font-size: 22px; box-shadow: 0 6px 18px rgba(200,149,28,0.18); }
 
-    .room-label {
-      font-size: 9px;
-      color: var(--gold);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 2.2px;
-      margin-bottom: 3px;
-    }
+    /* GREETING */
+    .greeting-band { margin: 20px 16px 0; padding: 20px 22px; background: linear-gradient(135deg, var(--dark), #231a0c 80%, #2e2008); border-radius: var(--r-lg); box-shadow: 0 12px 36px rgba(12,10,6,0.18); animation: fadeUp 0.6s 0.25s ease both; position: relative; overflow: hidden; }
+    .greeting-band::before { content: ""; position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-top: 1px solid var(--gold-border); border-right: 1px solid var(--gold-border); }
+    .greeting-band::after { content: ""; position: absolute; bottom: 12px; left: 12px; width: 32px; height: 32px; border-bottom: 1px solid var(--gold-border); border-left: 1px solid var(--gold-border); }
+    .greeting-band h1 { margin: 0 0 8px; font-family: "Cormorant Garamond", serif; font-size: 36px; font-weight: 600; line-height: 1.1; color: #fff; }
+    .greeting-band h1 em { font-style: italic; color: var(--gold-bright); }
+    .greeting-band p { margin: 0; font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.52); line-height: 1.65; }
 
-    .room-number {
-      font-family: "Cormorant Garamond", serif;
-      font-size: 22px;
-      font-weight: 600;
-      color: var(--text-dark);
-      line-height: 1.1;
-    }
+    /* SECTION TITLE */
+    .divider { margin: 22px 16px 0; height: 1px; background: linear-gradient(90deg, transparent, var(--cream3), transparent); }
+    .section-title { margin: 18px 16px 12px; display: flex; justify-content: space-between; align-items: flex-end; }
+    .section-title h2 { margin: 0; font-family: "Cormorant Garamond", serif; font-size: 28px; font-weight: 600; }
+    .section-title span { font-size: 10px; color: var(--text-soft); font-weight: 500; letter-spacing: 0.6px; text-transform: uppercase; padding-bottom: 5px; }
 
-    .structure-name {
-      font-size: 11px;
-      font-weight: 400;
-      color: var(--text-soft);
-      margin-top: 2px;
-    }
+    /* SKELETON SCREEN (LOADER) */
+    .skeleton-container { display: flex; flex-direction: column; gap: 10px; padding: 0 16px; margin-bottom: 15px; }
+    .s-card { height: 80px; width: 100%; background: linear-gradient(90deg, #f3ece0 25%, #faf6ef 50%, #f3ece0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite linear; border-radius: var(--r-md); border: 1.5px solid var(--cream3); }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-    .room-icon {
-      width: 50px; height: 50px;
-      border-radius: var(--r-sm);
-      background: linear-gradient(135deg, #fdf0d5, #f5d98a);
-      border: 1px solid rgba(200,149,28,0.28);
-      display: grid;
-      place-items: center;
-      font-size: 22px;
-      box-shadow: 0 6px 18px rgba(200,149,28,0.18);
-    }
-
-    /* ═══════════════════════════════
-       GREETING BAND
-    ═══════════════════════════════ */
-    .greeting-band {
-      margin: 20px 16px 0;
-      padding: 20px 22px;
-      background: linear-gradient(135deg, var(--dark), #231a0c 80%, #2e2008);
-      border-radius: var(--r-lg);
-      box-shadow: 0 12px 36px rgba(12,10,6,0.18);
-      animation: fadeUp 0.6s 0.25s ease both;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* decorative corner */
-    .greeting-band::before {
-      content: "";
-      position: absolute;
-      top: 12px; right: 12px;
-      width: 32px; height: 32px;
-      border-top: 1px solid var(--gold-border);
-      border-right: 1px solid var(--gold-border);
-    }
-
-    .greeting-band::after {
-      content: "";
-      position: absolute;
-      bottom: 12px; left: 12px;
-      width: 32px; height: 32px;
-      border-bottom: 1px solid var(--gold-border);
-      border-left: 1px solid var(--gold-border);
-    }
-
-    .greeting-band h1 {
-      margin: 0 0 8px;
-      font-family: "Cormorant Garamond", serif;
-      font-size: 36px;
-      font-weight: 600;
-      line-height: 1.1;
-      color: #fff;
-    }
-
-    .greeting-band h1 em {
-      font-style: italic;
-      color: var(--gold-bright);
-    }
-
-    .greeting-band p {
-      margin: 0;
-      font-size: 12px;
-      font-weight: 300;
-      color: rgba(255,255,255,0.52);
-      line-height: 1.65;
-    }
-
-    /* ═══════════════════════════════
-       STATUS BOX
-    ═══════════════════════════════ */
-    .status-box {
-      display: none;
-      margin: 12px 16px 0;
-      padding: 14px 18px;
-      border-radius: var(--r-md);
-      background: #fff8eb;
-      border: 1px solid rgba(200,149,28,0.45);
-      box-shadow: 0 6px 20px rgba(200,149,28,0.10);
-    }
-
-    .status-box.show { display: block; }
-
-    .status-title {
-      font-size: 9px;
-      font-weight: 600;
-      letter-spacing: 1.8px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 4px;
-    }
-
-    .countdown {
-      font-family: "Cormorant Garamond", serif;
-      font-size: 34px;
-      font-weight: 600;
-      color: var(--text-dark);
-      letter-spacing: 2px;
-      line-height: 1;
-    }
-
-    .status-note {
-      margin-top: 5px;
-      font-size: 11px;
-      color: var(--text-soft);
-      line-height: 1.5;
-      font-weight: 300;
-    }
-
-    /* ═══════════════════════════════
-       SECTION TITLE
-    ═══════════════════════════════ */
-    .divider {
-      margin: 22px 16px 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--cream3), transparent);
-    }
-
-    .section-title {
-      margin: 18px 16px 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-    }
-
-    .section-title h2 {
-      margin: 0;
-      font-family: "Cormorant Garamond", serif;
-      font-size: 28px;
-      font-weight: 600;
-      color: var(--text-dark);
-    }
-
-    .section-title span {
-      font-size: 10px;
-      color: var(--text-soft);
-      font-weight: 500;
-      letter-spacing: 0.6px;
-      text-transform: uppercase;
-      padding-bottom: 5px;
-    }
-
-    /* ═══════════════════════════════
-       FOOD CARDS
-    ═══════════════════════════════ */
-    .foods {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      padding: 0 16px;
-    }
-
+    /* FOOD CARDS */
+    .foods { display: flex; flex-direction: column; gap: 10px; padding: 0 16px; }
     .food-card input { display: none; }
-
-    .food-content {
-      cursor: pointer;
-      border-radius: var(--r-md);
-      background: var(--card-bg);
-      border: 1.5px solid var(--cream3);
-      padding: 12px 14px;
-      display: flex;
-      gap: 13px;
-      align-items: center;
-      transition: border-color .2s ease, box-shadow .2s ease, transform .15s ease;
-      -webkit-user-select: none;
-      user-select: none;
-      box-shadow: 0 2px 10px rgba(26,19,10,0.06);
-    }
-
+    .food-content { cursor: pointer; border-radius: var(--r-md); background: var(--card-bg); border: 1.5px solid var(--cream3); padding: 12px 14px; display: flex; gap: 13px; align-items: center; transition: border-color .2s ease, box-shadow .2s ease, transform .15s ease; user-select: none; box-shadow: 0 2px 10px rgba(26,19,10,0.06); }
     .food-content:active { transform: scale(0.985); }
-
-    @media (hover: hover) {
-      .food-content:hover {
-        border-color: rgba(200,149,28,0.4);
-        box-shadow: 0 4px 20px rgba(200,149,28,0.10);
-      }
-    }
-
-    .food-card input:checked + .food-content {
-      border-color: var(--gold);
-      background: #fffbf2;
-      box-shadow: 0 0 0 1px rgba(200,149,28,0.15), 0 6px 24px rgba(200,149,28,0.12);
-    }
-
-    .emoji {
-      width: 52px; height: 52px;
-      min-width: 52px;
-      border-radius: var(--r-sm);
-      display: grid;
-      place-items: center;
-      font-size: 24px;
-      background: var(--cream2);
-      border: 1px solid var(--cream3);
-      transition: background .2s, border-color .2s;
-    }
-
-    .food-card input:checked + .food-content .emoji {
-      background: #fdf0d5;
-      border-color: rgba(200,149,28,0.3);
-    }
-
+    .food-card input:checked + .food-content { border-color: var(--gold); background: #fffbf2; box-shadow: 0 0 0 1px rgba(200,149,28,0.15), 0 6px 24px rgba(200,149,28,0.12); }
+    .emoji { width: 52px; height: 52px; min-width: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 24px; background: var(--cream2); border: 1px solid var(--cream3); transition: background .2s, border-color .2s; }
+    .food-card input:checked + .food-content .emoji { background: #fdf0d5; border-color: rgba(200,149,28,0.3); }
     .food-info { flex: 1; min-width: 0; }
+    .food-title { font-family: "Cormorant Garamond", serif; font-weight: 600; font-size: 18px; margin-bottom: 2px; line-height: 1.2; }
+    .food-desc { font-size: 11px; font-weight: 300; line-height: 1.45; color: var(--text-soft); }
+    .check { margin-left: auto; width: 26px; height: 26px; min-width: 26px; border-radius: 50%; border: 1.5px solid var(--cream3); display: grid; place-items: center; font-size: 12px; color: transparent; transition: all .2s ease; }
+    .food-card input:checked + .food-content .check { background: var(--gold); border-color: var(--gold); color: #fff; box-shadow: 0 0 12px rgba(200,149,28,0.35); }
 
-    .food-title {
-      font-family: "Cormorant Garamond", serif;
-      font-weight: 600;
-      font-size: 18px;
-      color: var(--text-dark);
-      margin-bottom: 2px;
-      line-height: 1.2;
-    }
+    /* STATUS & BUTTONS */
+    .status-box { display: none; margin: 12px 16px 0; padding: 14px 18px; border-radius: var(--r-md); background: #fff8eb; border: 1px solid rgba(200,149,28,0.45); box-shadow: 0 6px 20px rgba(200,149,28,0.10); }
+    .status-box.show { display: block; }
+    .status-title { font-size: 9px; font-weight: 600; letter-spacing: 1.8px; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+    .countdown { font-family: "Cormorant Garamond", serif; font-size: 34px; font-weight: 600; line-height: 1; letter-spacing: 2px; }
+    .status-note { margin-top: 5px; font-size: 11px; color: var(--text-soft); line-height: 1.5; font-weight: 300; }
+    
+    textarea { display: block; margin: 12px 16px 0; width: calc(100% - 32px); min-height: 84px; resize: none; border: 1.5px solid var(--cream3); outline: none; border-radius: var(--r-md); padding: 13px 15px; font-family: "Jost", sans-serif; font-size: 13px; font-weight: 300; background: var(--card-bg); color: var(--text-dark); box-shadow: 0 2px 10px rgba(26,19,10,0.05); transition: border-color .2s; }
+    textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(200,149,28,0.08); }
 
-    .food-desc {
-      font-size: 11px;
-      font-weight: 300;
-      line-height: 1.45;
-      color: var(--text-soft);
-    }
-
-    .check {
-      margin-left: auto;
-      width: 26px; height: 26px;
-      min-width: 26px;
-      border-radius: 50%;
-      border: 1.5px solid var(--cream3);
-      display: grid;
-      place-items: center;
-      font-size: 12px;
-      color: transparent;
-      transition: all .2s ease;
-    }
-
-    .food-card input:checked + .food-content .check {
-      background: var(--gold);
-      border-color: var(--gold);
-      color: #fff;
-      box-shadow: 0 0 12px rgba(200,149,28,0.35);
-    }
-
-    /* ═══════════════════════════════
-       TEXTAREA
-    ═══════════════════════════════ */
-    textarea {
-      display: block;
-      margin: 12px 16px 0;
-      width: calc(100% - 32px);
-      min-height: 84px;
-      resize: none;
-      border: 1.5px solid var(--cream3);
-      outline: none;
-      border-radius: var(--r-md);
-      padding: 13px 15px;
-      font-family: "Jost", sans-serif;
-      font-size: 13px;
-      font-weight: 300;
-      background: var(--card-bg);
-      color: var(--text-dark);
-      box-shadow: 0 2px 10px rgba(26,19,10,0.05);
-      transition: border-color .2s, box-shadow .2s;
-      -webkit-appearance: none;
-    }
-
-    textarea::placeholder { color: var(--text-soft); }
-    textarea:focus {
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(200,149,28,0.08);
-    }
-
-    /* ═══════════════════════════════
-       BUTTONS
-    ═══════════════════════════════ */
-    .actions {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin: 14px 16px 0;
-    }
-
-    button {
-      width: 100%;
-      border: none;
-      border-radius: var(--r-sm);
-      padding: 16px 20px;
-      font-family: "Jost", sans-serif;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 1.8px;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: all .2s ease;
-      -webkit-appearance: none;
-    }
-
+    .actions { display: flex; flex-direction: column; gap: 10px; margin: 14px 16px 0; }
+    button { width: 100%; border: none; border-radius: 14px; padding: 16px 20px; font-family: "Jost", sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 1.8px; text-transform: uppercase; cursor: pointer; transition: all .2s ease; }
     button:active { transform: scale(0.983); }
-
-    .send-btn {
-      color: #fff;
-      background: linear-gradient(135deg, #1a110a, #3d2a0f, var(--gold-light));
-      box-shadow: 0 14px 36px rgba(12,10,6,0.22), inset 0 1px 0 rgba(255,255,255,0.08);
-    }
-
-    .edit-btn {
-      display: none;
-      color: var(--gold);
-      background: var(--card-bg);
-      border: 1.5px solid rgba(200,149,28,0.45);
-      box-shadow: 0 4px 16px rgba(26,19,10,0.06);
-    }
-
+    .send-btn { color: #fff; background: linear-gradient(135deg, #1a110a, #3d2a0f, var(--gold-light)); box-shadow: 0 14px 36px rgba(12,10,6,0.22), inset 0 1px 0 rgba(255,255,255,0.08); }
+    .edit-btn { display: none; color: var(--gold); background: var(--card-bg); border: 1.5px solid rgba(200,149,28,0.45); box-shadow: 0 4px 16px rgba(26,19,10,0.06); }
     .edit-btn.show { display: block; }
+    .small-note { margin: 10px 16px 0; text-align: center; font-size: 11px; font-weight: 300; line-height: 1.6; color: var(--text-soft); }
 
-    .small-note {
-      margin: 10px 16px 0;
-      text-align: center;
-      font-size: 11px;
-      font-weight: 300;
-      line-height: 1.6;
-      color: var(--text-soft);
-    }
+    .footer { margin-top: 32px; padding: 20px 16px; text-align: center; border-top: 1px solid var(--cream3); }
+    .footer-logo-img { width: 150px; height: auto; display: block; margin: 0 auto; opacity: 0.55; }
 
-    .loader {
-      margin: 24px 0;
-      text-align: center;
-      font-size: 12px;
-      letter-spacing: .8px;
-      color: var(--text-soft);
-    }
+    .toast { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(0.92); width: calc(100% - 48px); max-width: 360px; padding: 22px 20px; border-radius: 22px; background: rgba(12,10,6,0.96); border: 1px solid var(--gold-border); color: rgba(255,255,255,0.94); box-shadow: 0 24px 70px rgba(0,0,0,0.42); font-size: 14px; text-align: center; z-index: 999; opacity: 0; pointer-events: none; transition: opacity .25s ease, transform .25s ease; }
+    .toast.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
-    /* ═══════════════════════════════
-       FOOTER
-    ═══════════════════════════════ */
-    .footer {
-      margin-top: 32px;
-      padding: 20px 16px;
-      text-align: center;
-      border-top: 1px solid var(--cream3);
-    }
-
-    .footer-logo-img {
-      width: 150px;
-      height: auto;
-      display: block;
-      margin: 0 auto 8px;
-      opacity: 0.55;
-      object-fit: contain;
-    }
-
-    .footer-copy {
-      font-size: 10px;
-      letter-spacing: 1.4px;
-      text-transform: uppercase;
-      color: var(--text-soft);
-    }
-
-    /* ═══════════════════════════════
-       TOAST
-    ═══════════════════════════════ */
-   .toast {
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%) scale(0.92);
-  width: calc(100% - 48px);
-  max-width: 360px;
-  padding: 22px 20px;
-  border-radius: 22px;
-  background: rgba(12,10,6,0.96);
-  border: 1px solid var(--gold-border);
-  color: rgba(255,255,255,0.94);
-  box-shadow: 0 24px 70px rgba(0,0,0,0.42);
-  font-size: 14px;
-  line-height: 1.45;
-  z-index: 999;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .25s ease, transform .25s ease;
-  text-align: center;
-}
-
-.toast.show {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-    /* ═══════════════════════════════
-       DESKTOP
-    ═══════════════════════════════ */
     @media (min-width: 600px) {
       .hero { min-height: 300px; }
       .brand-logo-wide { max-width: 380px; }
-      .greeting-band h1 { font-size: 44px; }
-      .room-card, .greeting-band, .status-box,
-      .section-title, .actions, .small-note, .divider { margin-left: 24px; margin-right: 24px; }
+      .room-card, .greeting-band, .status-box, .section-title, .actions, .small-note, .divider, .skeleton-container { margin-left: 24px; margin-right: 24px; }
       .foods { padding: 0 24px; }
       textarea { margin-left: 24px; margin-right: 24px; width: calc(100% - 48px); }
     }
@@ -585,57 +109,48 @@
 
 <body>
 <main class="page">
-
-  <!-- ── HERO ── -->
   <section class="hero">
     <div class="hero-inner">
-      <img
-        src="assets/LG_ESTATE_Logo_esteso_oro.png"
-        alt="LG Estate — Residenze nelle Marche"
-        class="brand-logo-wide"
-      >
-      <div class="tag">
-        <span class="tag-dot"></span>
-        Colazione in camera
-      </div>
+      <img src="assets/LG_ESTATE_Logo_esteso_oro.png" alt="LG Estate" class="brand-logo-wide">
+      <div class="tag"><span class="tag-dot" style="width:5px; height:5px; border-radius:50%; background:var(--gold-bright); display:inline-block; margin-right:4px;"></span>Colazione in camera</div>
     </div>
   </section>
 
-  <!-- ── ROOM CARD ── -->
   <section class="room-card">
     <div>
       <div class="room-label">Camera rilevata</div>
-      <div class="room-number" id="roomNumber">Camera —</div>
-      <div class="structure-name" id="structureName">Struttura —</div>
+      <div class="room-number" id="roomNumber">Caricamento...</div>
+      <div class="structure-name" id="structureName">Attendere prego...</div>
     </div>
     <div class="room-icon">🛎️</div>
   </section>
 
-  <!-- ── GREETING ── -->
   <div class="greeting-band">
     <h1>Buongiorno,<br><em>cosa desideri?</em></h1>
     <p>Seleziona i prodotti desiderati. Il tuo ordine sarà inviato direttamente alla reception.</p>
   </div>
 
-  <!-- ── STATUS ── -->
   <section class="status-box" id="statusBox">
     <div class="status-title">Ordine ancora modificabile</div>
-    <div class="countdown" id="countdown">10:00</div>
-    <div class="status-note">
-      Puoi modificare l'ordine entro 10 minuti dall'invio. Dopo sarà considerato confermato.
-    </div>
+    <div class="countdown" id="countdown">--:--</div>
+    <div class="status-note">Puoi modificare l'ordine entro 10 minuti dall'invio. Dopo sarà considerato confermato.</div>
   </section>
 
-  <!-- ── MENU ── -->
   <div class="divider"></div>
-
   <div class="section-title">
     <h2>Menù breakfast</h2>
     <span>Scegli uno o più</span>
   </div>
 
   <form id="breakfastForm">
-    <div id="loader" class="loader">Caricamento menù…</div>
+    
+    <div id="loader" class="skeleton-container">
+      <div class="s-card"></div>
+      <div class="s-card"></div>
+      <div class="s-card"></div>
+      <div class="s-card"></div>
+    </div>
+
     <div class="foods" id="foods"></div>
 
     <textarea id="notes" placeholder="Note o richieste particolari… es. senza lattosio, orario preferito, allergie"></textarea>
@@ -645,26 +160,20 @@
       <button class="edit-btn" id="editBtn" type="button">Modifica ordine</button>
     </div>
 
-    <p class="small-note">
-      È consentito un solo ordine al giorno per camera.<br>
-      L'ordine può essere modificato entro 10 minuti dall'invio.
-    </p>
+    <p class="small-note">È consentito un solo ordine al giorno per camera.<br>L'ordine può essere modificato entro 10 minuti dall'invio.</p>
   </form>
 
-  <!-- ── FOOTER ── -->
   <div class="footer">
     <img src="assets/LG_ESTATE_Logo_esteso_oro.png" alt="LG Estate" class="footer-logo-img">
-
   </div>
-
 </main>
 
 <div class="toast" id="toast"></div>
 
 <script>
+  // *** INSERISCI QUI IL TUO URL DI GOOGLE APPS SCRIPT ***
   const CONFIG = {
-    webAppUrl: "https://script.google.com/macros/s/AKfycbzw-Jsstxe-RTU1Fg4OQDOchR5UpO9C3I_p158Y6STDwyJ0pfad-JeftyvnABtHMj8YPg/exec",
-    nomeBB: "LG Estate Colazioni"
+    webAppUrl: "https://script.google.com/macros/s/IL_TUO_ID_SCRIPT_QUI/exec",
   };
 
   const state = {
@@ -688,104 +197,59 @@
 
   init();
 
-function loadMenuFromCache() {
-  try {
-    const cached = localStorage.getItem("lg_estate_menu_cache");
-    if (!cached) return false;
+  async function init() {
+    const p = new URLSearchParams(window.location.search);
+    state.struttura = p.get("struttura") || "";
+    state.room      = p.get("room") || p.get("camera") || "";
+    state.key       = p.get("key") || "";
 
-    const menu = JSON.parse(cached);
-    if (!Array.isArray(menu) || !menu.length) return false;
+    els.roomNumber.textContent    = state.room ? "Camera " + state.room : "Camera non rilevata";
+    els.structureName.textContent = state.struttura ? state.struttura : "Struttura non rilevata";
 
-    state.menu = menu;
-    renderMenu(menu);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function saveMenuToCache(menu) {
-  try {
-    localStorage.setItem("lg_estate_menu_cache", JSON.stringify(menu || []));
-  } catch {}
-}
-  
-async function loadInitialData() {
-  try {
-    const url = CONFIG.webAppUrl
-      + "?action=init"
-      + "&struttura=" + encodeURIComponent(state.struttura)
-      + "&camera="    + encodeURIComponent(state.room)
-      + "&key="       + encodeURIComponent(state.key)
-      + "&t="         + Date.now();
-
-    const res = await fetch(url);
-    const data = await res.json();
-
-    if (!data.ok) {
-      showToast(data.error || "QR non autorizzato.");
+    if (!state.struttura || !state.room || !state.key) {
+      showToast("QR non valido: struttura, camera o codice mancanti.");
+      els.loader.style.display = "none";
+      return;
     }
 
-    state.menu = data.menu || [];
-    renderMenu(state.menu);
-
-    if (data.ordine) {
-      state.ordineAperto = data.ordine;
-      applyOrdineToForm(data.ordine);
-      startCountdown(data.ordine.secondiRimanenti);
-      setEditMode(true);
-    }
-
-  } catch (err) {
-    els.loader.textContent = "Errore caricamento dati.";
-    showToast("Errore caricamento dati.");
-  }
-}
-  
-async function init() {
-  const p = new URLSearchParams(window.location.search);
-  state.struttura = p.get("struttura") || "";
-  state.room      = p.get("room") || p.get("camera") || "";
-  state.key       = p.get("key") || "";
-
-  els.roomNumber.textContent    = state.room      ? "Camera " + state.room : "Camera non rilevata";
-  els.structureName.textContent = state.struttura ? state.struttura        : "Struttura non rilevata";
-
-  if (!state.struttura || !state.room || !state.key) {
-    showToast("QR non valido: struttura, camera o codice mancanti.");
-    await loadMenu();
-    return;
-  }
-loadMenuFromCache();
-  await loadInitialData();
-}
-
-  async function loadMenu() {
     try {
-      const res  = await fetch(CONFIG.webAppUrl + "?action=menu");
+      const url = `${CONFIG.webAppUrl}?action=init&struttura=${encodeURIComponent(state.struttura)}&camera=${encodeURIComponent(state.room)}&key=${encodeURIComponent(state.key)}&t=${Date.now()}`;
+      const res = await fetch(url);
       const data = await res.json();
-      if (!data.ok) throw new Error(data.error || "Errore caricamento menù");
+
+      els.loader.style.display = "none"; // Nascondi skeleton al termine
+
+      if (!data.ok) {
+        showToast(data.error || "Errore di caricamento.");
+      }
+
       state.menu = data.menu || [];
       renderMenu(state.menu);
-      saveMenuToCache(state.menu);
+
+      if (data.ordine) {
+        state.ordineAperto = data.ordine;
+        applyOrdineToForm(data.ordine);
+        startCountdown(data.ordine.secondiRimanenti);
+        setEditMode(true);
+      }
+
     } catch (err) {
-      els.loader.textContent = "Errore caricamento menù.";
-      showToast(err.message);
+      els.loader.style.display = "none";
+      showToast("Errore di connessione al server.");
     }
   }
 
   function renderMenu(menu) {
-    els.loader.style.display = "none";
     els.foods.innerHTML = "";
     if (!menu.length) {
-      els.foods.innerHTML = "<div class='loader'>Nessun prodotto disponibile.</div>";
+      els.foods.innerHTML = "<div style='text-align:center; font-size:12px; color:var(--text-soft); margin: 20px 0;'>Nessun prodotto disponibile al momento.</div>";
       return;
     }
     menu.forEach((item, i) => {
       const label = document.createElement("label");
       label.className = "food-card";
       label.innerHTML = `
-        <input type="checkbox" name="food" id="food_${i}" value="${escapeHtml(item.nome)}">
+        <input type="checkbox" name="food" value="${escapeHtml(item.nome)}">
         <div class="food-content">
           <div class="emoji">${escapeHtml(item.emoji || "🍽️")}</div>
           <div class="food-info">
@@ -798,8 +262,6 @@ loadMenuFromCache();
     });
   }
 
-
-
   function applyOrdineToForm(ordine) {
     const p = ordine.prodotti || [];
     document.querySelectorAll('input[name="food"]').forEach(i => { i.checked = p.includes(i.value); });
@@ -810,6 +272,7 @@ loadMenuFromCache();
     els.statusBox.classList.toggle("show", active);
     els.editBtn.classList.toggle("show", active);
     els.sendBtn.textContent = active ? "Nuovo ordine non disponibile" : "Invia ordine colazione";
+    els.sendBtn.style.display = active ? "none" : "block"; // Nasconde il pulsante invia se in edit mode
   }
 
   function startCountdown(seconds) {
@@ -822,6 +285,7 @@ loadMenuFromCache();
         clearInterval(state.countdownInterval);
         state.ordineAperto = null;
         setEditMode(false);
+        els.sendBtn.style.display = "none"; // Non fa inviare un nuovo ordine dopo la scadenza
         updateCountdownText(0);
         showToast("Tempo di modifica scaduto.");
         return;
@@ -837,7 +301,7 @@ loadMenuFromCache();
 
   els.form.addEventListener("submit", async e => {
     e.preventDefault();
-    if (state.ordineAperto) { showToast("Hai già un ordine aperto. Usa il pulsante Modifica ordine."); return; }
+    if (state.ordineAperto) { showToast("Hai già un ordine aperto."); return; }
     await sendOrder("creaOrdine");
   });
 
@@ -860,11 +324,24 @@ loadMenuFromCache();
       setButtonsDisabled(true);
       const res  = await fetch(CONFIG.webAppUrl, { method: "POST", body: JSON.stringify(payload) });
       const data = await res.json();
-      if (!data.ok) { showToast(data.error || "Errore invio ordine."); return; }
-      if (data.ordine) { state.ordineAperto = data.ordine; startCountdown(data.ordine.secondiRimanenti); setEditMode(true); }
+      
+      if (!data.ok) { 
+        showToast(data.error || "Errore invio ordine."); 
+        return; 
+      }
+      
+      if (data.ordine) { 
+        state.ordineAperto = data.ordine; 
+        startCountdown(data.ordine.secondiRimanenti); 
+        setEditMode(true); 
+      }
+      
       showToast(data.message || "Operazione completata.");
-    } catch { showToast("Errore di collegamento. Riprova.");
-    } finally { setButtonsDisabled(false); }
+    } catch { 
+      showToast("Errore di collegamento. Riprova.");
+    } finally { 
+      setButtonsDisabled(false); 
+    }
   }
 
   function setButtonsDisabled(d) {
@@ -873,22 +350,16 @@ loadMenuFromCache();
     els.editBtn.style.opacity = d ? ".55" : "1";
   }
 
-let toastTimer = null;
+  let toastTimer = null;
+  function showToast(msg) {
+    clearTimeout(toastTimer);
+    els.toast.textContent = msg;
+    els.toast.classList.add("show");
+    toastTimer = setTimeout(() => { els.toast.classList.remove("show"); }, 4000);
+  }
 
-function showToast(msg) {
-  clearTimeout(toastTimer);
-
-  els.toast.textContent = msg;
-  els.toast.classList.add("show");
-
-  toastTimer = setTimeout(() => {
-    els.toast.classList.remove("show");
-  }, 4000);
-}
-  
   function escapeHtml(s) {
-    return String(s||"").replaceAll("&","&amp;").replaceAll("<","&lt;")
-      .replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+    return String(s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
   }
 </script>
 </body>
