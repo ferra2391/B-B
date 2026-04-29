@@ -2,252 +2,339 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="theme-color" content="#080808" />
+  <title>LG Estate — Colazione in Camera</title>
 
-  <title>B&B Breakfast Order</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --cream: #fff8ef;
-      --brown: #6b3f25;
-      --brownDark: #321a0e;
-      --gold: #d7a85b;
-      --green: #7fa879;
-      --glass: rgba(255,255,255,0.78);
-      --shadow: 0 22px 60px rgba(80, 45, 20, 0.22);
+      --black:       #080808;
+      --black2:      #0f0f0f;
+      --black3:      #161616;
+      --black4:      #1e1e1e;
+      --gold:        #c8951c;
+      --gold-light:  #e0b84a;
+      --gold-pale:   #f0d48a;
+      --gold-dim:    rgba(200,149,28,0.18);
+      --gold-border: rgba(200,149,28,0.35);
+      --gold-glow:   rgba(200,149,28,0.12);
+      --white:       #ffffff;
+      --white-dim:   rgba(255,255,255,0.06);
+      --white-soft:  rgba(255,255,255,0.85);
+      --text:        rgba(255,255,255,0.88);
+      --text-muted:  rgba(255,255,255,0.45);
+      --text-faint:  rgba(255,255,255,0.25);
+      --radius-sm:   14px;
+      --radius-md:   22px;
+      --radius-lg:   30px;
+      --radius-xl:   40px;
     }
 
-    * {
+    *, *::before, *::after {
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
     }
 
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: "Poppins", sans-serif;
-      color: var(--brownDark);
-      background:
-        radial-gradient(circle at 10% 10%, rgba(255,255,255,0.95), transparent 24%),
-        radial-gradient(circle at 85% 0%, rgba(247,183,163,0.58), transparent 25%),
-        radial-gradient(circle at 90% 90%, rgba(145,184,140,0.35), transparent 25%),
-        linear-gradient(145deg, #fff8ef 0%, #ffe3c2 48%, #f8c9ad 100%);
+      font-family: "Jost", sans-serif;
+      color: var(--text);
+      background: var(--black);
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    .orb {
+    /* ── Background texture & noise ── */
+    body::before {
+      content: "";
       position: fixed;
-      border-radius: 999px;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(200,149,28,0.09) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(200,149,28,0.05) 0%, transparent 50%);
       pointer-events: none;
       z-index: 0;
-      filter: blur(3px);
-      opacity: 0.48;
     }
 
-    .orb.one {
-      width: 260px;
-      height: 260px;
-      left: -90px;
-      top: -80px;
-      background: rgba(215,168,91,0.42);
+    /* ── Grain overlay ── */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      opacity: 0.032;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 180px;
+      pointer-events: none;
+      z-index: 0;
     }
 
-    .orb.two {
-      width: 250px;
-      height: 250px;
-      right: -90px;
-      bottom: -80px;
-      background: rgba(145,184,140,0.42);
-    }
-
+    /* ── Layout ── */
     .page {
       position: relative;
       z-index: 1;
       width: 100%;
-      max-width: 540px;
+      max-width: 520px;
       margin: 0 auto;
-      padding: 26px 18px 36px;
+      padding: 0 0 40px;
     }
 
+    /* ── Hero ── */
     .hero {
       position: relative;
-      min-height: 265px;
       overflow: hidden;
-      border-radius: 38px;
-      padding: 30px 24px 26px;
+      padding: 44px 24px 36px;
       background:
-        linear-gradient(160deg, rgba(255,255,255,0.72), rgba(255,246,233,0.35)),
-        url("https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80");
-      background-size: cover;
-      background-position: center;
-      box-shadow: var(--shadow);
-      color: white;
+        linear-gradient(175deg, rgba(200,149,28,0.04) 0%, transparent 60%),
+        var(--black);
+      border-bottom: 1px solid var(--gold-border);
     }
 
-    .hero::before {
+    .hero::after {
       content: "";
       position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(155deg, rgba(47,24,12,0.85), rgba(91,52,30,0.52), rgba(255,255,255,0.08));
-      z-index: 0;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
     }
 
-    .hero-content {
-      position: relative;
-      z-index: 1;
+    /* decorative corner lines */
+    .hero-corner {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      pointer-events: none;
     }
+    .hero-corner.tl { top: 18px; left: 18px; border-top: 1px solid var(--gold); border-left: 1px solid var(--gold); }
+    .hero-corner.tr { top: 18px; right: 18px; border-top: 1px solid var(--gold); border-right: 1px solid var(--gold); }
 
-    .logo {
-      width: 84px;
-      height: 84px;
-      border-radius: 27px;
-      background: rgba(255,255,255,0.94);
-      color: var(--brown);
+    .brand-logo {
+      width: 120px;
+      height: 120px;
+      border-radius: 24px;
+      border: 1px solid var(--gold-border);
       display: grid;
       place-items: center;
-      font-family: "Playfair Display", serif;
-      font-size: 30px;
-      font-weight: 700;
-      box-shadow: 0 14px 32px rgba(0,0,0,0.2);
-      margin-bottom: 18px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      box-shadow:
+        0 0 0 1px rgba(200,149,28,0.08),
+        0 20px 50px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(200,149,28,0.12);
+      background: #050505;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .brand-logo img {
+      width: 90%;
+      height: 90%;
+      object-fit: contain;
     }
 
     .tag {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 13px;
+      gap: 7px;
+      padding: 5px 12px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.18);
-      backdrop-filter: blur(12px);
-      font-size: 12px;
-      font-weight: 700;
-      margin-bottom: 13px;
+      border: 1px solid var(--gold-border);
+      background: var(--gold-dim);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 14px;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    .tag-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 6px var(--gold);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
     }
 
     h1 {
       margin: 0;
-      font-family: "Playfair Display", serif;
-      font-size: 39px;
-      line-height: 1;
-      letter-spacing: -0.8px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 42px;
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+      color: var(--white);
+      animation: fadeUp 0.6s 0.15s ease both;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--gold-light);
     }
 
     .subtitle {
-      margin: 13px 0 0;
-      font-size: 14px;
-      line-height: 1.55;
-      max-width: 350px;
-      opacity: 0.95;
+      margin: 12px 0 0;
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.65;
+      color: var(--text-muted);
+      max-width: 320px;
+      animation: fadeUp 0.6s 0.2s ease both;
     }
 
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Room Card ── */
     .room-card {
-      margin-top: -30px;
+      margin: 0 16px;
+      transform: translateY(-20px);
       position: relative;
       z-index: 3;
-      background: rgba(255,255,255,0.88);
-      backdrop-filter: blur(18px);
-      border: 1px solid rgba(255,255,255,0.72);
-      border-radius: 28px;
-      padding: 18px;
+      background: var(--black3);
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 16px 42px rgba(72,39,18,0.16);
+      box-shadow:
+        0 0 0 1px rgba(200,149,28,0.06),
+        0 20px 50px rgba(0,0,0,0.5);
+      animation: fadeUp 0.6s 0.25s ease both;
     }
 
     .room-label {
-      font-size: 11px;
-      color: rgba(50,26,14,0.58);
-      font-weight: 800;
+      font-size: 9px;
+      color: var(--gold);
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.9px;
+      letter-spacing: 2px;
+      margin-bottom: 4px;
     }
 
     .room-number {
-      font-size: 25px;
-      font-weight: 900;
-      margin-top: 3px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--white);
+      letter-spacing: 0.3px;
+      line-height: 1.1;
     }
 
     .structure-name {
-      font-size: 13px;
-      font-weight: 700;
-      color: rgba(50,26,14,0.60);
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-muted);
       margin-top: 2px;
+      letter-spacing: 0.3px;
     }
 
     .room-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 21px;
-      background: linear-gradient(145deg, var(--gold), #f1d08c);
+      width: 50px;
+      height: 50px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--gold-border);
+      background: var(--gold-dim);
       display: grid;
       place-items: center;
-      font-size: 26px;
-      box-shadow: 0 10px 26px rgba(215,168,91,0.36);
+      font-size: 22px;
+      box-shadow: inset 0 1px 0 rgba(200,149,28,0.15);
     }
 
+    /* ── Status Box ── */
     .status-box {
       display: none;
-      margin-top: 16px;
-      padding: 15px;
-      border-radius: 24px;
-      background: rgba(255,255,255,0.78);
-      box-shadow: 0 12px 32px rgba(84,47,21,0.10);
-      border: 1px solid rgba(255,255,255,0.75);
+      margin: 0 16px 4px;
+      padding: 16px 18px;
+      border-radius: var(--radius-md);
+      background: var(--black3);
+      border: 1px solid rgba(200,149,28,0.55);
+      box-shadow:
+        0 0 30px rgba(200,149,28,0.08),
+        0 10px 30px rgba(0,0,0,0.3);
     }
 
-    .status-box.show {
-      display: block;
-    }
+    .status-box.show { display: block; }
 
     .status-title {
-      font-size: 13px;
-      font-weight: 900;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gold-light);
       margin-bottom: 6px;
     }
 
     .countdown {
-      font-size: 26px;
-      font-weight: 900;
-      color: var(--brown);
+      font-family: "Cormorant Garamond", serif;
+      font-size: 36px;
+      font-weight: 500;
+      color: var(--gold-light);
+      letter-spacing: 2px;
+      line-height: 1;
     }
 
     .status-note {
-      margin-top: 5px;
-      font-size: 12px;
-      color: rgba(50,26,14,0.58);
-      line-height: 1.45;
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      font-weight: 300;
     }
 
+    /* ── Section title ── */
     .section-title {
-      margin: 26px 4px 14px;
+      margin: 4px 16px 14px;
       display: flex;
       justify-content: space-between;
-      align-items: end;
+      align-items: flex-end;
       gap: 10px;
     }
 
     .section-title h2 {
       margin: 0;
-      font-family: "Playfair Display", serif;
-      font-size: 28px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 30px;
+      font-weight: 600;
+      color: var(--white);
+      letter-spacing: -0.3px;
     }
 
     .section-title span {
-      font-size: 12px;
-      color: rgba(50,26,14,0.58);
-      font-weight: 700;
-      text-align: right;
+      font-size: 10px;
+      color: var(--text-faint);
+      font-weight: 500;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding-bottom: 5px;
     }
 
+    /* ── Food cards ── */
     .foods {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 13px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 0 16px;
     }
 
     .food-card input {
@@ -256,107 +343,150 @@
 
     .food-content {
       cursor: pointer;
-      border-radius: 25px;
-      background: var(--glass);
-      border: 1px solid rgba(255,255,255,0.78);
-      padding: 15px;
+      border-radius: var(--radius-md);
+      background: var(--black3);
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 14px;
       display: flex;
       gap: 14px;
       align-items: center;
-      box-shadow: 0 12px 31px rgba(84,47,21,0.10);
-      transition: 0.22s ease;
+      transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+      -webkit-user-select: none;
+      user-select: none;
     }
 
-    .food-content:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 16px 36px rgba(84,47,21,0.15);
+    .food-content:active {
+      transform: scale(0.99);
+    }
+
+    @media (hover: hover) {
+      .food-content:hover {
+        border-color: var(--gold-border);
+        box-shadow: 0 0 0 1px var(--gold-dim);
+      }
     }
 
     .food-card input:checked + .food-content {
-      background: linear-gradient(145deg, rgba(255,255,255,0.97), rgba(255,244,224,0.96));
-      border: 2px solid var(--gold);
-      transform: scale(1.012);
+      background: var(--black4);
+      border-color: var(--gold);
+      box-shadow:
+        0 0 0 1px rgba(200,149,28,0.15),
+        0 10px 30px rgba(0,0,0,0.3),
+        inset 0 0 30px rgba(200,149,28,0.04);
     }
 
     .emoji {
-      width: 59px;
-      height: 59px;
-      min-width: 59px;
-      border-radius: 23px;
+      width: 54px;
+      height: 54px;
+      min-width: 54px;
+      border-radius: var(--radius-sm);
       display: grid;
       place-items: center;
-      font-size: 30px;
-      background: linear-gradient(145deg, #fff1dc, #ffd7bc);
+      font-size: 26px;
+      background: var(--black4);
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: border-color 0.2s ease;
+    }
+
+    .food-card input:checked + .food-content .emoji {
+      border-color: var(--gold-border);
+      background: var(--gold-dim);
+    }
+
+    .food-info {
+      flex: 1;
+      min-width: 0;
     }
 
     .food-title {
-      font-weight: 900;
-      font-size: 15px;
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 600;
+      font-size: 17px;
+      color: var(--white);
       margin-bottom: 3px;
+      line-height: 1.2;
     }
 
     .food-desc {
-      font-size: 12px;
-      line-height: 1.4;
-      color: rgba(50,26,14,0.62);
+      font-size: 11px;
+      font-weight: 300;
+      line-height: 1.45;
+      color: var(--text-muted);
     }
 
+    /* Check circle */
     .check {
       margin-left: auto;
-      width: 27px;
-      height: 27px;
-      min-width: 27px;
-      border-radius: 999px;
-      border: 2px solid rgba(107,63,37,0.18);
+      width: 26px;
+      height: 26px;
+      min-width: 26px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.15);
       display: grid;
       place-items: center;
-      font-size: 14px;
-      color: white;
-      transition: 0.2s ease;
+      font-size: 12px;
+      color: transparent;
+      transition: all 0.2s ease;
+      background: transparent;
     }
 
     .food-card input:checked + .food-content .check {
-      background: var(--green);
-      border-color: var(--green);
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #000;
+      box-shadow: 0 0 12px rgba(200,149,28,0.4);
     }
 
+    /* ── Textarea ── */
     textarea {
-      margin-top: 16px;
-      width: 100%;
-      min-height: 96px;
+      margin: 14px 16px 0;
+      width: calc(100% - 32px);
+      min-height: 88px;
       resize: none;
-      border: 0;
+      border: 1px solid rgba(255,255,255,0.08);
       outline: none;
-      border-radius: 25px;
-      padding: 16px;
-      font-family: "Poppins", sans-serif;
-      font-size: 14px;
-      background: rgba(255,255,255,0.80);
-      box-shadow: 0 12px 31px rgba(84,47,21,0.10);
-      color: var(--brownDark);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      font-family: "Jost", sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      background: var(--black3);
+      color: var(--white);
+      transition: border-color 0.2s ease;
+      display: block;
+      -webkit-appearance: none;
     }
 
     textarea::placeholder {
-      color: rgba(50,26,14,0.43);
+      color: var(--text-faint);
     }
 
+    textarea:focus {
+      border-color: var(--gold-border);
+      box-shadow: 0 0 0 1px var(--gold-dim);
+    }
+
+    /* ── Actions ── */
     .actions {
-      display: grid;
-      grid-template-columns: 1fr;
+      display: flex;
+      flex-direction: column;
       gap: 10px;
-      margin-top: 18px;
+      margin: 14px 16px 0;
     }
 
     button {
       width: 100%;
       border: none;
-      border-radius: 25px;
-      padding: 17px 20px;
-      font-family: "Poppins", sans-serif;
-      font-size: 15px;
-      font-weight: 900;
+      border-radius: var(--radius-sm);
+      padding: 16px 20px;
+      font-family: "Jost", sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
       cursor: pointer;
-      transition: 0.22s ease;
+      transition: all 0.2s ease;
+      -webkit-appearance: none;
     }
 
     button:active {
@@ -364,61 +494,99 @@
     }
 
     .send-btn {
-      color: white;
-      background: linear-gradient(135deg, var(--brownDark), var(--brown), var(--gold));
-      box-shadow: 0 18px 39px rgba(74,39,18,0.32);
+      color: #000;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      box-shadow:
+        0 0 0 1px rgba(200,149,28,0.3),
+        0 16px 40px rgba(200,149,28,0.2);
+    }
+
+    .send-btn:hover {
+      box-shadow:
+        0 0 0 1px rgba(200,149,28,0.5),
+        0 16px 40px rgba(200,149,28,0.3);
     }
 
     .edit-btn {
       display: none;
-      color: var(--brownDark);
-      background: rgba(255,255,255,0.78);
-      border: 1px solid rgba(255,255,255,0.80);
-      box-shadow: 0 12px 30px rgba(84,47,21,0.12);
+      color: var(--gold-light);
+      background: var(--black3);
+      border: 1px solid var(--gold-border);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
 
     .edit-btn.show {
       display: block;
     }
 
+    /* ── Small note ── */
     .small-note {
-      margin-top: 10px;
+      margin: 10px 16px 0;
       text-align: center;
-      font-size: 12px;
-      line-height: 1.45;
-      color: rgba(50,26,14,0.58);
+      font-size: 11px;
+      font-weight: 300;
+      line-height: 1.55;
+      color: var(--text-faint);
     }
 
+    /* ── Loader ── */
     .loader {
       margin: 22px 0;
       text-align: center;
-      font-size: 13px;
-      color: rgba(50,26,14,0.62);
-      font-weight: 700;
-    }
-
-    .footer {
-      margin-top: 19px;
-      text-align: center;
       font-size: 12px;
-      color: rgba(50,26,14,0.55);
+      font-weight: 400;
+      letter-spacing: 1px;
+      color: var(--text-muted);
     }
 
+    /* ── Divider ── */
+    .gold-divider {
+      margin: 20px 16px 18px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-border), transparent);
+    }
+
+    /* ── Footer ── */
+    .footer {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-faint);
+    }
+
+    .footer-logo {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 13px;
+      font-style: italic;
+      color: var(--gold-border);
+      display: block;
+      margin-bottom: 3px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Toast ── */
     .toast {
       position: fixed;
       left: 50%;
-      bottom: 22px;
-      transform: translateX(-50%) translateY(130px);
-      width: calc(100% - 34px);
-      max-width: 480px;
-      padding: 16px 18px;
-      border-radius: 23px;
-      background: rgba(50,26,14,0.96);
-      color: white;
-      box-shadow: 0 16px 44px rgba(0,0,0,0.24);
-      font-size: 14px;
-      z-index: 30;
-      transition: 0.3s ease;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(120px);
+      width: calc(100% - 32px);
+      max-width: 460px;
+      padding: 14px 18px;
+      border-radius: var(--radius-sm);
+      background: var(--black3);
+      border: 1px solid var(--gold-border);
+      color: var(--white);
+      box-shadow:
+        0 0 0 1px var(--gold-dim),
+        0 20px 50px rgba(0,0,0,0.6);
+      font-size: 13px;
+      font-weight: 400;
+      z-index: 50;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       text-align: center;
     }
 
@@ -426,61 +594,52 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    .brand-logo {
-  width: 150px;
-  height: 150px;
-  border-radius: 34px;
-  background: #051d0e;
-  border: 1px solid rgba(200,149,28,0.65);
-  display: grid;
-  place-items: center;
-  box-shadow: 0 18px 44px rgba(0,0,0,0.30);
-  margin-bottom: 20px;
-  overflow: hidden;
-}
-
-.brand-logo img {
-  width: 88%;
-  height: 88%;
-  object-fit: contain;
-}
-
+    /* ── Desktop ── */
     @media (min-width: 600px) {
-      .page {
-        padding-top: 40px;
-      }
-
-      h1 {
-        font-size: 43px;
-      }
+      .page { padding-bottom: 56px; }
+      .hero  { padding: 56px 32px 44px; }
+      h1     { font-size: 52px; }
+      .room-card { margin: 0 24px; }
+      .section-title,
+      .foods,
+      .actions { padding-left: 24px; padding-right: 24px; }
+      .section-title { margin-left: 24px; margin-right: 24px; }
+      .gold-divider { margin-left: 24px; margin-right: 24px; }
+      .small-note { margin-left: 24px; margin-right: 24px; }
+      textarea { margin-left: 24px; margin-right: 24px; width: calc(100% - 48px); }
     }
   </style>
 </head>
 
 <body>
-  <div class="orb one"></div>
-  <div class="orb two"></div>
 
   <main class="page">
 
     <section class="hero">
-      <div class="hero-content">
-        <div class="brand-logo">
-  <img src="assets/logo-lg-estate.png" alt="LG Estate">
-</div>
-        <div class="tag">☕ Colazione in camera</div>
-        <h1>Buongiorno,<br>scegli la tua colazione</h1>
-        <p class="subtitle">
-          Seleziona cosa desideri ricevere. Il tuo ordine sarà inviato direttamente alla reception.
-        </p>
+      <div class="hero-corner tl"></div>
+      <div class="hero-corner tr"></div>
+
+      <div class="brand-logo">
+        <img src="assets/logo-lg-estate.png" alt="LG Estate">
       </div>
+
+      <div class="tag">
+        <span class="tag-dot"></span>
+        Colazione in camera
+      </div>
+
+      <h1>Buongiorno,<br><em>scegli la tua<br>colazione</em></h1>
+
+      <p class="subtitle">
+        Seleziona cosa desideri ricevere. Il tuo ordine sarà inviato direttamente alla reception.
+      </p>
     </section>
 
     <section class="room-card">
       <div>
         <div class="room-label">Camera rilevata</div>
-        <div class="room-number" id="roomNumber">Camera --</div>
-        <div class="structure-name" id="structureName">Struttura --</div>
+        <div class="room-number" id="roomNumber">Camera —</div>
+        <div class="structure-name" id="structureName">Struttura —</div>
       </div>
       <div class="room-icon">🛎️</div>
     </section>
@@ -489,9 +648,11 @@
       <div class="status-title">Ordine ancora modificabile</div>
       <div class="countdown" id="countdown">10:00</div>
       <div class="status-note">
-        Puoi modificare l’ordine entro 10 minuti dall’invio. Dopo questo tempo sarà considerato confermato.
+        Puoi modificare l'ordine entro 10 minuti dall'invio. Dopo questo tempo sarà considerato confermato.
       </div>
     </section>
+
+    <div class="gold-divider"></div>
 
     <div class="section-title">
       <h2>Menù breakfast</h2>
@@ -499,24 +660,26 @@
     </div>
 
     <form id="breakfastForm">
-      <div id="loader" class="loader">Caricamento menù...</div>
+      <div id="loader" class="loader">Caricamento menù…</div>
       <div class="foods" id="foods"></div>
 
-      <textarea id="notes" placeholder="Note o richieste particolari... es. senza lattosio, orario preferito, allergie"></textarea>
+      <textarea id="notes" placeholder="Note o richieste particolari… es. senza lattosio, orario preferito, allergie"></textarea>
 
       <div class="actions">
-        <button class="send-btn" id="sendBtn" type="submit">Invia ordine colazione ✨</button>
+        <button class="send-btn" id="sendBtn" type="submit">Invia ordine colazione</button>
         <button class="edit-btn" id="editBtn" type="button">Modifica ordine</button>
       </div>
 
-      <div class="small-note">
-        È consentito un solo ordine al giorno per camera. L’ordine può essere modificato entro 10 minuti dall’invio.
-      </div>
+      <p class="small-note">
+        È consentito un solo ordine al giorno per camera. L'ordine può essere modificato entro 10 minuti dall'invio.
+      </p>
     </form>
 
     <div class="footer">
-      B&B Breakfast · Interfaccia V3
+      <span class="footer-logo">LG Estate — Residenze nelle Marche</span>
+      Breakfast Ordering · V3
     </div>
+
   </main>
 
   <div class="toast" id="toast"></div>
@@ -537,17 +700,17 @@
     };
 
     const els = {
-      roomNumber: document.getElementById("roomNumber"),
+      roomNumber:    document.getElementById("roomNumber"),
       structureName: document.getElementById("structureName"),
-      foods: document.getElementById("foods"),
-      loader: document.getElementById("loader"),
-      notes: document.getElementById("notes"),
-      form: document.getElementById("breakfastForm"),
-      sendBtn: document.getElementById("sendBtn"),
-      editBtn: document.getElementById("editBtn"),
-      toast: document.getElementById("toast"),
-      statusBox: document.getElementById("statusBox"),
-      countdown: document.getElementById("countdown")
+      foods:         document.getElementById("foods"),
+      loader:        document.getElementById("loader"),
+      notes:         document.getElementById("notes"),
+      form:          document.getElementById("breakfastForm"),
+      sendBtn:       document.getElementById("sendBtn"),
+      editBtn:       document.getElementById("editBtn"),
+      toast:         document.getElementById("toast"),
+      statusBox:     document.getElementById("statusBox"),
+      countdown:     document.getElementById("countdown")
     };
 
     init();
@@ -556,11 +719,11 @@
       const params = new URLSearchParams(window.location.search);
 
       state.struttura = params.get("struttura") || "";
-      state.room = params.get("room") || params.get("camera") || "";
-      state.key = params.get("key") || "";
+      state.room      = params.get("room") || params.get("camera") || "";
+      state.key       = params.get("key") || "";
 
-      els.roomNumber.textContent = state.room ? "Camera " + state.room : "Camera non rilevata";
-      els.structureName.textContent = state.struttura ? state.struttura : "Struttura non rilevata";
+      els.roomNumber.textContent    = state.room      ? "Camera " + state.room : "Camera non rilevata";
+      els.structureName.textContent = state.struttura ? state.struttura        : "Struttura non rilevata";
 
       if (!state.struttura || !state.room || !state.key) {
         showToast("QR non valido: struttura, camera o codice mancanti.");
@@ -573,7 +736,7 @@
     async function loadMenu() {
       try {
         const url = CONFIG.webAppUrl + "?action=menu";
-        const res = await fetch(url);
+        const res  = await fetch(url);
         const data = await res.json();
 
         if (!data.ok) throw new Error(data.error || "Errore caricamento menù");
@@ -597,8 +760,7 @@
       }
 
       menu.forEach((item, index) => {
-        const id = "food_" + index;
-
+        const id    = "food_" + index;
         const label = document.createElement("label");
         label.className = "food-card";
 
@@ -606,7 +768,7 @@
           <input type="checkbox" name="food" id="${id}" value="${escapeHtml(item.nome)}">
           <div class="food-content">
             <div class="emoji">${escapeHtml(item.emoji || "🍽️")}</div>
-            <div>
+            <div class="food-info">
               <div class="food-title">${escapeHtml(item.nome)}</div>
               <div class="food-desc">${escapeHtml(item.descrizione || "")}</div>
             </div>
@@ -626,10 +788,10 @@
           CONFIG.webAppUrl +
           "?action=ordineAperto" +
           "&struttura=" + encodeURIComponent(state.struttura) +
-          "&camera=" + encodeURIComponent(state.room) +
-          "&key=" + encodeURIComponent(state.key);
+          "&camera="    + encodeURIComponent(state.room) +
+          "&key="       + encodeURIComponent(state.key);
 
-        const res = await fetch(url);
+        const res  = await fetch(url);
         const data = await res.json();
 
         if (!data.ok) {
@@ -651,11 +813,9 @@
 
     function applyOrdineToForm(ordine) {
       const prodotti = ordine.prodotti || [];
-
       document.querySelectorAll('input[name="food"]').forEach(input => {
         input.checked = prodotti.includes(input.value);
       });
-
       els.notes.value = ordine.note || "";
     }
 
@@ -667,20 +827,17 @@
       } else {
         els.statusBox.classList.remove("show");
         els.editBtn.classList.remove("show");
-        els.sendBtn.textContent = "Invia ordine colazione ✨";
+        els.sendBtn.textContent = "Invia ordine colazione";
       }
     }
 
     function startCountdown(seconds) {
       clearInterval(state.countdownInterval);
-
       let remaining = Math.max(0, Number(seconds || 0));
-
       updateCountdownText(remaining);
 
       state.countdownInterval = setInterval(() => {
         remaining--;
-
         if (remaining <= 0) {
           clearInterval(state.countdownInterval);
           state.ordineAperto = null;
@@ -689,7 +846,6 @@
           showToast("Tempo di modifica scaduto.");
           return;
         }
-
         updateCountdownText(remaining);
       }, 1000);
     }
@@ -697,17 +853,15 @@
     function updateCountdownText(seconds) {
       const m = Math.floor(seconds / 60);
       const s = seconds % 60;
-      els.countdown.textContent = `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+      els.countdown.textContent = `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
     }
 
     els.form.addEventListener("submit", async function(e) {
       e.preventDefault();
-
       if (state.ordineAperto) {
         showToast("Hai già un ordine aperto. Usa il pulsante Modifica ordine.");
         return;
       }
-
       await sendOrder("creaOrdine");
     });
 
@@ -716,60 +870,40 @@
         showToast("Nessun ordine modificabile trovato.");
         return;
       }
-
       await sendOrder("modificaOrdine");
     });
 
     async function sendOrder(action) {
       const prodotti = Array.from(document.querySelectorAll('input[name="food"]:checked'))
         .map(input => input.value);
-
       const note = els.notes.value.trim();
 
       if (!state.struttura || !state.room || !state.key) {
         showToast("QR non valido: struttura, camera o codice mancanti.");
         return;
       }
-
       if (!prodotti.length) {
         showToast("Seleziona almeno una voce per la colazione.");
         return;
       }
 
-      const payload = {
-        action,
-        struttura: state.struttura,
-        camera: state.room,
-        key: state.key,
-        prodotti,
-        note
-      };
-
-      if (action === "modificaOrdine") {
-        payload.orderId = state.ordineAperto.orderId;
-      }
+      const payload = { action, struttura: state.struttura, camera: state.room, key: state.key, prodotti, note };
+      if (action === "modificaOrdine") payload.orderId = state.ordineAperto.orderId;
 
       try {
         setButtonsDisabled(true);
-
-        const res = await fetch(CONFIG.webAppUrl, {
-          method: "POST",
-          body: JSON.stringify(payload)
-        });
-
+        const res  = await fetch(CONFIG.webAppUrl, { method: "POST", body: JSON.stringify(payload) });
         const data = await res.json();
 
         if (!data.ok) {
           showToast(data.error || "Errore invio ordine.");
           return;
         }
-
         if (data.ordine) {
           state.ordineAperto = data.ordine;
           startCountdown(data.ordine.secondiRimanenti);
           setEditMode(true);
         }
-
         showToast(data.message || "Operazione completata.");
 
       } catch (err) {
@@ -782,18 +916,14 @@
     function setButtonsDisabled(disabled) {
       els.sendBtn.disabled = disabled;
       els.editBtn.disabled = disabled;
-
-      els.sendBtn.style.opacity = disabled ? "0.65" : "1";
-      els.editBtn.style.opacity = disabled ? "0.65" : "1";
+      els.sendBtn.style.opacity = disabled ? "0.55" : "1";
+      els.editBtn.style.opacity = disabled ? "0.55" : "1";
     }
 
     function showToast(message) {
       els.toast.textContent = message;
       els.toast.classList.add("show");
-
-      setTimeout(() => {
-        els.toast.classList.remove("show");
-      }, 3300);
+      setTimeout(() => els.toast.classList.remove("show"), 3300);
     }
 
     function escapeHtml(str) {
