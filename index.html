@@ -17,13 +17,13 @@
       --cream: #faf6ef; --cream2: #f3ece0; --cream3: #e8dece;
       --card-bg: #ffffff; --text-dark: #1a130a; --text-soft: #a08060;
       --text-mid: #6b5a3e;
-      --r-md: 31px; /* Aumentato */
-      --r-lg: 44px; /* Aumentato */
+      --r-md: 31px;
+      --r-lg: 44px;
     }
 
     *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body { margin: 0; min-height: 100vh; font-family: "Jost", sans-serif; background: var(--cream); color: var(--text-dark); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
-    .page { max-width: 680px; /* Aumentato per non far schiacciare gli elementi giganti */ margin: 0 auto; padding-bottom: 78px; }
+    .page { max-width: 680px; margin: 0 auto; padding-bottom: 78px; }
 
     /* SPLASH SCREEN INTRO */
     .splash-screen {
@@ -35,13 +35,13 @@
     }
     .splash-screen.hidden { opacity: 0; transform: scale(1.15); visibility: hidden; pointer-events: none; }
     .splash-logo {
-      width: 100%; max-width: 450px; /* Aumentato */
+      width: 100%; max-width: 450px;
       height: auto; margin-bottom: 62px;
       filter: drop-shadow(0 0 32px rgba(200,149,28,0.15));
       animation: pulseLogo 2.5s infinite alternate ease-in-out;
     }
     .splash-text {
-      font-family: "Cormorant Garamond", serif; font-size: 50px; /* Aumentato */
+      font-family: "Cormorant Garamond", serif; font-size: 50px;
       color: var(--gold-bright); font-style: italic; line-height: 1.15;
       opacity: 0; animation: fadeTextIn 1s 0.6s forwards;
     }
@@ -53,55 +53,55 @@
     .hero::before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(200,149,28,0.09) 0%, transparent 70%); z-index: 1; }
     .hero::after { content: ""; position: absolute; bottom: 0; left: 10%; right: 10%; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-border), transparent); z-index: 2; }
     .hero-inner { position: relative; z-index: 3; width: 100%; padding: 0 34px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 22px; }
-    .brand-logo-wide { width: 100%; max-width: 480px; /* Aumentato */ height: auto; display: block; filter: drop-shadow(0 0 52px rgba(200,149,28,0.22)); }
-    .tag { display: inline-flex; align-items: center; gap: 10px; padding: 8px 22px; border-radius: 999px; border: 1.5px solid var(--gold-border); background: rgba(200,149,28,0.14); backdrop-filter: blur(10px); font-size: 15px; /* Aumentato */ font-weight: 600; letter-spacing: 2.6px; text-transform: uppercase; color: var(--gold-bright); }
+    .brand-logo-wide { width: 100%; max-width: 480px; height: auto; display: block; filter: drop-shadow(0 0 52px rgba(200,149,28,0.22)); }
+    .tag { display: inline-flex; align-items: center; gap: 10px; padding: 8px 22px; border-radius: 999px; border: 1.5px solid var(--gold-border); background: rgba(200,149,28,0.14); backdrop-filter: blur(10px); font-size: 15px; font-weight: 600; letter-spacing: 2.6px; text-transform: uppercase; color: var(--gold-bright); }
     
     .room-card { position: relative; z-index: 10; margin: -52px 20px 0; background: var(--card-bg); border: 1.5px solid var(--cream3); border-radius: var(--r-lg); padding: 25px 28px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 26px 65px rgba(26,19,10,0.14); }
-    .room-label { font-size: 14px; /* Aumentato */ color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: 2.8px; margin-bottom: 5px; }
-    .room-number { font-family: "Cormorant Garamond", serif; font-size: 34px; /* Aumentato */ font-weight: 600; line-height: 1.1; }
-    .structure-name { font-size: 17px; /* Aumentato */ color: var(--text-soft); margin-top: 3px; }
-    .room-icon { width: 78px; height: 78px; /* Aumentato */ border-radius: 22px; background: linear-gradient(135deg, #fdf0d5, #f5d98a); border: 1.5px solid rgba(200,149,28,0.28); display: grid; place-items: center; font-size: 34px; /* Aumentato */ box-shadow: 0 8px 23px rgba(200,149,28,0.18); }
+    .room-label { font-size: 14px; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: 2.8px; margin-bottom: 5px; }
+    .room-number { font-family: "Cormorant Garamond", serif; font-size: 34px; font-weight: 600; line-height: 1.1; }
+    .structure-name { font-size: 17px; color: var(--text-soft); margin-top: 3px; }
+    .room-icon { width: 78px; height: 78px; border-radius: 22px; background: linear-gradient(135deg, #fdf0d5, #f5d98a); border: 1.5px solid rgba(200,149,28,0.28); display: grid; place-items: center; font-size: 34px; box-shadow: 0 8px 23px rgba(200,149,28,0.18); }
 
     /* GREETING */
     .greeting-band { margin: 31px 20px 0; padding: 31px 34px; background: linear-gradient(135deg, var(--dark), #231a0c 80%, #2e2008); border-radius: var(--r-lg); box-shadow: 0 15px 46px rgba(12,10,6,0.18); position: relative; overflow: hidden; }
     .greeting-band::before { content: ""; position: absolute; top: 15px; right: 15px; width: 49px; height: 49px; border-top: 1.5px solid var(--gold-border); border-right: 1.5px solid var(--gold-border); }
     .greeting-band::after { content: ""; position: absolute; bottom: 15px; left: 15px; width: 49px; height: 49px; border-bottom: 1.5px solid var(--gold-border); border-left: 1.5px solid var(--gold-border); }
-    .greeting-band h1 { margin: 0 0 13px; font-family: "Cormorant Garamond", serif; font-size: 42px; /* Aumentato */ font-weight: 600; line-height: 1.1; color: #fff; }
+    .greeting-band h1 { margin: 0 0 13px; font-family: "Cormorant Garamond", serif; font-size: 42px; font-weight: 600; line-height: 1.1; color: #fff; }
     .greeting-band h1 em { font-style: italic; color: var(--gold-bright); }
-    .greeting-band p { margin: 0; font-size: 18px; /* Aumentato */ font-weight: 400; color: rgba(255,255,255,0.9); line-height: 1.5; }
-    .greeting-band .rules { margin-top: 15px; padding-top: 15px; border-top: 1.5px solid rgba(200,149,28,0.3); font-size: 17px; /* Aumentato */ font-weight: 300; color: var(--gold-bright); line-height: 1.5; }
+    .greeting-band p { margin: 0; font-size: 18px; font-weight: 400; color: rgba(255,255,255,0.9); line-height: 1.5; }
+    .greeting-band .rules { margin-top: 15px; padding-top: 15px; border-top: 1.5px solid rgba(200,149,28,0.3); font-size: 17px; font-weight: 300; color: var(--gold-bright); line-height: 1.5; }
 
     /* SECTION TITLE */
     .divider { margin: 37px 20px 0; height: 1.5px; background: linear-gradient(90deg, transparent, var(--cream3), transparent); }
-    .category-title { margin: 31px 20px 18px; font-family: "Cormorant Garamond", serif; font-size: 34px; /* Aumentato */ font-weight: 600; color: var(--gold); border-left: 5px solid var(--gold); padding-left: 15px; line-height: 1.1;}
+    .category-title { margin: 31px 20px 18px; font-family: "Cormorant Garamond", serif; font-size: 34px; font-weight: 600; color: var(--gold); border-left: 5px solid var(--gold); padding-left: 15px; line-height: 1.1;}
 
-    /* FOOD CARDS WITH SELECT */
+    /* FOOD CARDS WITH SELECT (ULTERIORE +30%) */
     .foods { display: flex; flex-direction: column; gap: 15px; padding: 0 20px; margin-bottom: 23px;}
     .food-card { position: relative; }
     .food-card input[type="checkbox"] { display: none; }
     
-    .food-content { cursor: pointer; border-radius: var(--r-md); background: var(--card-bg); border: 2px solid var(--cream3); padding: 18px 22px; /* Aumentato */ display: flex; gap: 20px; align-items: center; transition: all .2s ease; user-select: none; box-shadow: 0 3px 13px rgba(26,19,10,0.06); }
+    .food-content { cursor: pointer; border-radius: var(--r-md); background: var(--card-bg); border: 2px solid var(--cream3); padding: 23px 29px; /* Ancora più grande */ display: flex; gap: 26px; /* Aumentato */ align-items: center; transition: all .2s ease; user-select: none; box-shadow: 0 3px 13px rgba(26,19,10,0.06); }
     .food-content:active { transform: scale(0.985); }
     
     .food-card.disabled .food-content { opacity: 0.5; filter: grayscale(100%); pointer-events: none; }
 
     .food-card input:checked + .food-content { border-color: var(--gold); background: #fffbf2; box-shadow: 0 0 0 2px rgba(200,149,28,0.15), 0 8px 31px rgba(200,149,28,0.12); }
-    .emoji { width: 62px; height: 62px; /* Aumentato */ min-width: 62px; border-radius: 18px; display: grid; place-items: center; font-size: 28px; /* Aumentato */ background: var(--cream2); border: 1.5px solid var(--cream3); transition: all .2s; }
+    .emoji { width: 80px; height: 80px; /* Aumentato massivamente */ min-width: 80px; border-radius: 23px; display: grid; place-items: center; font-size: 36px; /* Aumentato */ background: var(--cream2); border: 1.5px solid var(--cream3); transition: all .2s; }
     .food-card input:checked + .food-content .emoji { background: #fdf0d5; border-color: rgba(200,149,28,0.3); }
     
     .food-info { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
-    .food-title { font-family: "Cormorant Garamond", serif; font-weight: 600; font-size: 25px; /* Aumentato */ line-height: 1.2; color: var(--text-dark); }
+    .food-title { font-family: "Cormorant Garamond", serif; font-weight: 600; font-size: 32px; /* Aumentato */ line-height: 1.2; color: var(--text-dark); }
     
-    /* MENU A TENDINA MIGLIORATO E SUPER INGRANDITO */
+    /* MENU A TENDINA PRODOTTI (+30%) */
     .food-select { 
-      margin-top: 9px; 
+      margin-top: 10px; 
       font-family: "Jost", sans-serif; 
-      font-size: 17px; /* Aumentato */
+      font-size: 22px; /* Aumentato da 17px */
       color: var(--text-mid); 
       background-color: var(--cream);
       border: 2px solid var(--cream3); 
-      border-radius: 13px;
-      padding: 10px 46px 10px 15px; /* Aumentato */
+      border-radius: 16px;
+      padding: 13px 60px 13px 20px; /* Aumentato da 10px 46px 10px 15px */
       width: fit-content; 
       max-width: 100%;
       outline: none; 
@@ -111,8 +111,8 @@
       -webkit-appearance: none; 
       background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23a08060%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E"); 
       background-repeat: no-repeat; 
-      background-position: right 13px center; 
-      background-size: 22px auto; /* Aumentato */
+      background-position: right 18px center; /* Spostata la freccia a destra */
+      background-size: 28px auto; /* Freccia più grande */
       transition: all 0.2s ease;
       box-shadow: 0 3px 6px rgba(0,0,0,0.02);
     }
@@ -125,42 +125,42 @@
     }
     .food-select:focus { border-color: var(--gold); }
 
-    .check { margin-left: auto; width: 40px; height: 40px; /* Aumentato */ min-width: 40px; border-radius: 50%; border: 2px solid var(--cream3); display: grid; place-items: center; font-size: 18px; /* Aumentato */ color: transparent; transition: all .2s ease; }
+    .check { margin-left: auto; width: 52px; height: 52px; /* Aumentato da 40px */ min-width: 52px; border-radius: 50%; border: 2px solid var(--cream3); display: grid; place-items: center; font-size: 23px; /* Aumentato */ color: transparent; transition: all .2s ease; }
     .food-card input:checked + .food-content .check { background: var(--gold); border-color: var(--gold); color: #fff; box-shadow: 0 0 15px rgba(200,149,28,0.35); }
 
     /* LIMIT COUNTER */
-    .limit-counter { margin: 15px 20px 23px; padding: 15px; background: rgba(200,149,28,0.1); border-radius: 15px; text-align: center; font-size: 18px; /* Aumentato */ font-weight: 500; color: var(--gold); border: 2px dashed var(--gold-border); transition: 0.3s;}
+    .limit-counter { margin: 15px 20px 23px; padding: 15px; background: rgba(200,149,28,0.1); border-radius: 15px; text-align: center; font-size: 18px; font-weight: 500; color: var(--gold); border: 2px dashed var(--gold-border); transition: 0.3s;}
     .limit-counter.maxed { background: #ffebeb; color: #d32f2f; border-color: #f4c2c2; }
 
     /* STATUS & BUTTONS */
-    .status-box { display: none; margin: 18px 20px 0; padding: 22px 28px; /* Aumentato */ border-radius: var(--r-md); background: #fff8eb; border: 2px solid rgba(200,149,28,0.45); box-shadow: 0 8px 26px rgba(200,149,28,0.10); }
+    .status-box { display: none; margin: 18px 20px 0; padding: 22px 28px; border-radius: var(--r-md); background: #fff8eb; border: 2px solid rgba(200,149,28,0.45); box-shadow: 0 8px 26px rgba(200,149,28,0.10); }
     .status-box.show { display: block; }
-    .status-title { font-size: 14px; /* Aumentato */ font-weight: 600; letter-spacing: 2.3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
-    .countdown { font-family: "Cormorant Garamond", serif; font-size: 53px; /* Aumentato */ font-weight: 600; line-height: 1; letter-spacing: 2.6px; }
-    .status-note { margin-top: 8px; font-size: 17px; /* Aumentato */ color: var(--text-soft); line-height: 1.5; font-weight: 300; }
+    .status-title { font-size: 14px; font-weight: 600; letter-spacing: 2.3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .countdown { font-family: "Cormorant Garamond", serif; font-size: 53px; font-weight: 600; line-height: 1; letter-spacing: 2.6px; }
+    .status-note { margin-top: 8px; font-size: 17px; color: var(--text-soft); line-height: 1.5; font-weight: 300; }
     
-    textarea { display: block; margin: 18px 20px 0; width: calc(100% - 40px); min-height: 130px; /* Aumentato */ resize: none; border: 2px solid var(--cream3); outline: none; border-radius: var(--r-md); padding: 20px 23px; /* Aumentato */ font-family: "Jost", sans-serif; font-size: 20px; /* Aumentato */ font-weight: 300; background: var(--card-bg); color: var(--text-dark); box-shadow: 0 3px 13px rgba(26,19,10,0.05); transition: border-color .2s; }
+    textarea { display: block; margin: 18px 20px 0; width: calc(100% - 40px); min-height: 130px; resize: none; border: 2px solid var(--cream3); outline: none; border-radius: var(--r-md); padding: 20px 23px; font-family: "Jost", sans-serif; font-size: 20px; font-weight: 300; background: var(--card-bg); color: var(--text-dark); box-shadow: 0 3px 13px rgba(26,19,10,0.05); transition: border-color .2s; }
     textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(200,149,28,0.08); }
 
     .actions { display: flex; flex-direction: column; gap: 15px; margin: 22px 20px 0; }
-    button { width: 100%; border: none; border-radius: 22px; padding: 24px 31px; /* Aumentato */ font-family: "Jost", sans-serif; font-size: 18px; /* Aumentato */ font-weight: 600; letter-spacing: 2.3px; text-transform: uppercase; cursor: pointer; transition: all .2s ease; }
+    button { width: 100%; border: none; border-radius: 22px; padding: 24px 31px; font-family: "Jost", sans-serif; font-size: 18px; font-weight: 600; letter-spacing: 2.3px; text-transform: uppercase; cursor: pointer; transition: all .2s ease; }
     button:active { transform: scale(0.983); }
     .send-btn { color: #fff; background: linear-gradient(135deg, #1a110a, #3d2a0f, var(--gold-light)); box-shadow: 0 18px 46px rgba(12,10,6,0.22), inset 0 1px 0 rgba(255,255,255,0.08); }
     .edit-btn { display: none; color: var(--gold); background: var(--card-bg); border: 2px solid rgba(200,149,28,0.45); box-shadow: 0 5px 20px rgba(26,19,10,0.06); }
     .edit-btn.show { display: block; }
-    .small-note { margin: 15px 20px 0; text-align: center; font-size: 17px; /* Aumentato */ font-weight: 300; line-height: 1.6; color: var(--text-soft); }
+    .small-note { margin: 15px 20px 0; text-align: center; font-size: 17px; font-weight: 300; line-height: 1.6; color: var(--text-soft); }
 
     .footer { margin-top: 49px; padding: 31px 20px; text-align: center; border-top: 1.5px solid var(--cream3); }
-    .footer-logo-img { width: 234px; /* Aumentato */ height: auto; display: block; margin: 0 auto; opacity: 0.55; }
+    .footer-logo-img { width: 234px; height: auto; display: block; margin: 0 auto; opacity: 0.55; }
 
-    .toast { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(0.92); width: calc(100% - 40px); max-width: 550px; /* Aumentato */ padding: 33px 31px; border-radius: 33px; background: rgba(12,10,6,0.96); border: 1.5px solid var(--gold-border); color: rgba(255,255,255,0.94); box-shadow: 0 31px 90px rgba(0,0,0,0.42); font-size: 22px; /* Aumentato */ text-align: center; z-index: 999; opacity: 0; pointer-events: none; transition: opacity .25s ease, transform .25s ease; }
+    .toast { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(0.92); width: calc(100% - 40px); max-width: 550px; padding: 33px 31px; border-radius: 33px; background: rgba(12,10,6,0.96); border: 1.5px solid var(--gold-border); color: rgba(255,255,255,0.94); box-shadow: 0 31px 90px rgba(0,0,0,0.42); font-size: 22px; text-align: center; z-index: 999; opacity: 0; pointer-events: none; transition: opacity .25s ease, transform .25s ease; }
     .toast.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
     /* STILI MESSAGGIO DI CHIUSURA */
-    .closed-message { text-align: center; padding: 46px 20px; /* Aumentato */ margin: 15px 20px; background: #fff; border-radius: var(--r-md); border: 1.5px solid var(--cream3); box-shadow: 0 13px 39px rgba(0,0,0,0.05); }
-    .closed-icon { font-size: 62px; /* Aumentato */ margin-bottom: 23px; }
-    .closed-title { font-family: "Cormorant Garamond", serif; font-size: 37px; /* Aumentato */ font-weight: 600; color: var(--gold); margin-bottom: 13px; }
-    .closed-desc { font-size: 22px; /* Aumentato */ color: var(--text-soft); line-height: 1.5; }
+    .closed-message { text-align: center; padding: 46px 20px; margin: 15px 20px; background: #fff; border-radius: var(--r-md); border: 1.5px solid var(--cream3); box-shadow: 0 13px 39px rgba(0,0,0,0.05); }
+    .closed-icon { font-size: 62px; margin-bottom: 23px; }
+    .closed-title { font-family: "Cormorant Garamond", serif; font-size: 37px; font-weight: 600; color: var(--gold); margin-bottom: 13px; }
+    .closed-desc { font-size: 22px; color: var(--text-soft); line-height: 1.5; }
 
   </style>
 </head>
@@ -353,7 +353,7 @@
           const options = prod.varianti.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
           selectHtml = `<select class="food-select" onclick="event.stopPropagation()" onchange="this.closest('.food-card').querySelector('input').checked=true; checkLimit()">${options}</select>`;
         } else {
-          selectHtml = `<div style="font-size: 17px; color: var(--text-soft); margin-top:6px;">Ricetta classica</div>`;
+          selectHtml = `<div style="font-size: 22px; color: var(--text-soft); margin-top:8px;">Ricetta classica</div>`;
         }
 
         label.innerHTML = `
