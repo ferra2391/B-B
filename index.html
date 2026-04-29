@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <meta name="theme-color" content="#0c0a06" />
   <title>LG Estate — Colazione</title>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Jost:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Jost:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -22,26 +23,47 @@
     body { margin: 0; min-height: 100vh; font-family: "Jost", sans-serif; background: var(--cream); color: var(--text-dark); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
     .page { max-width: 520px; margin: 0 auto; padding-bottom: 50px; }
 
+    /* SPLASH SCREEN INTRO */
+    .splash-screen {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--dark);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 30px; text-align: center;
+      transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1), transform 0.9s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.9s;
+    }
+    .splash-screen.hidden {
+      opacity: 0; transform: scale(1.15); visibility: hidden; pointer-events: none;
+    }
+    .splash-logo {
+      width: 100%; max-width: 250px; height: auto; margin-bottom: 35px;
+      filter: drop-shadow(0 0 25px rgba(200,149,28,0.15));
+      animation: pulseLogo 2.5s infinite alternate ease-in-out;
+    }
+    .splash-text {
+      font-family: "Cormorant Garamond", serif; font-size: 28px;
+      color: var(--gold-bright); font-style: italic; line-height: 1.2;
+      opacity: 0; animation: fadeTextIn 1s 0.6s forwards;
+    }
+    @keyframes pulseLogo { from { filter: drop-shadow(0 0 15px rgba(200,149,28,0.1)); } to { filter: drop-shadow(0 0 40px rgba(200,149,28,0.4)); } }
+    @keyframes fadeTextIn { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(10px); } }
+
     /* HERO */
     .hero { position: relative; overflow: hidden; min-height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 0 52px; background: var(--dark); }
     .hero::before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(200,149,28,0.09) 0%, transparent 70%); z-index: 1; }
     .hero::after { content: ""; position: absolute; bottom: 0; left: 10%; right: 10%; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-border), transparent); z-index: 2; }
     .hero-inner { position: relative; z-index: 3; width: 100%; padding: 0 22px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; }
-    .brand-logo-wide { width: 100%; max-width: 310px; height: auto; display: block; object-fit: contain; filter: drop-shadow(0 0 40px rgba(200,149,28,0.22)) drop-shadow(0 8px 20px rgba(0,0,0,0.4)); animation: fadeDown 0.65s ease both; }
-    .tag { display: inline-flex; align-items: center; gap: 7px; padding: 5px 14px; border-radius: 999px; border: 1px solid var(--gold-border); background: rgba(200,149,28,0.14); backdrop-filter: blur(10px); font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-bright); animation: fadeDown 0.65s 0.1s ease both; }
+    .brand-logo-wide { width: 100%; max-width: 310px; height: auto; display: block; filter: drop-shadow(0 0 40px rgba(200,149,28,0.22)); }
+    .tag { display: inline-flex; align-items: center; gap: 7px; padding: 5px 14px; border-radius: 999px; border: 1px solid var(--gold-border); background: rgba(200,149,28,0.14); backdrop-filter: blur(10px); font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-bright); }
     
-    @keyframes fadeDown { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
-    @keyframes fadeUp   { from{opacity:0;transform:translateY(16px)}  to{opacity:1;transform:translateY(0)} }
-
     /* ROOM CARD */
-    .room-card { position: relative; z-index: 10; margin: -34px 16px 0; background: var(--card-bg); border: 1px solid var(--cream3); border-radius: var(--r-lg); padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 20px 50px rgba(26,19,10,0.14), 0 2px 0 var(--cream3); animation: fadeUp 0.6s 0.2s ease both; }
+    .room-card { position: relative; z-index: 10; margin: -34px 16px 0; background: var(--card-bg); border: 1px solid var(--cream3); border-radius: var(--r-lg); padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 20px 50px rgba(26,19,10,0.14); }
     .room-label { font-size: 9px; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: 2.2px; margin-bottom: 3px; }
     .room-number { font-family: "Cormorant Garamond", serif; font-size: 22px; font-weight: 600; line-height: 1.1; }
     .structure-name { font-size: 11px; color: var(--text-soft); margin-top: 2px; }
     .room-icon { width: 50px; height: 50px; border-radius: 14px; background: linear-gradient(135deg, #fdf0d5, #f5d98a); border: 1px solid rgba(200,149,28,0.28); display: grid; place-items: center; font-size: 22px; box-shadow: 0 6px 18px rgba(200,149,28,0.18); }
 
     /* GREETING */
-    .greeting-band { margin: 20px 16px 0; padding: 20px 22px; background: linear-gradient(135deg, var(--dark), #231a0c 80%, #2e2008); border-radius: var(--r-lg); box-shadow: 0 12px 36px rgba(12,10,6,0.18); animation: fadeUp 0.6s 0.25s ease both; position: relative; overflow: hidden; }
+    .greeting-band { margin: 20px 16px 0; padding: 20px 22px; background: linear-gradient(135deg, var(--dark), #231a0c 80%, #2e2008); border-radius: var(--r-lg); box-shadow: 0 12px 36px rgba(12,10,6,0.18); position: relative; overflow: hidden; }
     .greeting-band::before { content: ""; position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-top: 1px solid var(--gold-border); border-right: 1px solid var(--gold-border); }
     .greeting-band::after { content: ""; position: absolute; bottom: 12px; left: 12px; width: 32px; height: 32px; border-bottom: 1px solid var(--gold-border); border-left: 1px solid var(--gold-border); }
     .greeting-band h1 { margin: 0 0 8px; font-family: "Cormorant Garamond", serif; font-size: 36px; font-weight: 600; line-height: 1.1; color: #fff; }
@@ -53,11 +75,6 @@
     .section-title { margin: 18px 16px 12px; display: flex; justify-content: space-between; align-items: flex-end; }
     .section-title h2 { margin: 0; font-family: "Cormorant Garamond", serif; font-size: 28px; font-weight: 600; }
     .section-title span { font-size: 10px; color: var(--text-soft); font-weight: 500; letter-spacing: 0.6px; text-transform: uppercase; padding-bottom: 5px; }
-
-    /* SKELETON SCREEN (LOADER) */
-    .skeleton-container { display: flex; flex-direction: column; gap: 10px; padding: 0 16px; margin-bottom: 15px; }
-    .s-card { height: 80px; width: 100%; background: linear-gradient(90deg, #f3ece0 25%, #faf6ef 50%, #f3ece0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite linear; border-radius: var(--r-md); border: 1.5px solid var(--cream3); }
-    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
     /* FOOD CARDS */
     .foods { display: flex; flex-direction: column; gap: 10px; padding: 0 16px; }
@@ -100,7 +117,7 @@
     @media (min-width: 600px) {
       .hero { min-height: 300px; }
       .brand-logo-wide { max-width: 380px; }
-      .room-card, .greeting-band, .status-box, .section-title, .actions, .small-note, .divider, .skeleton-container { margin-left: 24px; margin-right: 24px; }
+      .room-card, .greeting-band, .status-box, .section-title, .actions, .small-note, .divider { margin-left: 24px; margin-right: 24px; }
       .foods { padding: 0 24px; }
       textarea { margin-left: 24px; margin-right: 24px; width: calc(100% - 48px); }
     }
@@ -108,6 +125,12 @@
 </head>
 
 <body>
+
+<div id="splashScreen" class="splash-screen">
+  <img src="assets/LG_ESTATE_Logo_esteso_oro.png" alt="LG Estate" class="splash-logo">
+  <div class="splash-text">Benvenuto nel sistema di<br>prenotazione colazione</div>
+</div>
+
 <main class="page">
   <section class="hero">
     <div class="hero-inner">
@@ -143,23 +166,12 @@
   </div>
 
   <form id="breakfastForm">
-    
-    <div id="loader" class="skeleton-container">
-      <div class="s-card"></div>
-      <div class="s-card"></div>
-      <div class="s-card"></div>
-      <div class="s-card"></div>
-    </div>
-
     <div class="foods" id="foods"></div>
-
     <textarea id="notes" placeholder="Note o richieste particolari… es. senza lattosio, orario preferito, allergie"></textarea>
-
     <div class="actions">
       <button class="send-btn" id="sendBtn" type="submit">Invia ordine colazione</button>
       <button class="edit-btn" id="editBtn" type="button">Modifica ordine</button>
     </div>
-
     <p class="small-note">È consentito un solo ordine al giorno per camera.<br>L'ordine può essere modificato entro 10 minuti dall'invio.</p>
   </form>
 
@@ -182,10 +194,10 @@
   };
 
   const els = {
+    splash:        document.getElementById("splashScreen"),
     roomNumber:    document.getElementById("roomNumber"),
     structureName: document.getElementById("structureName"),
     foods:         document.getElementById("foods"),
-    loader:        document.getElementById("loader"),
     notes:         document.getElementById("notes"),
     form:          document.getElementById("breakfastForm"),
     sendBtn:       document.getElementById("sendBtn"),
@@ -208,16 +220,18 @@
 
     if (!state.struttura || !state.room || !state.key) {
       showToast("QR non valido: struttura, camera o codice mancanti.");
-      els.loader.style.display = "none";
+      els.splash.classList.add("hidden");
       return;
     }
 
     try {
       const url = `${CONFIG.webAppUrl}?action=init&struttura=${encodeURIComponent(state.struttura)}&camera=${encodeURIComponent(state.room)}&key=${encodeURIComponent(state.key)}&t=${Date.now()}`;
-      const res = await fetch(url);
-      const data = await res.json();
-
-      els.loader.style.display = "none"; // Nascondi skeleton al termine
+      
+      // IL TRUCCO MAGICO: Aspettiamo ENTRAMBI (Il caricamento dati E almeno 2.5 secondi di animazione)
+      const minimumSplashTime = new Promise(resolve => setTimeout(resolve, 2500));
+      const fetchDati = fetch(url).then(res => res.json()).catch(err => { throw err; });
+      
+      const [_, data] = await Promise.all([minimumSplashTime, fetchDati]);
 
       if (!data.ok) {
         showToast(data.error || "Errore di caricamento.");
@@ -234,8 +248,10 @@
       }
 
     } catch (err) {
-      els.loader.style.display = "none";
       showToast("Errore di connessione al server.");
+    } finally {
+      // Alla fine di tutto, facciamo sfumare lo splash screen all'indietro
+      els.splash.classList.add("hidden");
     }
   }
 
@@ -272,7 +288,7 @@
     els.statusBox.classList.toggle("show", active);
     els.editBtn.classList.toggle("show", active);
     els.sendBtn.textContent = active ? "Nuovo ordine non disponibile" : "Invia ordine colazione";
-    els.sendBtn.style.display = active ? "none" : "block"; // Nasconde il pulsante invia se in edit mode
+    els.sendBtn.style.display = active ? "none" : "block";
   }
 
   function startCountdown(seconds) {
@@ -285,7 +301,7 @@
         clearInterval(state.countdownInterval);
         state.ordineAperto = null;
         setEditMode(false);
-        els.sendBtn.style.display = "none"; // Non fa inviare un nuovo ordine dopo la scadenza
+        els.sendBtn.style.display = "none";
         updateCountdownText(0);
         showToast("Tempo di modifica scaduto.");
         return;
@@ -325,10 +341,7 @@
       const res  = await fetch(CONFIG.webAppUrl, { method: "POST", body: JSON.stringify(payload) });
       const data = await res.json();
       
-      if (!data.ok) { 
-        showToast(data.error || "Errore invio ordine."); 
-        return; 
-      }
+      if (!data.ok) { showToast(data.error || "Errore invio ordine."); return; }
       
       if (data.ordine) { 
         state.ordineAperto = data.ordine; 
