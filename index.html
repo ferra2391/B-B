@@ -36,23 +36,23 @@
     }
     .splash-logo {
       width: 100%; 
-      max-width: 350px; /* PRIMA ERA 250px - Modifica questo numero per cambiare la grandezza del logo */
+      max-width: 350px;
       height: auto; 
-      margin-bottom: 40px; /* Aumentato leggermente lo spazio sotto il logo */
+      margin-bottom: 40px;
       filter: drop-shadow(0 0 25px rgba(200,149,28,0.15));
       animation: pulseLogo 2.5s infinite alternate ease-in-out;
     }
 
     .splash-text {
       font-family: "Cormorant Garamond", serif; 
-      font-size: 38px; /* PRIMA ERA 28px - Modifica questo numero per cambiare la grandezza del testo */
+      font-size: 38px;
       color: var(--gold-bright); 
       font-style: italic; 
       line-height: 1.15;
       opacity: 0; 
       animation: fadeTextIn 1s 0.6s forwards;
     }
-    }
+    
     @keyframes pulseLogo { from { filter: drop-shadow(0 0 15px rgba(200,149,28,0.1)); } to { filter: drop-shadow(0 0 40px rgba(200,149,28,0.4)); } }
     @keyframes fadeTextIn { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(10px); } }
 
@@ -123,6 +123,12 @@
     .toast { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(0.92); width: calc(100% - 48px); max-width: 360px; padding: 22px 20px; border-radius: 22px; background: rgba(12,10,6,0.96); border: 1px solid var(--gold-border); color: rgba(255,255,255,0.94); box-shadow: 0 24px 70px rgba(0,0,0,0.42); font-size: 14px; text-align: center; z-index: 999; opacity: 0; pointer-events: none; transition: opacity .25s ease, transform .25s ease; }
     .toast.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
+    /* STILI MESSAGGIO DI CHIUSURA */
+    .closed-message { text-align: center; padding: 30px 16px; margin: 10px 16px; background: #fff; border-radius: var(--r-md); border: 1px solid var(--cream3); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+    .closed-icon { font-size: 40px; margin-bottom: 15px; }
+    .closed-title { font-family: "Cormorant Garamond", serif; font-size: 24px; font-weight: 600; color: var(--gold); margin-bottom: 8px; }
+    .closed-desc { font-size: 14px; color: var(--text-soft); line-height: 1.5; }
+
     @media (min-width: 600px) {
       .hero { min-height: 300px; }
       .brand-logo-wide { max-width: 380px; }
@@ -157,7 +163,7 @@
     <div class="room-icon">🛎️</div>
   </section>
 
-  <div class="greeting-band">
+  <div class="greeting-band" id="greetingBand">
     <h1>Buongiorno,<br><em>cosa desideri?</em></h1>
     <p>Seleziona i prodotti desiderati. Il tuo ordine sarà inviato direttamente alla reception.</p>
   </div>
@@ -168,8 +174,8 @@
     <div class="status-note">Puoi modificare l'ordine entro 10 minuti dall'invio. Dopo sarà considerato confermato.</div>
   </section>
 
-  <div class="divider"></div>
-  <div class="section-title">
+  <div class="divider" id="dividerMenu"></div>
+  <div class="section-title" id="titleMenu">
     <h2>Menù breakfast</h2>
     <span>Scegli uno o più</span>
   </div>
@@ -177,11 +183,11 @@
   <form id="breakfastForm">
     <div class="foods" id="foods"></div>
     <textarea id="notes" placeholder="Note o richieste particolari… es. senza lattosio, orario preferito, allergie"></textarea>
-    <div class="actions">
+    <div class="actions" id="actionsBox">
       <button class="send-btn" id="sendBtn" type="submit">Invia ordine colazione</button>
       <button class="edit-btn" id="editBtn" type="button">Modifica ordine</button>
     </div>
-    <p class="small-note">È consentito un solo ordine al giorno per camera.<br>L'ordine può essere modificato entro 10 minuti dall'invio.</p>
+    <p class="small-note" id="smallNote">È consentito un solo ordine al giorno per camera.<br>L'ordine può essere modificato entro 10 minuti dall'invio.</p>
   </form>
 
   <div class="footer">
@@ -195,6 +201,7 @@
   // *** INSERISCI QUI IL TUO URL DI GOOGLE APPS SCRIPT ***
   const CONFIG = {
     webAppUrl: "https://script.google.com/macros/s/AKfycbzw-Jsstxe-RTU1Fg4OQDOchR5UpO9C3I_p158Y6STDwyJ0pfad-JeftyvnABtHMj8YPg/exec",
+    oraRiapertura: 15 // Orario in cui viene riaperto il servizio
   };
 
   const state = {
@@ -213,7 +220,12 @@
     editBtn:       document.getElementById("editBtn"),
     toast:         document.getElementById("toast"),
     statusBox:     document.getElementById("statusBox"),
-    countdown:     document.getElementById("countdown")
+    countdown:     document.getElementById("countdown"),
+    greetingBand:  document.getElementById("greetingBand"),
+    dividerMenu:   document.getElementById("dividerMenu"),
+    titleMenu:     document.getElementById("titleMenu"),
+    actionsBox:    document.getElementById("actionsBox"),
+    smallNote:     document.getElementById("smallNote")
   };
 
   init();
@@ -250,6 +262,12 @@
         showToast(data.error || "Errore di caricamento.");
       }
 
+      // CONTROLLO ORARIO (Blocco Chiusura)
+      if (data.fuoriOrario) {
+        mostraSchermataChiusura();
+        return;
+      }
+
       // 3. Stampiamo i dati appena arrivano
       state.menu = data.menu || [];
       renderMenu(state.menu);
@@ -269,6 +287,26 @@
       showToast("Errore di connessione al server.");
       els.roomNumber.textContent = "Errore di connessione";
     }
+  }
+
+  function mostraSchermataChiusura() {
+    els.greetingBand.style.display = "none";
+    els.dividerMenu.style.display = "none";
+    els.titleMenu.style.display = "none";
+    els.notes.style.display = "none";
+    els.actionsBox.style.display = "none";
+    els.smallNote.style.display = "none";
+
+    els.foods.innerHTML = `
+      <div class="closed-message">
+        <div class="closed-icon">☕</div>
+        <div class="closed-title">Servizio Sospeso</div>
+        <div class="closed-desc">
+          Il servizio colazione per oggi è terminato.<br>
+          Potrai inviare l'ordine per domani a partire dalle ore <b>${CONFIG.oraRiapertura}:00</b>.
+        </div>
+      </div>
+    `;
   }
 
   function renderMenu(menu) {
