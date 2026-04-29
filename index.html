@@ -649,7 +649,7 @@
   <!-- ── FOOTER ── -->
   <div class="footer">
     <img src="assets/LG_ESTATE_Logo_esteso_oro.png" alt="LG Estate" class="footer-logo-img">
-    <div class="footer-copy">Breakfast Ordering · V3</div>
+
   </div>
 
 </main>
@@ -682,22 +682,55 @@
   };
 
   init();
+async function loadInitialData() {
+  try {
+    const url = CONFIG.webAppUrl
+      + "?action=init"
+      + "&struttura=" + encodeURIComponent(state.struttura)
+      + "&camera="    + encodeURIComponent(state.room)
+      + "&key="       + encodeURIComponent(state.key)
+      + "&t="         + Date.now();
 
-  async function init() {
-    const p = new URLSearchParams(window.location.search);
-    state.struttura = p.get("struttura") || "";
-    state.room      = p.get("room") || p.get("camera") || "";
-    state.key       = p.get("key") || "";
+    const res = await fetch(url);
+    const data = await res.json();
 
-    els.roomNumber.textContent    = state.room      ? "Camera " + state.room : "Camera non rilevata";
-    els.structureName.textContent = state.struttura ? state.struttura        : "Struttura non rilevata";
+    if (!data.ok) {
+      showToast(data.error || "QR non autorizzato.");
+    }
 
-    if (!state.struttura || !state.room || !state.key)
-      showToast("QR non valido: struttura, camera o codice mancanti.");
+    state.menu = data.menu || [];
+    renderMenu(state.menu);
 
-    await loadMenu();
-    await checkOrdineAperto();
+    if (data.ordine) {
+      state.ordineAperto = data.ordine;
+      applyOrdineToForm(data.ordine);
+      startCountdown(data.ordine.secondiRimanenti);
+      setEditMode(true);
+    }
+
+  } catch (err) {
+    els.loader.textContent = "Errore caricamento dati.";
+    showToast("Errore caricamento dati.");
   }
+}
+  
+async function init() {
+  const p = new URLSearchParams(window.location.search);
+  state.struttura = p.get("struttura") || "";
+  state.room      = p.get("room") || p.get("camera") || "";
+  state.key       = p.get("key") || "";
+
+  els.roomNumber.textContent    = state.room      ? "Camera " + state.room : "Camera non rilevata";
+  els.structureName.textContent = state.struttura ? state.struttura        : "Struttura non rilevata";
+
+  if (!state.struttura || !state.room || !state.key) {
+    showToast("QR non valido: struttura, camera o codice mancanti.");
+    await loadMenu();
+    return;
+  }
+
+  await loadInitialData();
+}
 
   async function loadMenu() {
     try {
@@ -736,25 +769,7 @@
     });
   }
 
-  async function checkOrdineAperto() {
-    if (!state.struttura || !state.room || !state.key) return;
-    try {
-      const url = CONFIG.webAppUrl
-        + "?action=ordineAperto"
-        + "&struttura=" + encodeURIComponent(state.struttura)
-        + "&camera="    + encodeURIComponent(state.room)
-        + "&key="       + encodeURIComponent(state.key);
-      const res  = await fetch(url);
-      const data = await res.json();
-      if (!data.ok) { showToast(data.error || "QR non autorizzato."); return; }
-      if (data.ordine) {
-        state.ordineAperto = data.ordine;
-        applyOrdineToForm(data.ordine);
-        startCountdown(data.ordine.secondiRimanenti);
-        setEditMode(true);
-      }
-    } catch { showToast("Impossibile controllare ordini aperti."); }
-  }
+
 
   function applyOrdineToForm(ordine) {
     const p = ordine.prodotti || [];
