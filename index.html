@@ -66,8 +66,23 @@
     .greeting-band::after { content: ""; position: absolute; bottom: 12px; left: 12px; width: 32px; height: 32px; border-bottom: 1px solid var(--gold-border); border-left: 1px solid var(--gold-border); }
     .greeting-band h1 { margin: 0 0 8px; font-family: "Cormorant Garamond", serif; font-size: 32px; font-weight: 600; line-height: 1.1; color: #fff; }
     .greeting-band h1 em { font-style: italic; color: var(--gold-bright); }
-    .greeting-band p { margin: 0; font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.7); line-height: 1.5; }
-    .greeting-band .rules { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(200,149,28,0.3); font-size: 11px; color: var(--gold-light); }
+  .greeting-band p { 
+      margin: 0; 
+      font-size: 14px; /* GRANDEZZA DELLA PRIMA RIGA (prima era 12px) */
+      font-weight: 400; /* SPESSORE: 300 è sottile, 400 normale, 600 grassetto */
+      color: rgba(255,255,255,0.9); /* COLORE: ora è un bianco più acceso (prima era 0.7) */
+      line-height: 1.5; 
+    }
+    
+    .greeting-band .rules { 
+      margin-top: 10px; 
+      padding-top: 10px; 
+      border-top: 1px solid rgba(200,149,28,0.3); 
+      font-size: 13px; /* GRANDEZZA DELLE REGOLE (prima era 11px) */
+      font-weight: 300; /* SPESSORE DELLE REGOLE */
+      color: var(--gold-bright); /* COLORE: ora è un oro più brillante. Se lo vuoi bianco scrivi #ffffff */
+      line-height: 1.5; 
+    }
 
     /* SECTION TITLE */
     .divider { margin: 24px 16px 0; height: 1px; background: linear-gradient(90deg, transparent, var(--cream3), transparent); }
