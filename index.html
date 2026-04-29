@@ -29,20 +29,29 @@
       background: var(--dark);
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       padding: 30px; text-align: center;
-      transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1), transform 0.9s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.9s;
+      transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.9s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.9s;
     }
     .splash-screen.hidden {
       opacity: 0; transform: scale(1.15); visibility: hidden; pointer-events: none;
     }
     .splash-logo {
-      width: 100%; max-width: 250px; height: auto; margin-bottom: 35px;
+      width: 100%; 
+      max-width: 350px; /* PRIMA ERA 250px - Modifica questo numero per cambiare la grandezza del logo */
+      height: auto; 
+      margin-bottom: 40px; /* Aumentato leggermente lo spazio sotto il logo */
       filter: drop-shadow(0 0 25px rgba(200,149,28,0.15));
       animation: pulseLogo 2.5s infinite alternate ease-in-out;
     }
+
     .splash-text {
-      font-family: "Cormorant Garamond", serif; font-size: 28px;
-      color: var(--gold-bright); font-style: italic; line-height: 1.2;
-      opacity: 0; animation: fadeTextIn 1s 0.6s forwards;
+      font-family: "Cormorant Garamond", serif; 
+      font-size: 38px; /* PRIMA ERA 28px - Modifica questo numero per cambiare la grandezza del testo */
+      color: var(--gold-bright); 
+      font-style: italic; 
+      line-height: 1.15;
+      opacity: 0; 
+      animation: fadeTextIn 1s 0.6s forwards;
+    }
     }
     @keyframes pulseLogo { from { filter: drop-shadow(0 0 15px rgba(200,149,28,0.1)); } to { filter: drop-shadow(0 0 40px rgba(200,149,28,0.4)); } }
     @keyframes fadeTextIn { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(10px); } }
@@ -228,7 +237,7 @@
       const url = `${CONFIG.webAppUrl}?action=init&struttura=${encodeURIComponent(state.struttura)}&camera=${encodeURIComponent(state.room)}&key=${encodeURIComponent(state.key)}&t=${Date.now()}`;
       
       // IL TRUCCO MAGICO: Aspettiamo ENTRAMBI (Il caricamento dati E almeno 2.5 secondi di animazione)
-      const minimumSplashTime = new Promise(resolve => setTimeout(resolve, 2500));
+      const minimumSplashTime = new Promise(resolve => setTimeout(resolve, 1500));
       const fetchDati = fetch(url).then(res => res.json()).catch(err => { throw err; });
       
       const [_, data] = await Promise.all([minimumSplashTime, fetchDati]);
