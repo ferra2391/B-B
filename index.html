@@ -8,7 +8,7 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Jost:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -31,32 +31,21 @@
       padding: 30px; text-align: center;
       transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), transform 1.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.5s;
     }
-    .splash-screen.hidden {
-      opacity: 0; transform: scale(1.15); visibility: hidden; pointer-events: none;
-    }
+    .splash-screen.hidden { opacity: 0; transform: scale(1.15); visibility: hidden; pointer-events: none; }
     .splash-logo {
-      width: 100%; 
-      max-width: 350px;
-      height: auto; 
-      margin-bottom: 40px;
+      width: 100%; max-width: 350px; height: auto; margin-bottom: 40px;
       filter: drop-shadow(0 0 25px rgba(200,149,28,0.15));
       animation: pulseLogo 2.5s infinite alternate ease-in-out;
     }
-
     .splash-text {
-      font-family: "Cormorant Garamond", serif; 
-      font-size: 38px;
-      color: var(--gold-bright); 
-      font-style: italic; 
-      line-height: 1.15;
-      opacity: 0; 
-      animation: fadeTextIn 1s 0.6s forwards;
+      font-family: "Cormorant Garamond", serif; font-size: 38px;
+      color: var(--gold-bright); font-style: italic; line-height: 1.15;
+      opacity: 0; animation: fadeTextIn 1s 0.6s forwards;
     }
-    
     @keyframes pulseLogo { from { filter: drop-shadow(0 0 15px rgba(200,149,28,0.1)); } to { filter: drop-shadow(0 0 40px rgba(200,149,28,0.4)); } }
     @keyframes fadeTextIn { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(10px); } }
 
-    /* HERO */
+    /* HERO & ROOM CARD */
     .hero { position: relative; overflow: hidden; min-height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 0 52px; background: var(--dark); }
     .hero::before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(200,149,28,0.09) 0%, transparent 70%); z-index: 1; }
     .hero::after { content: ""; position: absolute; bottom: 0; left: 10%; right: 10%; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-border), transparent); z-index: 2; }
@@ -64,7 +53,6 @@
     .brand-logo-wide { width: 100%; max-width: 310px; height: auto; display: block; filter: drop-shadow(0 0 40px rgba(200,149,28,0.22)); }
     .tag { display: inline-flex; align-items: center; gap: 7px; padding: 5px 14px; border-radius: 999px; border: 1px solid var(--gold-border); background: rgba(200,149,28,0.14); backdrop-filter: blur(10px); font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-bright); }
     
-    /* ROOM CARD */
     .room-card { position: relative; z-index: 10; margin: -34px 16px 0; background: var(--card-bg); border: 1px solid var(--cream3); border-radius: var(--r-lg); padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 20px 50px rgba(26,19,10,0.14); }
     .room-label { font-size: 9px; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: 2.2px; margin-bottom: 3px; }
     .room-number { font-family: "Cormorant Garamond", serif; font-size: 22px; font-weight: 600; line-height: 1.1; }
@@ -75,29 +63,43 @@
     .greeting-band { margin: 20px 16px 0; padding: 20px 22px; background: linear-gradient(135deg, var(--dark), #231a0c 80%, #2e2008); border-radius: var(--r-lg); box-shadow: 0 12px 36px rgba(12,10,6,0.18); position: relative; overflow: hidden; }
     .greeting-band::before { content: ""; position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-top: 1px solid var(--gold-border); border-right: 1px solid var(--gold-border); }
     .greeting-band::after { content: ""; position: absolute; bottom: 12px; left: 12px; width: 32px; height: 32px; border-bottom: 1px solid var(--gold-border); border-left: 1px solid var(--gold-border); }
-    .greeting-band h1 { margin: 0 0 8px; font-family: "Cormorant Garamond", serif; font-size: 36px; font-weight: 600; line-height: 1.1; color: #fff; }
+    .greeting-band h1 { margin: 0 0 8px; font-family: "Cormorant Garamond", serif; font-size: 32px; font-weight: 600; line-height: 1.1; color: #fff; }
     .greeting-band h1 em { font-style: italic; color: var(--gold-bright); }
-    .greeting-band p { margin: 0; font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.52); line-height: 1.65; }
+    .greeting-band p { margin: 0; font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.7); line-height: 1.5; }
+    .greeting-band .rules { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(200,149,28,0.3); font-size: 11px; color: var(--gold-light); }
 
     /* SECTION TITLE */
-    .divider { margin: 22px 16px 0; height: 1px; background: linear-gradient(90deg, transparent, var(--cream3), transparent); }
-    .section-title { margin: 18px 16px 12px; display: flex; justify-content: space-between; align-items: flex-end; }
-    .section-title h2 { margin: 0; font-family: "Cormorant Garamond", serif; font-size: 28px; font-weight: 600; }
-    .section-title span { font-size: 10px; color: var(--text-soft); font-weight: 500; letter-spacing: 0.6px; text-transform: uppercase; padding-bottom: 5px; }
+    .divider { margin: 24px 16px 0; height: 1px; background: linear-gradient(90deg, transparent, var(--cream3), transparent); }
+    .category-title { margin: 20px 16px 12px; font-family: "Cormorant Garamond", serif; font-size: 26px; font-weight: 600; color: var(--gold); border-left: 3px solid var(--gold); padding-left: 10px; line-height: 1.1;}
 
-    /* FOOD CARDS */
-    .foods { display: flex; flex-direction: column; gap: 10px; padding: 0 16px; }
-    .food-card input { display: none; }
-    .food-content { cursor: pointer; border-radius: var(--r-md); background: var(--card-bg); border: 1.5px solid var(--cream3); padding: 12px 14px; display: flex; gap: 13px; align-items: center; transition: border-color .2s ease, box-shadow .2s ease, transform .15s ease; user-select: none; box-shadow: 0 2px 10px rgba(26,19,10,0.06); }
+    /* FOOD CARDS WITH SELECT */
+    .foods { display: flex; flex-direction: column; gap: 10px; padding: 0 16px; margin-bottom: 15px;}
+    .food-card { position: relative; }
+    .food-card input[type="checkbox"] { display: none; }
+    
+    .food-content { cursor: pointer; border-radius: var(--r-md); background: var(--card-bg); border: 1.5px solid var(--cream3); padding: 12px 14px; display: flex; gap: 13px; align-items: center; transition: all .2s ease; user-select: none; box-shadow: 0 2px 10px rgba(26,19,10,0.06); }
     .food-content:active { transform: scale(0.985); }
+    
+    /* Stile per card disabilitata (limite di 2) */
+    .food-card.disabled .food-content { opacity: 0.5; filter: grayscale(100%); pointer-events: none; }
+
     .food-card input:checked + .food-content { border-color: var(--gold); background: #fffbf2; box-shadow: 0 0 0 1px rgba(200,149,28,0.15), 0 6px 24px rgba(200,149,28,0.12); }
-    .emoji { width: 52px; height: 52px; min-width: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 24px; background: var(--cream2); border: 1px solid var(--cream3); transition: background .2s, border-color .2s; }
+    .emoji { width: 48px; height: 48px; min-width: 48px; border-radius: 12px; display: grid; place-items: center; font-size: 22px; background: var(--cream2); border: 1px solid var(--cream3); transition: all .2s; }
     .food-card input:checked + .food-content .emoji { background: #fdf0d5; border-color: rgba(200,149,28,0.3); }
-    .food-info { flex: 1; min-width: 0; }
-    .food-title { font-family: "Cormorant Garamond", serif; font-weight: 600; font-size: 18px; margin-bottom: 2px; line-height: 1.2; }
-    .food-desc { font-size: 11px; font-weight: 300; line-height: 1.45; color: var(--text-soft); }
+    
+    .food-info { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+    .food-title { font-family: "Cormorant Garamond", serif; font-weight: 600; font-size: 19px; line-height: 1.2; color: var(--text-dark); }
+    
+    /* SELECT DROPDOWN */
+    .food-select { margin-top: 4px; font-family: "Jost", sans-serif; font-size: 12px; color: var(--text-soft); border: none; background: transparent; padding: 0; width: 100%; outline: none; cursor: pointer; font-weight: 500; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23a08060%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right center; background-size: 8px auto; padding-right: 15px;}
+    .food-card input:checked + .food-content .food-select { color: var(--gold); background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23c8951c%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");}
+
     .check { margin-left: auto; width: 26px; height: 26px; min-width: 26px; border-radius: 50%; border: 1.5px solid var(--cream3); display: grid; place-items: center; font-size: 12px; color: transparent; transition: all .2s ease; }
     .food-card input:checked + .food-content .check { background: var(--gold); border-color: var(--gold); color: #fff; box-shadow: 0 0 12px rgba(200,149,28,0.35); }
+
+    /* LIMIT COUNTER */
+    .limit-counter { margin: 10px 16px 15px; padding: 10px; background: rgba(200,149,28,0.1); border-radius: var(--r-sm); text-align: center; font-size: 12px; font-weight: 500; color: var(--gold); border: 1px dashed var(--gold-border); transition: 0.3s;}
+    .limit-counter.maxed { background: #ffebeb; color: #d32f2f; border-color: #f4c2c2; }
 
     /* STATUS & BUTTONS */
     .status-box { display: none; margin: 12px 16px 0; padding: 14px 18px; border-radius: var(--r-md); background: #fff8eb; border: 1px solid rgba(200,149,28,0.45); box-shadow: 0 6px 20px rgba(200,149,28,0.10); }
@@ -129,13 +131,6 @@
     .closed-title { font-family: "Cormorant Garamond", serif; font-size: 24px; font-weight: 600; color: var(--gold); margin-bottom: 8px; }
     .closed-desc { font-size: 14px; color: var(--text-soft); line-height: 1.5; }
 
-    @media (min-width: 600px) {
-      .hero { min-height: 300px; }
-      .brand-logo-wide { max-width: 380px; }
-      .room-card, .greeting-band, .status-box, .section-title, .actions, .small-note, .divider { margin-left: 24px; margin-right: 24px; }
-      .foods { padding: 0 24px; }
-      textarea { margin-left: 24px; margin-right: 24px; width: calc(100% - 48px); }
-    }
   </style>
 </head>
 
@@ -165,7 +160,11 @@
 
   <div class="greeting-band" id="greetingBand">
     <h1>Buongiorno,<br><em>cosa desideri?</em></h1>
-    <p>Seleziona i prodotti desiderati. Il tuo ordine sarà inviato direttamente alla reception.</p>
+    <p>La colazione è servita dalle 7:30 alle 10:00.</p>
+    <div class="rules">
+      Per garantirle la massima freschezza e ridurre gli sprechi, la invitiamo a compilare questo menù entro le ore 20:00.<br>
+      <b>Puoi scegliere un massimo di 2 pietanze.</b>
+    </div>
   </div>
 
   <section class="status-box" id="statusBox">
@@ -174,20 +173,19 @@
     <div class="status-note">Puoi modificare l'ordine entro 10 minuti dall'invio. Dopo sarà considerato confermato.</div>
   </section>
 
-  <div class="divider" id="dividerMenu"></div>
-  <div class="section-title" id="titleMenu">
-    <h2>Menù breakfast</h2>
-    <span>Scegli uno o più</span>
-  </div>
-
   <form id="breakfastForm">
-    <div class="foods" id="foods"></div>
+    
+    <div id="menuContainer"></div>
+
+    <div class="limit-counter" id="limitCounter">
+      Pietanze selezionate: <span id="countNum">0</span> / 2
+    </div>
+
     <textarea id="notes" placeholder="Note o richieste particolari… es. senza lattosio, orario preferito, allergie"></textarea>
     <div class="actions" id="actionsBox">
       <button class="send-btn" id="sendBtn" type="submit">Invia ordine colazione</button>
       <button class="edit-btn" id="editBtn" type="button">Modifica ordine</button>
     </div>
-    <p class="small-note" id="smallNote">È consentito un solo ordine al giorno per camera.<br>L'ordine può essere modificato entro 10 minuti dall'invio.</p>
   </form>
 
   <div class="footer">
@@ -200,20 +198,21 @@
 <script>
   // *** INSERISCI QUI IL TUO URL DI GOOGLE APPS SCRIPT ***
   const CONFIG = {
-    webAppUrl: "https://script.google.com/macros/s/AKfycbzw-Jsstxe-RTU1Fg4OQDOchR5UpO9C3I_p158Y6STDwyJ0pfad-JeftyvnABtHMj8YPg/exec",
-    oraRiapertura: 15 // Orario in cui viene riaperto il servizio
+    webAppUrl: "https://script.google.com/macros/s/IL_TUO_ID_SCRIPT_QUI/exec",
+    oraRiapertura: 10
   };
 
   const state = {
     struttura: null, room: null, key: null,
-    menu: [], ordineAperto: null, countdownInterval: null
+    menu: [], ordineAperto: null, countdownInterval: null,
+    maxScelte: 2
   };
 
   const els = {
     splash:        document.getElementById("splashScreen"),
     roomNumber:    document.getElementById("roomNumber"),
     structureName: document.getElementById("structureName"),
-    foods:         document.getElementById("foods"),
+    menuContainer: document.getElementById("menuContainer"),
     notes:         document.getElementById("notes"),
     form:          document.getElementById("breakfastForm"),
     sendBtn:       document.getElementById("sendBtn"),
@@ -222,10 +221,9 @@
     statusBox:     document.getElementById("statusBox"),
     countdown:     document.getElementById("countdown"),
     greetingBand:  document.getElementById("greetingBand"),
-    dividerMenu:   document.getElementById("dividerMenu"),
-    titleMenu:     document.getElementById("titleMenu"),
     actionsBox:    document.getElementById("actionsBox"),
-    smallNote:     document.getElementById("smallNote")
+    limitCounter:  document.getElementById("limitCounter"),
+    countNum:      document.getElementById("countNum")
   };
 
   init();
@@ -245,32 +243,27 @@
       return;
     }
 
-    // 1. Facciamo partire un timer ASSOLUTO per lo splash screen (es. 2.8 secondi)
-    // Allo scadere di questo tempo, il logo sparisce indipendentemente da Google.
-    setTimeout(() => {
-      els.splash.classList.add("hidden");
-    }, 2800); 
+    const fallbackTimer = setTimeout(() => { els.splash.classList.add("hidden"); }, 2800); 
 
     try {
       const url = `${CONFIG.webAppUrl}?action=init&struttura=${encodeURIComponent(state.struttura)}&camera=${encodeURIComponent(state.room)}&key=${encodeURIComponent(state.key)}&t=${Date.now()}`;
       
-      // 2. Scarichiamo i dati da Google
       const res = await fetch(url);
       const data = await res.json();
 
-      if (!data.ok) {
-        showToast(data.error || "Errore di caricamento.");
-      }
+      clearTimeout(fallbackTimer);
+      els.splash.classList.add("hidden");
 
-      // CONTROLLO ORARIO (Blocco Chiusura)
+      if (!data.ok) showToast(data.error || "Errore di caricamento.");
+
+      // Blocco Orario
       if (data.fuoriOrario) {
         mostraSchermataChiusura();
         return;
       }
 
-      // 3. Stampiamo i dati appena arrivano
       state.menu = data.menu || [];
-      renderMenu(state.menu);
+      renderMenuStrutturato(state.menu);
 
       if (data.ordine) {
         state.ordineAperto = data.ordine;
@@ -279,7 +272,6 @@
         setEditMode(true);
       }
       
-      // Aggiorniamo i testi se l'ordine non c'era
       els.roomNumber.textContent = "Camera " + state.room;
       els.structureName.textContent = state.struttura;
 
@@ -291,51 +283,110 @@
 
   function mostraSchermataChiusura() {
     els.greetingBand.style.display = "none";
-    els.dividerMenu.style.display = "none";
-    els.titleMenu.style.display = "none";
-    els.notes.style.display = "none";
-    els.actionsBox.style.display = "none";
-    els.smallNote.style.display = "none";
-
-    els.foods.innerHTML = `
+    els.form.style.display = "none";
+    els.menuContainer.innerHTML = `
       <div class="closed-message">
         <div class="closed-icon">☕</div>
         <div class="closed-title">Servizio Sospeso</div>
         <div class="closed-desc">
-          Il servizio colazione per oggi è terminato.<br>
-          Potrai inviare l'ordine per domani a partire dalle ore <b>${CONFIG.oraRiapertura}:00</b>.
+          Il servizio ordini per domani mattina è terminato alle ore 20:00.<br><br>
+          Potrai inviare un nuovo ordine a partire dalle ore <b>${CONFIG.oraRiapertura}:00</b>.
         </div>
       </div>
     `;
+    els.menuContainer.style.display = "block";
   }
 
-  function renderMenu(menu) {
-    els.foods.innerHTML = "";
-    if (!menu.length) {
-      els.foods.innerHTML = "<div style='text-align:center; font-size:12px; color:var(--text-soft); margin: 20px 0;'>Nessun prodotto disponibile al momento.</div>";
+  function renderMenuStrutturato(categorie) {
+    els.menuContainer.innerHTML = "";
+    
+    if (!categorie.length) {
+      els.menuContainer.innerHTML = "<div style='text-align:center; padding: 20px;'>Nessun menù disponibile.</div>";
       return;
     }
-    menu.forEach((item, i) => {
-      const label = document.createElement("label");
-      label.className = "food-card";
-      label.innerHTML = `
-        <input type="checkbox" name="food" value="${escapeHtml(item.nome)}">
-        <div class="food-content">
-          <div class="emoji">${escapeHtml(item.emoji || "🍽️")}</div>
-          <div class="food-info">
-            <div class="food-title">${escapeHtml(item.nome)}</div>
-            <div class="food-desc">${escapeHtml(item.descrizione || "")}</div>
-          </div>
-          <div class="check">✓</div>
-        </div>`;
-      els.foods.appendChild(label);
+
+    categorie.forEach(cat => {
+      // Titolo Categoria
+      const catDiv = document.createElement("div");
+      catDiv.innerHTML = `<div class="divider"></div><div class="category-title">${escapeHtml(cat.tipologia)}</div>`;
+      els.menuContainer.appendChild(catDiv);
+
+      // Wrapper Prodotti
+      const foodsDiv = document.createElement("div");
+      foodsDiv.className = "foods";
+
+      cat.prodotti.forEach(prod => {
+        const label = document.createElement("label");
+        label.className = "food-card";
+        
+        // Creiamo la select solo se ci sono varianti
+        let selectHtml = "";
+        if (prod.varianti && prod.varianti.length > 0) {
+          const options = prod.varianti.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
+          selectHtml = `<select class="food-select" onchange="this.closest('.food-card').querySelector('input').checked=true; checkLimit()">${options}</select>`;
+        } else {
+          selectHtml = `<div style="font-size: 11px; color: var(--text-soft); margin-top:2px;">Ricetta classica</div>`;
+        }
+
+        label.innerHTML = `
+          <input type="checkbox" name="food" value="${escapeHtml(prod.nome)}" onchange="checkLimit()">
+          <div class="food-content">
+            <div class="emoji">${escapeHtml(prod.emoji || "🍽️")}</div>
+            <div class="food-info">
+              <div class="food-title">${escapeHtml(prod.nome)}</div>
+              ${selectHtml}
+            </div>
+            <div class="check">✓</div>
+          </div>`;
+        
+        foodsDiv.appendChild(label);
+      });
+      els.menuContainer.appendChild(foodsDiv);
     });
   }
 
+  // Funzione per controllare il limite di 2 scelte
+  window.checkLimit = function() {
+    const checkboxes = document.querySelectorAll('input[name="food"]');
+    const checkedBoxes = Array.from(checkboxes).filter(cb => cb.checked);
+    const count = checkedBoxes.length;
+    
+    els.countNum.textContent = count;
+
+    if (count >= state.maxScelte) {
+      els.limitCounter.classList.add("maxed");
+      els.limitCounter.innerHTML = `⚠️ Hai raggiunto il limite massimo (2/2)`;
+      checkboxes.forEach(cb => {
+        if (!cb.checked) cb.closest('.food-card').classList.add('disabled');
+      });
+    } else {
+      els.limitCounter.classList.remove("maxed");
+      els.limitCounter.innerHTML = `Pietanze selezionate: <span id="countNum">${count}</span> / 2`;
+      checkboxes.forEach(cb => {
+        cb.closest('.food-card').classList.remove('disabled');
+      });
+    }
+  };
+
   function applyOrdineToForm(ordine) {
-    const p = ordine.prodotti || [];
-    document.querySelectorAll('input[name="food"]').forEach(i => { i.checked = p.includes(i.value); });
+    const pScelti = ordine.prodotti || [];
+    pScelti.forEach(stringaProdotto => {
+      // Esempio: stringaProdotto = "Cornetto - al cioccolato" oppure "Torta di Mele"
+      const parts = stringaProdotto.split(" - ");
+      const nomeBase = parts[0].trim();
+      const sub = parts.length > 1 ? parts.slice(1).join(" - ").trim() : null;
+
+      const cb = document.querySelector(`input[value="${nomeBase}"]`);
+      if (cb) {
+        cb.checked = true;
+        if (sub) {
+          const select = cb.closest('.food-card').querySelector('select');
+          if (select) select.value = sub;
+        }
+      }
+    });
     els.notes.value = ordine.note || "";
+    checkLimit(); // Aggiorna il contatore visivo
   }
 
   function setEditMode(active) {
@@ -381,12 +432,25 @@
   });
 
   async function sendOrder(action) {
-    const prodotti = Array.from(document.querySelectorAll('input[name="food"]:checked')).map(i => i.value);
+    // Raccogliamo i prodotti costruendo la stringa "Prodotto - Variante"
+    const prodottiFinali = [];
+    document.querySelectorAll('input[name="food"]:checked').forEach(cb => {
+      const nome = cb.value;
+      const select = cb.closest('.food-card').querySelector('select');
+      if (select && select.value) {
+        prodottiFinali.push(`${nome} - ${select.value}`);
+      } else {
+        prodottiFinali.push(nome);
+      }
+    });
+
     const note = els.notes.value.trim();
     if (!state.struttura || !state.room || !state.key) { showToast("QR non valido."); return; }
-    if (!prodotti.length) { showToast("Seleziona almeno una voce per la colazione."); return; }
+    
+    if (prodottiFinali.length === 0) { showToast("Seleziona almeno una pietanza."); return; }
+    if (prodottiFinali.length > state.maxScelte) { showToast(`Massimo ${state.maxScelte} scelte consentite.`); return; }
 
-    const payload = { action, struttura: state.struttura, camera: state.room, key: state.key, prodotti, note };
+    const payload = { action, struttura: state.struttura, camera: state.room, key: state.key, prodotti: prodottiFinali, note };
     if (action === "modificaOrdine") payload.orderId = state.ordineAperto.orderId;
 
     try {
@@ -422,7 +486,7 @@
     clearTimeout(toastTimer);
     els.toast.textContent = msg;
     els.toast.classList.add("show");
-    toastTimer = setTimeout(() => { els.toast.classList.remove("show"); }, 4500);
+    toastTimer = setTimeout(() => { els.toast.classList.remove("show"); }, 4000);
   }
 
   function escapeHtml(s) {
