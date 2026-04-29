@@ -16,6 +16,7 @@
       --gold-border: rgba(200,149,28,0.40); --dark: #0c0a06;
       --cream: #faf6ef; --cream2: #f3ece0; --cream3: #e8dece;
       --card-bg: #ffffff; --text-dark: #1a130a; --text-soft: #a08060;
+      --text-mid: #6b5a3e;
       --r-md: 20px; --r-lg: 28px;
     }
 
@@ -80,7 +81,6 @@
     .food-content { cursor: pointer; border-radius: var(--r-md); background: var(--card-bg); border: 1.5px solid var(--cream3); padding: 12px 14px; display: flex; gap: 13px; align-items: center; transition: all .2s ease; user-select: none; box-shadow: 0 2px 10px rgba(26,19,10,0.06); }
     .food-content:active { transform: scale(0.985); }
     
-    /* Stile per card disabilitata (limite di 2) */
     .food-card.disabled .food-content { opacity: 0.5; filter: grayscale(100%); pointer-events: none; }
 
     .food-card input:checked + .food-content { border-color: var(--gold); background: #fffbf2; box-shadow: 0 0 0 1px rgba(200,149,28,0.15), 0 6px 24px rgba(200,149,28,0.12); }
@@ -90,9 +90,38 @@
     .food-info { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
     .food-title { font-family: "Cormorant Garamond", serif; font-weight: 600; font-size: 19px; line-height: 1.2; color: var(--text-dark); }
     
-    /* SELECT DROPDOWN */
-    .food-select { margin-top: 4px; font-family: "Jost", sans-serif; font-size: 12px; color: var(--text-soft); border: none; background: transparent; padding: 0; width: 100%; outline: none; cursor: pointer; font-weight: 500; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23a08060%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right center; background-size: 8px auto; padding-right: 15px;}
-    .food-card input:checked + .food-content .food-select { color: var(--gold); background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23c8951c%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");}
+    /* === NUOVO MENU A TENDINA MIGLIORATO === */
+    .food-select { 
+      margin-top: 6px; 
+      font-family: "Jost", sans-serif; 
+      font-size: 13px; 
+      color: var(--text-mid); 
+      background-color: var(--cream);
+      border: 1px solid var(--cream3); 
+      border-radius: 8px;
+      padding: 6px 30px 6px 10px; 
+      width: fit-content; 
+      max-width: 100%;
+      outline: none; 
+      cursor: pointer; 
+      font-weight: 500; 
+      appearance: none; 
+      -webkit-appearance: none; 
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23a08060%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E"); 
+      background-repeat: no-repeat; 
+      background-position: right 8px center; 
+      background-size: 14px auto; 
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .food-card input:checked + .food-content .food-select { 
+      color: var(--gold); 
+      background-color: #fff;
+      border-color: rgba(200,149,28,0.4);
+      box-shadow: 0 2px 8px rgba(200,149,28,0.1);
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23c8951c%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E");
+    }
+    .food-select:focus { border-color: var(--gold); }
 
     .check { margin-left: auto; width: 26px; height: 26px; min-width: 26px; border-radius: 50%; border: 1.5px solid var(--cream3); display: grid; place-items: center; font-size: 12px; color: transparent; transition: all .2s ease; }
     .food-card input:checked + .food-content .check { background: var(--gold); border-color: var(--gold); color: #fff; box-shadow: 0 0 12px rgba(200,149,28,0.35); }
@@ -145,7 +174,7 @@
   <section class="hero">
     <div class="hero-inner">
       <img src="assets/LG_ESTATE_Logo_esteso_oro.png" alt="LG Estate" class="brand-logo-wide">
-      <div class="tag"><span class="tag-dot" style="width:5px; height:5px; border-radius:50%; background:var(--gold-bright); display:inline-block; margin-right:4px;"></span>Colazione in camera</div>
+      <div class="tag"><span class="tag-dot" style="width:5px; height:5px; border-radius:50%; background:var(--gold-bright); display:inline-block; margin-right:4px;"></span>Servizio Colazione</div>
     </div>
   </section>
 
@@ -319,13 +348,13 @@
         const label = document.createElement("label");
         label.className = "food-card";
         
-        // Creiamo la select solo se ci sono varianti
+        // Menù a tendina migliorato con onclick event handler per prevenire bug su mobile
         let selectHtml = "";
         if (prod.varianti && prod.varianti.length > 0) {
           const options = prod.varianti.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
-          selectHtml = `<select class="food-select" onchange="this.closest('.food-card').querySelector('input').checked=true; checkLimit()">${options}</select>`;
+          selectHtml = `<select class="food-select" onclick="event.stopPropagation()" onchange="this.closest('.food-card').querySelector('input').checked=true; checkLimit()">${options}</select>`;
         } else {
-          selectHtml = `<div style="font-size: 11px; color: var(--text-soft); margin-top:2px;">Ricetta classica</div>`;
+          selectHtml = `<div style="font-size: 11px; color: var(--text-soft); margin-top:4px;">Ricetta classica</div>`;
         }
 
         label.innerHTML = `
@@ -345,7 +374,6 @@
     });
   }
 
-  // Funzione per controllare il limite di 2 scelte
   window.checkLimit = function() {
     const checkboxes = document.querySelectorAll('input[name="food"]');
     const checkedBoxes = Array.from(checkboxes).filter(cb => cb.checked);
@@ -371,7 +399,6 @@
   function applyOrdineToForm(ordine) {
     const pScelti = ordine.prodotti || [];
     pScelti.forEach(stringaProdotto => {
-      // Esempio: stringaProdotto = "Cornetto - al cioccolato" oppure "Torta di Mele"
       const parts = stringaProdotto.split(" - ");
       const nomeBase = parts[0].trim();
       const sub = parts.length > 1 ? parts.slice(1).join(" - ").trim() : null;
@@ -386,7 +413,7 @@
       }
     });
     els.notes.value = ordine.note || "";
-    checkLimit(); // Aggiorna il contatore visivo
+    checkLimit();
   }
 
   function setEditMode(active) {
@@ -432,7 +459,6 @@
   });
 
   async function sendOrder(action) {
-    // Raccogliamo i prodotti costruendo la stringa "Prodotto - Variante"
     const prodottiFinali = [];
     document.querySelectorAll('input[name="food"]:checked').forEach(cb => {
       const nome = cb.value;
