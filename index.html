@@ -1,300 +1,576 @@
-const SHEET_MENU = "Menu";
-const SHEET_CAMERE = "Camere";
-const SHEET_ORDINI = "Ordini";
-const EMAIL_DESTINATARIO = "ferra2391@gmail.com";
-const NOME_BB = "LG Estate Colazioni";
-const MINUTI_MODIFICA = 10;
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="theme-color" content="#0c0a06" />
+  <title>LG Estate — Colazione</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-// --- IMPOSTAZIONI ORARI ---
-const ORA_CHIUSURA = 20;   // Chiude alle 20:00
-const ORA_RIAPERTURA = 10; // Riapre alle 10:00 del mattino successivo
+  <style>
+    :root {
+      --gold: #c8951c; --gold-light: #dba832; --gold-bright: #f0c84a;
+      --gold-border: rgba(200,149,28,0.40); --dark: #0c0a06;
+      --cream: #faf6ef; --cream2: #f3ece0; --cream3: #e8dece;
+      --card-bg: #ffffff; --text-dark: #1a130a; --text-soft: #a08060;
+      --text-mid: #6b5a3e;
+      --r-md: 31px; 
+      --r-lg: 44px; 
+    }
 
-function isOrarioValido_() {
-  const h = new Date().getHours();
-  // Se l'ora è maggiore o uguale a 20, oppure minore di 10, è chiuso.
-  return !(h >= ORA_CHIUSURA || h < ORA_RIAPERTURA);
-}
+    *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { margin: 0; min-height: 100vh; font-family: "Jost", sans-serif; background: var(--cream); color: var(--text-dark); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    .page { max-width: 680px; margin: 0 auto; padding-bottom: 78px; }
 
-function doGet(e) {
-  try {
-    const action = String(e.parameter.action || "").trim();
-    const ss = SpreadsheetApp.getActive();
+    /* SPLASH SCREEN INTRO */
+    .splash-screen {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--dark);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 46px; text-align: center;
+      transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), transform 1.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.5s;
+    }
+    .splash-screen.hidden { opacity: 0; transform: scale(1.15); visibility: hidden; pointer-events: none; }
+    .splash-logo {
+      width: 100%; max-width: 450px; 
+      height: auto; margin-bottom: 62px;
+      filter: drop-shadow(0 0 32px rgba(200,149,28,0.15));
+      animation: pulseLogo 2.5s infinite alternate ease-in-out;
+    }
+    .splash-text {
+      font-family: "Cormorant Garamond", serif; font-size: 50px; 
+      color: var(--gold-bright); font-style: italic; line-height: 1.15;
+      opacity: 0; animation: fadeTextIn 1s 0.6s forwards;
+    }
+    @keyframes pulseLogo { from { filter: drop-shadow(0 0 20px rgba(200,149,28,0.1)); } to { filter: drop-shadow(0 0 52px rgba(200,149,28,0.4)); } }
+    @keyframes fadeTextIn { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(13px); } }
 
-    if (action === "init") {
-      const struttura = String(e.parameter.struttura || "").trim();
-      const camera = String(e.parameter.camera || "").trim();
-      const key = String(e.parameter.key || "").trim();
+    /* GUEST POPUP INTERMEDIO */
+    .guest-popup {
+      position: fixed; inset: 0; z-index: 9000;
+      background: rgba(12, 10, 6, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center; padding: 25px;
+      transition: opacity 0.6s ease, visibility 0.6s;
+    }
+    .guest-popup.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    .guest-popup-content {
+      background: var(--cream); border-radius: var(--r-lg); padding: 45px 35px; text-align: center;
+      border: 2px solid var(--gold-border); box-shadow: 0 25px 70px rgba(0,0,0,0.5);
+      max-width: 500px; width: 100%; transform: scale(0.9); transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .guest-popup:not(.hidden) .guest-popup-content { transform: scale(1); }
+    .guest-popup h2 { font-family: "Cormorant Garamond", serif; font-size: 42px; color: var(--gold); margin: 0 0 18px; line-height: 1.1; }
+    .guest-popup p { font-size: 21px; color: var(--text-soft); line-height: 1.5; margin: 0 0 35px; }
+    .guest-selector { display: flex; gap: 18px; justify-content: center; }
+    .guest-btn {
+      flex: 1; padding: 20px 0; font-size: 32px; font-weight: 600; font-family: "Jost", sans-serif;
+      background: #fff; border: 2.5px solid var(--cream3); border-radius: 20px; color: var(--text-dark);
+      cursor: pointer; transition: all 0.2s ease; box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+    }
+    .guest-btn:active { transform: scale(0.95); }
+    .guest-btn:hover { border-color: var(--gold); color: var(--gold); background: #fffbf2; }
 
-      const orarioValido = isOrarioValido_();
+    /* HERO & ROOM CARD */
+    .hero { position: relative; overflow: hidden; min-height: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 75px 0 80px; background: var(--dark); }
+    .hero::before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(200,149,28,0.09) 0%, transparent 70%); z-index: 1; }
+    .hero::after { content: ""; position: absolute; bottom: 0; left: 10%; right: 10%; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-border), transparent); z-index: 2; }
+    .hero-inner { position: relative; z-index: 3; width: 100%; padding: 0 34px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 22px; }
+    .brand-logo-wide { width: 100%; max-width: 480px; height: auto; display: block; filter: drop-shadow(0 0 52px rgba(200,149,28,0.22)); }
+    .tag { display: inline-flex; align-items: center; gap: 10px; padding: 8px 22px; border-radius: 999px; border: 1.5px solid var(--gold-border); background: rgba(200,149,28,0.14); backdrop-filter: blur(10px); font-size: 15px; font-weight: 600; letter-spacing: 2.6px; text-transform: uppercase; color: var(--gold-bright); }
+    
+    .room-card { position: relative; z-index: 10; margin: -52px 20px 0; background: var(--card-bg); border: 1.5px solid var(--cream3); border-radius: var(--r-lg); padding: 25px 28px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 26px 65px rgba(26,19,10,0.14); }
+    .room-label { font-size: 14px; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: 2.8px; margin-bottom: 5px; }
+    .room-number { font-family: "Cormorant Garamond", serif; font-size: 34px; font-weight: 600; line-height: 1.1; }
+    .structure-name { font-size: 17px; color: var(--text-soft); margin-top: 3px; }
+    .room-icon { width: 78px; height: 78px; border-radius: 22px; background: linear-gradient(135deg, #fdf0d5, #f5d98a); border: 1.5px solid rgba(200,149,28,0.28); display: grid; place-items: center; font-size: 34px; box-shadow: 0 8px 23px rgba(200,149,28,0.18); }
 
-      const menuData = ss.getSheetByName(SHEET_MENU).getDataRange().getValues();
-      const camereData = ss.getSheetByName(SHEET_CAMERE).getDataRange().getValues();
-      const ordiniSheet = ss.getSheetByName(SHEET_ORDINI);
-      const ordiniData = ordiniSheet ? ordiniSheet.getDataRange().getValues() : [];
+    /* GREETING */
+    .greeting-band { margin: 31px 20px 0; padding: 31px 34px; background: linear-gradient(135deg, var(--dark), #231a0c 80%, #2e2008); border-radius: var(--r-lg); box-shadow: 0 15px 46px rgba(12,10,6,0.18); position: relative; overflow: hidden; }
+    .greeting-band::before { content: ""; position: absolute; top: 15px; right: 15px; width: 49px; height: 49px; border-top: 1.5px solid var(--gold-border); border-right: 1.5px solid var(--gold-border); }
+    .greeting-band::after { content: ""; position: absolute; bottom: 15px; left: 15px; width: 49px; height: 49px; border-bottom: 1.5px solid var(--gold-border); border-left: 1.5px solid var(--gold-border); }
+    .greeting-band h1 { margin: 0 0 13px; font-family: "Cormorant Garamond", serif; font-size: 42px; font-weight: 600; line-height: 1.1; color: #fff; }
+    .greeting-band h1 em { font-style: italic; color: var(--gold-bright); }
+    .greeting-band p { margin: 0; font-size: 18px; font-weight: 400; color: rgba(255,255,255,0.9); line-height: 1.5; }
+    .greeting-band .rules { margin-top: 15px; padding-top: 15px; border-top: 1.5px solid rgba(200,149,28,0.3); font-size: 17px; font-weight: 300; color: var(--gold-bright); line-height: 1.5; }
 
-      // LETTURA NUOVO MENU (Tipologia, Prodotto, SubProdotto, Emoji, Attivo)
-      const menuFlat = menuData.slice(1)
-        .filter(r => String(r[4] || "").toUpperCase().trim() === "SI")
-        .map(r => ({
-          tipologia: String(r[0] || "").trim(),
-          prodotto: String(r[1] || "").trim(),
-          sub: String(r[2] || "").trim(),
-          emoji: String(r[3] || "🍽️").trim()
-        }));
+    /* SECTION TITLE */
+    .divider { margin: 37px 20px 0; height: 1.5px; background: linear-gradient(90deg, transparent, var(--cream3), transparent); }
+    .category-title { margin: 31px 20px 18px; font-family: "Cormorant Garamond", serif; font-size: 34px; font-weight: 600; color: var(--gold); border-left: 5px solid var(--gold); padding-left: 15px; line-height: 1.1;}
 
-      // Raggruppamento per Frontend
-      const menuStrutturato = [];
-      const tipiMap = {};
+    /* FOOD CARDS WITH SELECT */
+    .foods { display: flex; flex-direction: column; gap: 15px; padding: 0 20px; margin-bottom: 23px;}
+    .food-card { position: relative; }
+    .food-card input[type="checkbox"] { display: none; }
+    
+    .food-content { cursor: pointer; border-radius: var(--r-md); background: var(--card-bg); border: 2px solid var(--cream3); padding: 23px 29px; display: flex; gap: 26px; align-items: center; transition: all .2s ease; user-select: none; box-shadow: 0 3px 13px rgba(26,19,10,0.06); }
+    .food-content:active { transform: scale(0.985); }
+    
+    .food-card.disabled .food-content { opacity: 0.5; filter: grayscale(100%); pointer-events: none; }
+
+    .food-card input:checked + .food-content { border-color: var(--gold); background: #fffbf2; box-shadow: 0 0 0 2px rgba(200,149,28,0.15), 0 8px 31px rgba(200,149,28,0.12); }
+    .emoji { width: 80px; height: 80px; min-width: 80px; border-radius: 23px; display: grid; place-items: center; font-size: 36px; background: var(--cream2); border: 1.5px solid var(--cream3); transition: all .2s; }
+    .food-card input:checked + .food-content .emoji { background: #fdf0d5; border-color: rgba(200,149,28,0.3); }
+    
+    .food-info { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+    .food-title { font-family: "Cormorant Garamond", serif; font-weight: 600; font-size: 32px; line-height: 1.2; color: var(--text-dark); }
+    
+    /* MENU A TENDINA PRODOTTI */
+    .food-select { 
+      margin-top: 10px; font-family: "Jost", sans-serif; font-size: 22px; color: var(--text-mid); background-color: var(--cream);
+      border: 2px solid var(--cream3); border-radius: 16px; padding: 13px 60px 13px 20px; width: fit-content; max-width: 100%;
+      outline: none; cursor: pointer; font-weight: 500; appearance: none; -webkit-appearance: none; 
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23a08060%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E"); 
+      background-repeat: no-repeat; background-position: right 18px center; background-size: 28px auto; transition: all 0.2s ease; box-shadow: 0 3px 6px rgba(0,0,0,0.02);
+    }
+    .food-card input:checked + .food-content .food-select { 
+      color: var(--gold); background-color: #fff; border-color: rgba(200,149,28,0.4); box-shadow: 0 3px 10px rgba(200,149,28,0.1);
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23c8951c%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E");
+    }
+    .food-select:focus { border-color: var(--gold); }
+
+    .check { margin-left: auto; width: 52px; height: 52px; min-width: 52px; border-radius: 50%; border: 2px solid var(--cream3); display: grid; place-items: center; font-size: 23px; color: transparent; transition: all .2s ease; }
+    .food-card input:checked + .food-content .check { background: var(--gold); border-color: var(--gold); color: #fff; box-shadow: 0 0 15px rgba(200,149,28,0.35); }
+
+    /* LIMIT COUNTER */
+    .limit-counter { margin: 15px 20px 23px; padding: 15px; background: rgba(200,149,28,0.1); border-radius: 15px; text-align: center; font-size: 18px; font-weight: 500; color: var(--gold); border: 2px dashed var(--gold-border); transition: 0.3s;}
+    .limit-counter.maxed { background: #ffebeb; color: #d32f2f; border-color: #f4c2c2; }
+
+    /* STATUS & BUTTONS */
+    .status-box { display: none; margin: 18px 20px 0; padding: 22px 28px; border-radius: var(--r-md); background: #fff8eb; border: 2px solid rgba(200,149,28,0.45); box-shadow: 0 8px 26px rgba(200,149,28,0.10); }
+    .status-box.show { display: block; }
+    .status-title { font-size: 14px; font-weight: 600; letter-spacing: 2.3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .countdown { font-family: "Cormorant Garamond", serif; font-size: 53px; font-weight: 600; line-height: 1; letter-spacing: 2.6px; }
+    .status-note { margin-top: 8px; font-size: 17px; color: var(--text-soft); line-height: 1.5; font-weight: 300; }
+    
+    textarea { display: block; margin: 18px 20px 0; width: calc(100% - 40px); min-height: 130px; resize: none; border: 2px solid var(--cream3); outline: none; border-radius: var(--r-md); padding: 20px 23px; font-family: "Jost", sans-serif; font-size: 20px; font-weight: 300; background: var(--card-bg); color: var(--text-dark); box-shadow: 0 3px 13px rgba(26,19,10,0.05); transition: border-color .2s; }
+    textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(200,149,28,0.08); }
+
+    .actions { display: flex; flex-direction: column; gap: 15px; margin: 22px 20px 0; }
+    button { width: 100%; border: none; border-radius: 22px; padding: 24px 31px; font-family: "Jost", sans-serif; font-size: 18px; font-weight: 600; letter-spacing: 2.3px; text-transform: uppercase; cursor: pointer; transition: all .2s ease; }
+    button:active { transform: scale(0.983); }
+    .send-btn { color: #fff; background: linear-gradient(135deg, #1a110a, #3d2a0f, var(--gold-light)); box-shadow: 0 18px 46px rgba(12,10,6,0.22), inset 0 1px 0 rgba(255,255,255,0.08); }
+    .edit-btn { display: none; color: var(--gold); background: var(--card-bg); border: 2px solid rgba(200,149,28,0.45); box-shadow: 0 5px 20px rgba(26,19,10,0.06); }
+    .edit-btn.show { display: block; }
+    .small-note { margin: 15px 20px 0; text-align: center; font-size: 17px; font-weight: 300; line-height: 1.6; color: var(--text-soft); }
+
+    .footer { margin-top: 49px; padding: 31px 20px; text-align: center; border-top: 1.5px solid var(--cream3); }
+    .footer-logo-img { width: 234px; height: auto; display: block; margin: 0 auto; opacity: 0.55; }
+
+    .toast { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(0.92); width: calc(100% - 40px); max-width: 550px; padding: 33px 31px; border-radius: 33px; background: rgba(12,10,6,0.96); border: 1.5px solid var(--gold-border); color: rgba(255,255,255,0.94); box-shadow: 0 31px 90px rgba(0,0,0,0.42); font-size: 22px; text-align: center; z-index: 999; opacity: 0; pointer-events: none; transition: opacity .25s ease, transform .25s ease; }
+    .toast.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+    /* STILI MESSAGGIO DI CHIUSURA */
+    .closed-message { text-align: center; padding: 46px 20px; margin: 15px 20px; background: #fff; border-radius: var(--r-md); border: 1.5px solid var(--cream3); box-shadow: 0 13px 39px rgba(0,0,0,0.05); }
+    .closed-icon { font-size: 62px; margin-bottom: 23px; }
+    .closed-title { font-family: "Cormorant Garamond", serif; font-size: 37px; font-weight: 600; color: var(--gold); margin-bottom: 13px; }
+    .closed-desc { font-size: 22px; color: var(--text-soft); line-height: 1.5; }
+
+  </style>
+</head>
+
+<body>
+
+<!-- SPLASH SCREEN INIZIALE -->
+<div id="splashScreen" class="splash-screen">
+  <img src="assets/LG_ESTATE_Logo_esteso_oro.png" alt="LG Estate" class="splash-logo">
+  <div class="splash-text">Benvenuto nel sistema di<br>prenotazione colazione</div>
+</div>
+
+<!-- POPUP INTERMEDIO OSPITI -->
+<div id="guestPopup" class="guest-popup hidden">
+  <div class="guest-popup-content">
+    <h2>Quanti ospiti?</h2>
+    <p>Per garantirti il miglior servizio, indicaci per quante persone preparare la colazione.</p>
+    <div class="guest-selector">
+      <button type="button" class="guest-btn" onclick="selectGuests(1)">1</button>
+      <button type="button" class="guest-btn" onclick="selectGuests(2)">2</button>
+      <button type="button" class="guest-btn" onclick="selectGuests(3)">3</button>
+      <button type="button" class="guest-btn" onclick="selectGuests(4)">4</button>
+    </div>
+  </div>
+</div>
+
+<main class="page" id="mainPage">
+  <section class="hero">
+    <div class="hero-inner">
+      <img src="assets/LG_ESTATE_Logo_esteso_oro.png" alt="LG Estate" class="brand-logo-wide">
+      <div class="tag"><span class="tag-dot" style="width:8px; height:8px; border-radius:50%; background:var(--gold-bright); display:inline-block; margin-right:6px;"></span>Servizio Colazione</div>
+    </div>
+  </section>
+
+  <section class="room-card">
+    <div>
+      <div class="room-label">Camera rilevata</div>
+      <div class="room-number" id="roomNumber">Caricamento...</div>
+      <div class="structure-name" id="structureName">Attendere prego...</div>
+    </div>
+    <div class="room-icon">🛎️</div>
+  </section>
+
+  <div class="greeting-band" id="greetingBand">
+    <h1>Buongiorno,<br><em>cosa desideri?</em></h1>
+    <p>La colazione è servita dalle 7:30 alle 10:00.</p>
+    <div class="rules" id="dynamicRules">
+      Per garantire la massima freschezza e ridurre gli sprechi, invitiamo a compilare questo menù entro le ore 20:00.<br>
+      <b>Puoi scegliere un massimo di 2 pietanze.</b>
+    </div>
+  </div>
+
+  <section class="status-box" id="statusBox">
+    <div class="status-title">Ordine ancora modificabile</div>
+    <div class="countdown" id="countdown">--:--</div>
+    <div class="status-note">Puoi modificare l'ordine entro 10 minuti dall'invio. Dopo sarà considerato confermato.</div>
+  </section>
+
+  <form id="breakfastForm">
+    
+    <div id="menuContainer"></div>
+
+    <div class="limit-counter" id="limitCounter">
+      Pietanze selezionate: <span id="countNum">0</span> / 2
+    </div>
+
+    <textarea id="notes" placeholder="Note o richieste particolari… es. senza lattosio, orario preferito, allergie"></textarea>
+    <div class="actions" id="actionsBox">
+      <button class="send-btn" id="sendBtn" type="submit">Invia ordine colazione</button>
+      <button class="edit-btn" id="editBtn" type="button">Modifica ordine</button>
+    </div>
+  </form>
+
+  <div class="footer">
+    <img src="assets/LG_ESTATE_Logo_esteso_oro.png" alt="LG Estate" class="footer-logo-img">
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // *** INSERISCI QUI IL TUO URL DI GOOGLE APPS SCRIPT ***
+  const CONFIG = {
+    webAppUrl: "https://script.google.com/macros/s/IL_TUO_ID_SCRIPT_QUI/exec",
+    oraRiapertura: 10
+  };
+
+  const state = {
+    struttura: null, room: null, key: null,
+    menu: [], ordineAperto: null, countdownInterval: null,
+    ospiti: 1, maxScelte: 2
+  };
+
+  const els = {
+    splash:        document.getElementById("splashScreen"),
+    guestPopup:    document.getElementById("guestPopup"),
+    dynamicRules:  document.getElementById("dynamicRules"),
+    roomNumber:    document.getElementById("roomNumber"),
+    structureName: document.getElementById("structureName"),
+    menuContainer: document.getElementById("menuContainer"),
+    notes:         document.getElementById("notes"),
+    form:          document.getElementById("breakfastForm"),
+    sendBtn:       document.getElementById("sendBtn"),
+    editBtn:       document.getElementById("editBtn"),
+    toast:         document.getElementById("toast"),
+    statusBox:     document.getElementById("statusBox"),
+    countdown:     document.getElementById("countdown"),
+    greetingBand:  document.getElementById("greetingBand"),
+    actionsBox:    document.getElementById("actionsBox"),
+    limitCounter:  document.getElementById("limitCounter"),
+    countNum:      document.getElementById("countNum")
+  };
+
+  init();
+
+  async function init() {
+    const p = new URLSearchParams(window.location.search);
+    state.struttura = p.get("struttura") || "";
+    state.room      = p.get("room") || p.get("camera") || "";
+    state.key       = p.get("key") || "";
+
+    els.roomNumber.textContent    = state.room ? "Camera " + state.room : "Camera non rilevata";
+    els.structureName.textContent = state.struttura ? state.struttura : "Struttura non rilevata";
+
+    if (!state.struttura || !state.room || !state.key) {
+      showToast("QR non valido: struttura, camera o codice mancanti.");
+      els.splash.classList.add("hidden");
+      return;
+    }
+
+    const fallbackTimer = setTimeout(() => { 
+      els.splash.classList.add("hidden"); 
+      els.guestPopup.classList.remove("hidden");
+    }, 2800); 
+
+    try {
+      const url = `${CONFIG.webAppUrl}?action=init&struttura=${encodeURIComponent(state.struttura)}&camera=${encodeURIComponent(state.room)}&key=${encodeURIComponent(state.key)}&t=${Date.now()}`;
       
-      menuFlat.forEach(item => {
-        if (!tipiMap[item.tipologia]) {
-          tipiMap[item.tipologia] = { tipologia: item.tipologia, prodotti: [] };
-          menuStrutturato.push(tipiMap[item.tipologia]);
-        }
-        const prodList = tipiMap[item.tipologia].prodotti;
-        let prodObj = prodList.find(p => p.nome === item.prodotto);
-        
-        if (!prodObj) {
-          prodObj = { nome: item.prodotto, emoji: item.emoji, varianti: [] };
-          prodList.push(prodObj);
-        }
-        if (item.sub) prodObj.varianti.push(item.sub);
-      });
+      const res = await fetch(url);
+      const data = await res.json();
 
-      const isValida = camereData.slice(1).some(r => 
-        String(r[0]).trim() === struttura && 
-        String(r[1]).trim() === camera && 
-        String(r[2]).trim() === key && 
-        String(r[3]).toUpperCase().trim() === "SI"
-      );
+      clearTimeout(fallbackTimer);
+      
+      // Nascondiamo il logo grande sfumato
+      els.splash.classList.add("hidden");
 
-      if (!isValida) return json_({ ok: false, error: "QR non autorizzato", menu: menuStrutturato });
+      if (!data.ok) showToast(data.error || "Errore di caricamento.");
 
-      let ordineAperto = null;
-      const now = new Date();
-      for (let i = ordiniData.length - 1; i >= 1; i--) {
-        const row = ordiniData[i];
-        const scadenza = new Date(row[1]);
-        if (String(row[2]) === struttura && String(row[3]) === camera && now <= scadenza) {
-          ordineAperto = {
-            orderId: String(row[4]),
-            prodotti: String(row[5]).split(",").map(x => x.trim()).filter(Boolean),
-            note: String(row[6]),
-            stato: String(row[7]),
-            secondiRimanenti: Math.max(0, Math.floor((scadenza - now) / 1000))
-          };
-          break;
-        }
+      // Blocco Orario
+      if (data.fuoriOrario) {
+        mostraSchermataChiusura();
+        return;
       }
 
-      return json_({ 
-        ok: true, 
-        menu: menuStrutturato, 
-        ordine: ordineAperto,
-        fuoriOrario: !orarioValido 
+      state.menu = data.menu || [];
+      renderMenuStrutturato(state.menu);
+
+      if (data.ordine) {
+        state.ordineAperto = data.ordine;
+        applyOrdineToForm(data.ordine);
+        startCountdown(data.ordine.secondiRimanenti);
+        setEditMode(true);
+      }
+      
+      els.roomNumber.textContent = "Camera " + state.room;
+      els.structureName.textContent = state.struttura;
+
+      // Mostriamo la finestra di popup per la selezione ospiti
+      els.guestPopup.classList.remove("hidden");
+
+    } catch (err) {
+      showToast("Errore di connessione al server.");
+      els.roomNumber.textContent = "Errore di connessione";
+    }
+  }
+
+  // Funzione chiamata al click sui pulsanti del numero di ospiti
+  window.selectGuests = function(num) {
+    state.ospiti = num;
+    state.maxScelte = num * 2;
+    
+    // Aggiorniamo le regole di testo mostrate nel banner in base alla scelta
+    els.dynamicRules.innerHTML = `
+      Per garantire la massima freschezza e ridurre gli sprechi, invitiamo a compilare questo menù entro le ore 20:00.<br>
+      <b>Puoi scegliere un massimo di ${state.maxScelte} pietanze (${num} per ospite).</b>`;
+    
+    // Ricalcoliamo i limiti e nascondiamo il popup
+    checkLimit();
+    els.guestPopup.classList.add("hidden");
+  };
+
+  function mostraSchermataChiusura() {
+    els.greetingBand.style.display = "none";
+    els.form.style.display = "none";
+    els.menuContainer.innerHTML = `
+      <div class="closed-message">
+        <div class="closed-icon">☕</div>
+        <div class="closed-title">Servizio Sospeso</div>
+        <div class="closed-desc">
+          Il servizio ordini per domani mattina è terminato alle ore 20:00.<br><br>
+          Potrai inviare un nuovo ordine a partire dalle ore <b>${CONFIG.oraRiapertura}:00</b>.
+        </div>
+      </div>
+    `;
+    els.menuContainer.style.display = "block";
+  }
+
+  function renderMenuStrutturato(categorie) {
+    els.menuContainer.innerHTML = "";
+    
+    if (!categorie.length) {
+      els.menuContainer.innerHTML = "<div style='text-align:center; padding: 31px; font-size: 18px;'>Nessun menù disponibile.</div>";
+      return;
+    }
+
+    categorie.forEach(cat => {
+      const catDiv = document.createElement("div");
+      catDiv.innerHTML = `<div class="divider"></div><div class="category-title">${escapeHtml(cat.tipologia)}</div>`;
+      els.menuContainer.appendChild(catDiv);
+
+      const foodsDiv = document.createElement("div");
+      foodsDiv.className = "foods";
+
+      cat.prodotti.forEach(prod => {
+        const label = document.createElement("label");
+        label.className = "food-card";
+        
+        let selectHtml = "";
+        if (prod.varianti && prod.varianti.length > 0) {
+          const options = prod.varianti.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
+          selectHtml = `<select class="food-select" onclick="event.stopPropagation()" onchange="this.closest('.food-card').querySelector('input').checked=true; checkLimit()">${options}</select>`;
+        } else {
+          selectHtml = `<div style="font-size: 22px; color: var(--text-soft); margin-top:8px;">Ricetta classica</div>`;
+        }
+
+        label.innerHTML = `
+          <input type="checkbox" name="food" value="${escapeHtml(prod.nome)}" onchange="checkLimit()">
+          <div class="food-content">
+            <div class="emoji">${escapeHtml(prod.emoji || "🍽️")}</div>
+            <div class="food-info">
+              <div class="food-title">${escapeHtml(prod.nome)}</div>
+              ${selectHtml}
+            </div>
+            <div class="check">✓</div>
+          </div>`;
+        
+        foodsDiv.appendChild(label);
+      });
+      els.menuContainer.appendChild(foodsDiv);
+    });
+  }
+
+  window.checkLimit = function() {
+    const checkboxes = document.querySelectorAll('input[name="food"]');
+    const checkedBoxes = Array.from(checkboxes).filter(cb => cb.checked);
+    const count = checkedBoxes.length;
+    
+    els.countNum.textContent = count;
+
+    if (count >= state.maxScelte) {
+      els.limitCounter.classList.add("maxed");
+      els.limitCounter.innerHTML = `⚠️ Hai raggiunto il limite massimo (${state.maxScelte}/${state.maxScelte})`;
+      checkboxes.forEach(cb => {
+        if (!cb.checked) cb.closest('.food-card').classList.add('disabled');
+      });
+    } else {
+      els.limitCounter.classList.remove("maxed");
+      els.limitCounter.innerHTML = `Pietanze selezionate: <span id="countNum">${count}</span> / ${state.maxScelte}`;
+      checkboxes.forEach(cb => {
+        cb.closest('.food-card').classList.remove('disabled');
       });
     }
-
-    return json_({ ok: false, error: "Azione GET non valida." });
-
-  } catch (err) {
-    return json_({ ok: false, error: err.message });
-  }
-}
-
-function doPost(e) {
-  try {
-    const data = JSON.parse(e.postData.contents || "{}");
-    const action = String(data.action || "").trim();
-
-    if (action === "creaOrdine") return json_(creaOrdine_(data));
-    if (action === "modificaOrdine") return json_(modificaOrdine_(data));
-
-    return json_({ ok: false, error: "Azione POST non valida." });
-  } catch (err) {
-    return json_({ ok: false, error: err.message });
-  }
-}
-
-function creaOrdine_(data) {
-  if (!isOrarioValido_()) return { ok: false, error: `Servizio chiuso. Ricorda di ordinare entro le ${ORA_CHIUSURA}:00.` };
-
-  const struttura = String(data.struttura || "").trim();
-  const camera = String(data.camera || "").trim();
-  const key = String(data.key || "").trim();
-  const prodotti = Array.isArray(data.prodotti) ? data.prodotti : [];
-  const note = limitaTesto_(String(data.note || "").trim(), 500);
-  const ospiti = parseInt(data.ospiti) || 1; // Riceve gli ospiti
-  const maxScelte = ospiti * 2; // Calcola il limite
-
-  if (!isCameraValida_(struttura, camera, key)) return { ok: false, error: "QR non autorizzato." };
-  if (!prodotti.length) return { ok: false, error: "Seleziona almeno un prodotto." };
-  
-  if (prodotti.length > maxScelte) return { ok: false, error: `Puoi selezionare un massimo di ${maxScelte} pietanze.` };
-
-  const prodottiValidi = filtraProdottiValidi_(prodotti);
-  if (!prodottiValidi.length) return { ok: false, error: "I prodotti selezionati non sono validi." };
-
-  const ordineAperto = getOrdineAperto_(struttura, camera);
-  if (ordineAperto.ok && ordineAperto.ordine) return { ok: false, error: "Hai già un ordine modificabile.", ordine: ordineAperto.ordine };
-
-  const ordineOggi = getOrdineDiOggi_(struttura, camera);
-  if (ordineOggi) return { ok: false, error: "Ordine già inviato oggi. Contatta la reception." };
-
-  const now = new Date();
-  const scadenza = new Date(now.getTime() + MINUTI_MODIFICA * 60 * 1000);
-  const orderId = generaOrderId_(struttura, camera);
-  const sh = SpreadsheetApp.getActive().getSheetByName(SHEET_ORDINI);
-
-  if (!sh) return { ok: false, error: "Tab Ordini non trovata." };
-
-  sh.appendRow([now, scadenza, struttura, camera, orderId, prodottiValidi.join(", "), note, "INVIATO", now]);
-  inviaMailOrdine_("NUOVO ORDINE", struttura, camera, orderId, prodottiValidi, note, now, scadenza, ospiti);
-
-  return {
-    ok: true, message: "Ordine inviato correttamente.",
-    ordine: {
-      struttura, camera, orderId, prodotti: prodottiValidi, note, stato: "INVIATO",
-      scadenzaModifica: scadenza.toISOString(),
-      secondiRimanenti: Math.max(0, Math.floor((scadenza.getTime() - new Date().getTime()) / 1000))
-    }
   };
-}
 
-function modificaOrdine_(data) {
-  if (!isOrarioValido_()) return { ok: false, error: `Servizio chiuso. Ordini consentiti fino alle ${ORA_CHIUSURA}:00.` };
+  function applyOrdineToForm(ordine) {
+    const pScelti = ordine.prodotti || [];
+    pScelti.forEach(stringaProdotto => {
+      const parts = stringaProdotto.split(" - ");
+      const nomeBase = parts[0].trim();
+      const sub = parts.length > 1 ? parts.slice(1).join(" - ").trim() : null;
 
-  const struttura = String(data.struttura || "").trim();
-  const camera = String(data.camera || "").trim();
-  const key = String(data.key || "").trim();
-  const orderId = String(data.orderId || "").trim();
-  const prodotti = Array.isArray(data.prodotti) ? data.prodotti : [];
-  const note = limitaTesto_(String(data.note || "").trim(), 500);
-  const ospiti = parseInt(data.ospiti) || 1; 
-  const maxScelte = ospiti * 2; 
-
-  if (!isCameraValida_(struttura, camera, key)) return { ok: false, error: "QR non autorizzato." };
-  if (!orderId) return { ok: false, error: "OrderId mancante." };
-  if (!prodotti.length) return { ok: false, error: "Seleziona almeno un prodotto." };
-  
-  if (prodotti.length > maxScelte) return { ok: false, error: `Puoi selezionare un massimo di ${maxScelte} pietanze.` };
-
-  const prodottiValidi = filtraProdottiValidi_(prodotti);
-  if (!prodottiValidi.length) return { ok: false, error: "Prodotti non validi." };
-
-  const sh = SpreadsheetApp.getActive().getSheetByName(SHEET_ORDINI);
-  if (!sh) return { ok: false, error: "Tab Ordini non trovata." };
-
-  const values = sh.getDataRange().getValues();
-  const now = new Date();
-
-  for (let i = values.length - 1; i >= 1; i--) {
-    const row = values[i];
-    if (String(row[2]).trim() === struttura && String(row[3]).trim() === camera && String(row[4]).trim() === orderId) {
-      const scadenza = new Date(row[1]);
-      if (now.getTime() > scadenza.getTime()) return { ok: false, error: "Tempo di modifica scaduto." };
-
-      sh.getRange(i + 1, 6).setValue(prodottiValidi.join(", "));
-      sh.getRange(i + 1, 7).setValue(note);
-      sh.getRange(i + 1, 8).setValue("MODIFICATO");
-      sh.getRange(i + 1, 9).setValue(now);
-
-      inviaMailOrdine_("MODIFICA ORDINE", struttura, camera, orderId, prodottiValidi, note, now, scadenza, ospiti);
-
-      return {
-        ok: true, message: "Ordine modificato.",
-        ordine: {
-          struttura, camera, orderId, prodotti: prodottiValidi, note, stato: "MODIFICATO",
-          scadenzaModifica: scadenza.toISOString(),
-          secondiRimanenti: Math.max(0, Math.floor((scadenza.getTime() - now.getTime()) / 1000))
+      const cb = document.querySelector(`input[value="${nomeBase}"]`);
+      if (cb) {
+        cb.checked = true;
+        if (sub) {
+          const select = cb.closest('.food-card').querySelector('select');
+          if (select) select.value = sub;
         }
-      };
-    }
+      }
+    });
+    els.notes.value = ordine.note || "";
+    checkLimit();
   }
-  return { ok: false, error: "Ordine non trovato." };
-}
 
-function isCameraValida_(struttura, camera, key) {
-  const sh = SpreadsheetApp.getActive().getSheetByName(SHEET_CAMERE);
-  if (!sh) return false;
-  const values = sh.getDataRange().getValues().slice(1);
-  return values.some(r => {
-    return String(r[0] || "").trim() === struttura && String(r[1] || "").trim() === camera && 
-           String(r[2] || "").trim() === key && String(r[3] || "").toUpperCase().trim() === "SI";
+  function setEditMode(active) {
+    els.statusBox.classList.toggle("show", active);
+    els.editBtn.classList.toggle("show", active);
+    els.sendBtn.textContent = active ? "Nuovo ordine non disponibile" : "Invia ordine colazione";
+    els.sendBtn.style.display = active ? "none" : "block";
+  }
+
+  function startCountdown(seconds) {
+    clearInterval(state.countdownInterval);
+    let r = Math.max(0, Number(seconds || 0));
+    updateCountdownText(r);
+    state.countdownInterval = setInterval(() => {
+      r--;
+      if (r <= 0) {
+        clearInterval(state.countdownInterval);
+        state.ordineAperto = null;
+        setEditMode(false);
+        els.sendBtn.style.display = "none";
+        updateCountdownText(0);
+        showToast("Tempo di modifica scaduto.");
+        return;
+      }
+      updateCountdownText(r);
+    }, 1000);
+  }
+
+  function updateCountdownText(s) {
+    const m = Math.floor(s / 60), ss = s % 60;
+    els.countdown.textContent = `${String(m).padStart(2,"0")}:${String(ss).padStart(2,"0")}`;
+  }
+
+  els.form.addEventListener("submit", async e => {
+    e.preventDefault();
+    if (state.ordineAperto) { showToast("Hai già un ordine aperto."); return; }
+    await sendOrder("creaOrdine");
   });
-}
 
-function getOrdineAperto_(struttura, camera) {
-  const sh = SpreadsheetApp.getActive().getSheetByName(SHEET_ORDINI);
-  if (!sh) return { ok: false, error: "Tab non trovata." };
-  const values = sh.getDataRange().getValues();
-  if (values.length < 2) return { ok: true, ordine: null };
-  const now = new Date();
+  els.editBtn.addEventListener("click", async () => {
+    if (!state.ordineAperto) { showToast("Nessun ordine modificabile trovato."); return; }
+    await sendOrder("modificaOrdine");
+  });
 
-  for (let i = values.length - 1; i >= 1; i--) {
-    const row = values[i];
-    const scadenza = new Date(row[1]);
-    if (String(row[2]).trim() === struttura && String(row[3]).trim() === camera && now.getTime() <= scadenza.getTime()) {
-      return {
-        ok: true,
-        ordine: {
-          struttura: row[2], camera: row[3], orderId: String(row[4]).trim(),
-          prodotti: String(row[5] || "").split(",").map(x => x.trim()).filter(Boolean),
-          note: String(row[6] || "").trim(), stato: String(row[7] || "").trim(),
-          scadenzaModifica: scadenza.toISOString(),
-          secondiRimanenti: Math.max(0, Math.floor((scadenza.getTime() - now.getTime()) / 1000))
-        }
-      };
-    }
-  }
-  return { ok: true, ordine: null };
-}
-
-function getOrdineDiOggi_(struttura, camera) {
-  const sh = SpreadsheetApp.getActive().getSheetByName(SHEET_ORDINI);
-  if (!sh) return null;
-  const values = sh.getDataRange().getValues();
-  const tz = Session.getScriptTimeZone();
-  const oggi = Utilities.formatDate(new Date(), tz, "yyyy-MM-dd");
-
-  for (let i = values.length - 1; i >= 1; i--) {
-    if (!(values[i][0] instanceof Date)) continue;
-    if (String(values[i][2]).trim() === struttura && String(values[i][3]).trim() === camera && 
-        Utilities.formatDate(values[i][0], tz, "yyyy-MM-dd") === oggi) return values[i];
-  }
-  return null;
-}
-
-function filtraProdottiValidi_(prodotti) {
-  const ss = SpreadsheetApp.getActive();
-  const menuData = ss.getSheetByName(SHEET_MENU).getDataRange().getValues().slice(1);
-  
-  const combinazioniValide = menuData
-    .filter(r => String(r[4] || "").toUpperCase().trim() === "SI")
-    .map(r => {
-      const p = String(r[1] || "").trim();
-      const sub = String(r[2] || "").trim();
-      return sub ? `${p} - ${sub}` : p;
+  async function sendOrder(action) {
+    const prodottiFinali = [];
+    document.querySelectorAll('input[name="food"]:checked').forEach(cb => {
+      const nome = cb.value;
+      const select = cb.closest('.food-card').querySelector('select');
+      if (select && select.value) {
+        prodottiFinali.push(`${nome} - ${select.value}`);
+      } else {
+        prodottiFinali.push(nome);
+      }
     });
 
-  return prodotti.map(x => String(x || "").trim()).filter(x => combinazioniValide.includes(x));
-}
+    const note = els.notes.value.trim();
+    if (!state.struttura || !state.room || !state.key) { showToast("QR non valido."); return; }
+    
+    if (prodottiFinali.length === 0) { showToast("Seleziona almeno una pietanza."); return; }
+    if (prodottiFinali.length > state.maxScelte) { showToast(`Massimo ${state.maxScelte} scelte consentite.`); return; }
 
-function limitaTesto_(txt, max) { return txt ? txt.substring(0, max) : ""; }
+    const payload = { 
+      action, 
+      struttura: state.struttura, 
+      camera: state.room, 
+      key: state.key, 
+      prodotti: prodottiFinali, 
+      note,
+      ospiti: state.ospiti // Passiamo il parametro degli ospiti al server!
+    };
+    if (action === "modificaOrdine") payload.orderId = state.ordineAperto.orderId;
 
-function generaOrderId_(struttura, camera) {
-  const timestamp = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyyMMdd-HHmmss");
-  const rnd = Math.random().toString(36).substring(2, 7).toUpperCase();
-  return `${struttura.replace(/[^A-Z0-9]/gi, "").toUpperCase()}-${camera.replace(/[^A-Z0-9]/gi, "").toUpperCase()}-${timestamp}-${rnd}`;
-}
+    try {
+      showToast(action === "modificaOrdine" ? "Invio modifica in corso…" : "Invio ordine in corso…");
+      setButtonsDisabled(true);
+      const res  = await fetch(CONFIG.webAppUrl, { method: "POST", body: JSON.stringify(payload) });
+      const data = await res.json();
+      
+      if (!data.ok) { showToast(data.error || "Errore invio ordine."); return; }
+      
+      if (data.ordine) { 
+        state.ordineAperto = data.ordine; 
+        startCountdown(data.ordine.secondiRimanenti); 
+        setEditMode(true); 
+      }
+      
+      showToast(data.message || "Operazione completata.");
+    } catch { 
+      showToast("Errore di collegamento. Riprova.");
+    } finally { 
+      setButtonsDisabled(false); 
+    }
+  }
 
-function inviaMailOrdine_(tipo, struttura, camera, orderId, prodotti, note, data, scadenza, ospiti) {
-  const subject = `${tipo} colazione - ${struttura} - Camera ${camera}`;
-  const tz = Session.getScriptTimeZone();
-  const body = `B&B: ${NOME_BB}\nTipo: ${tipo}\nStruttura: ${struttura}\nCamera: ${camera}\nOspiti in camera: ${ospiti}\nOrder ID: ${orderId}\n\nProdotti Scelti:\n- ${prodotti.join("\n- ")}\n\nNote:\n${note || "Nessuna nota"}\n\nData: ${Utilities.formatDate(data, tz, "dd/MM/yyyy HH:mm:ss")}\nModificabile fino a: ${Utilities.formatDate(scadenza, tz, "dd/MM/yyyy HH:mm:ss")}`;
-  MailApp.sendEmail({ to: EMAIL_DESTINATARIO, subject, body });
-}
+  function setButtonsDisabled(d) {
+    els.sendBtn.disabled = d; els.editBtn.disabled = d;
+    els.sendBtn.style.opacity = d ? ".55" : "1";
+    els.editBtn.style.opacity = d ? ".55" : "1";
+  }
 
-function json_(obj) {
-  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
-}
+  let toastTimer = null;
+  function showToast(msg) {
+    clearTimeout(toastTimer);
+    els.toast.textContent = msg;
+    els.toast.classList.add("show");
+    toastTimer = setTimeout(() => { els.toast.classList.remove("show"); }, 4000);
+  }
+
+  function escapeHtml(s) {
+    return String(s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+  }
+</script>
+</body>
+</html>
