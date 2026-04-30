@@ -215,7 +215,7 @@
     <p>La colazione è servita dalle 7:30 alle 10:00.</p>
     <div class="rules" id="dynamicRules">
       Per garantire la massima freschezza e ridurre gli sprechi, invitiamo a compilare questo menù entro le ore 20:00.<br>
-      <b>Puoi scegliere un massimo di 2 pietanze.</b>
+      <b>Scegli il numero di ospiti per calcolare le pietanze.</b>
     </div>
   </div>
 
@@ -227,7 +227,10 @@
 
   <form id="breakfastForm">
     
-    <div id="menuContainer"></div>
+    <div id="menuContainer">
+      <!-- Un segnaposto per far capire all'utente che il menù sta caricando in caso sia velocissimo -->
+      <div style='text-align:center; padding: 40px; font-size: 22px; color: var(--gold);'>Caricamento menù in corso...</div>
+    </div>
 
     <div class="limit-counter" id="limitCounter">
       Pietanze selezionate: <span id="countNum">0</span> / 2
@@ -250,7 +253,7 @@
 <script>
   // *** INSERISCI QUI IL TUO URL DI GOOGLE APPS SCRIPT ***
   const CONFIG = {
-    webAppUrl: "https://script.google.com/macros/s/AKfycbzw-Jsstxe-RTU1Fg4OQDOchR5UpO9C3I_p158Y6STDwyJ0pfad-JeftyvnABtHMj8YPg/exec",
+    webAppUrl: "https://script.google.com/macros/s/IL_TUO_ID_SCRIPT_QUI/exec",
     oraRiapertura: 10
   };
 
@@ -280,6 +283,9 @@
     countNum:      document.getElementById("countNum")
   };
 
+  // Variabile globale per salvare la promessa della chiamata a Google
+  let backgroundFetchPromise = null;
+
   init();
 
   async function init() {
@@ -289,7 +295,7 @@
     state.key       = p.get("key") || "";
 
     els.roomNumber.textContent    = state.room ? "Camera " + state.room : "Camera non rilevata";
-    els.structureName.textContent = state.struttura ? state.struttura : "Struttura non rilevata";
+    els.structureName.textContent = state.struttura ? "Attendere prego..." : "Struttura non rilevata";
 
     if (!state.struttura || !state.room || !state.key) {
       showToast("QR non valido: struttura, camera o codice mancanti.");
@@ -297,65 +303,62 @@
       return;
     }
 
-    const fallbackTimer = setTimeout(() => { 
-      els.splash.classList.add("hidden"); 
-      els.guestPopup.classList.remove("hidden");
-    }, 2800); 
+    // 1. FACCIAMO PARTIRE SUBITO IL CARICAMENTO DEI DATI DA GOOGLE IN BACKGROUND
+    const url = `${CONFIG.webAppUrl}?action=init&struttura=${encodeURIComponent(state.struttura)}&camera=${encodeURIComponent(state.room)}&key=${encodeURIComponent(state.key)}&t=${Date.now()}`;
+    backgroundFetchPromise = fetch(url).then(res => res.json()).catch(err => ({ ok: false, error: "Errore di connessione al server." }));
 
-    try {
-      const url = `${CONFIG.webAppUrl}?action=init&struttura=${encodeURIComponent(state.struttura)}&camera=${encodeURIComponent(state.room)}&key=${encodeURIComponent(state.key)}&t=${Date.now()}`;
-      
-      const res = await fetch(url);
-      const data = await res.json();
+    // 2. FACCIAMO DURARE IL LOGO ESATTAMENTE 2.5 SECONDI
+    await new Promise(resolve => setTimeout(resolve, 2500));
 
-      clearTimeout(fallbackTimer);
-      
-      // Nascondiamo il logo grande sfumato
-      els.splash.classList.add("hidden");
-
-      if (!data.ok) showToast(data.error || "Errore di caricamento.");
-
-      // Blocco Orario
-      if (data.fuoriOrario) {
-        mostraSchermataChiusura();
-        return;
-      }
-
-      state.menu = data.menu || [];
-      renderMenuStrutturato(state.menu);
-
-      if (data.ordine) {
-        state.ordineAperto = data.ordine;
-        applyOrdineToForm(data.ordine);
-        startCountdown(data.ordine.secondiRimanenti);
-        setEditMode(true);
-      }
-      
-      els.roomNumber.textContent = "Camera " + state.room;
-      els.structureName.textContent = state.struttura;
-
-      // Mostriamo la finestra di popup per la selezione ospiti
-      els.guestPopup.classList.remove("hidden");
-
-    } catch (err) {
-      showToast("Errore di connessione al server.");
-      els.roomNumber.textContent = "Errore di connessione";
-    }
+    // 3. DOPO 2.5 SECONDI NASCONDIAMO IL LOGO E MOSTRIAMO IL POPUP DEGLI OSPITI
+    els.splash.classList.add("hidden");
+    els.guestPopup.classList.remove("hidden");
   }
 
   // Funzione chiamata al click sui pulsanti del numero di ospiti
-  window.selectGuests = function(num) {
+  window.selectGuests = async function(num) {
+    // 1. Aggiorniamo le regole di testo in base alla scelta
     state.ospiti = num;
     state.maxScelte = num * 2;
     
-    // Aggiorniamo le regole di testo mostrate nel banner in base alla scelta
     els.dynamicRules.innerHTML = `
       Per garantire la massima freschezza e ridurre gli sprechi, invitiamo a compilare questo menù entro le ore 20:00.<br>
       <b>Puoi scegliere un massimo di ${state.maxScelte} pietanze (${num} per ospite).</b>`;
     
-    // Ricalcoliamo i limiti e nascondiamo il popup
-    checkLimit();
+    // 2. Nascondiamo il popup
     els.guestPopup.classList.add("hidden");
+
+    // 3. ATTENDIAMO CHE GOOGLE ABBIA FINITO (se ha già finito, caricherà all'istante)
+    const data = await backgroundFetchPromise;
+
+    if (!data || !data.ok) {
+      showToast((data && data.error) ? data.error : "Errore di caricamento.");
+      els.structureName.textContent = "Errore di caricamento";
+      els.menuContainer.innerHTML = "<div style='text-align:center; padding: 30px; font-size: 18px;'>Impossibile caricare il menù.</div>";
+      return;
+    }
+
+    // Controllo Blocco Orario
+    if (data.fuoriOrario) {
+      mostraSchermataChiusura();
+      return;
+    }
+
+    // Stampiamo i dati reali
+    state.menu = data.menu || [];
+    renderMenuStrutturato(state.menu);
+
+    if (data.ordine) {
+      state.ordineAperto = data.ordine;
+      applyOrdineToForm(data.ordine);
+      startCountdown(data.ordine.secondiRimanenti);
+      setEditMode(true);
+    } else {
+      checkLimit(); // Inizializza il contatore visivo per i nuovi ordini
+    }
+    
+    els.roomNumber.textContent = "Camera " + state.room;
+    els.structureName.textContent = state.struttura;
   };
 
   function mostraSchermataChiusura() {
@@ -528,7 +531,7 @@
       key: state.key, 
       prodotti: prodottiFinali, 
       note,
-      ospiti: state.ospiti // Passiamo il parametro degli ospiti al server!
+      ospiti: state.ospiti 
     };
     if (action === "modificaOrdine") payload.orderId = state.ordineAperto.orderId;
 
