@@ -93,14 +93,14 @@
     .greeting-band::after { content: ""; position: absolute; bottom: 15px; left: 15px; width: 49px; height: 49px; border-bottom: 1.5px solid var(--gold-border); border-left: 1.5px solid var(--gold-border); }
     .greeting-band h1 { margin: 0 0 13px; font-family: "Cormorant Garamond", serif; font-size: 42px; font-weight: 600; line-height: 1.1; color: #fff; }
     .greeting-band h1 em { font-style: italic; color: var(--gold-bright); }
-    .greeting-band p { margin: 0; font-size: 18px; font-weight: 400; color: rgba(255,255,255,0.9); line-height: 1.5; }
-    .greeting-band .rules { margin-top: 15px; padding-top: 15px; border-top: 1.5px solid rgba(200,149,28,0.3); font-size: 17px; font-weight: 300; color: var(--gold-bright); line-height: 1.5; }
+    .greeting-band p { margin: 0; font-size: 22px; font-weight: 400; color: rgba(255,255,255,0.9); line-height: 1.5; }
+    .greeting-band .rules { margin-top: 15px; padding-top: 15px; border-top: 1.5px solid rgba(200,149,28,0.3); font-size: 20px; font-weight: 300; color: var(--gold-bright); line-height: 1.5; }
 
     /* SECTION TITLE */
     .divider { margin: 37px 20px 0; height: 1.5px; background: linear-gradient(90deg, transparent, var(--cream3), transparent); }
     .category-title { margin: 31px 20px 18px; font-family: "Cormorant Garamond", serif; font-size: 34px; font-weight: 600; color: var(--gold); border-left: 5px solid var(--gold); padding-left: 15px; line-height: 1.1;}
 
-    /* FOOD CARDS WITH SELECT */
+    /* FOOD CARDS & QTY SELECTOR */
     .foods { display: flex; flex-direction: column; gap: 15px; padding: 0 20px; margin-bottom: 23px;}
     .food-card { position: relative; }
     .food-card input[type="checkbox"] { display: none; }
@@ -111,6 +111,7 @@
     .food-card.disabled .food-content { opacity: 0.5; filter: grayscale(100%); pointer-events: none; }
 
     .food-card input:checked + .food-content { border-color: var(--gold); background: #fffbf2; box-shadow: 0 0 0 2px rgba(200,149,28,0.15), 0 8px 31px rgba(200,149,28,0.12); }
+    
     .emoji { width: 80px; height: 80px; min-width: 80px; border-radius: 23px; display: grid; place-items: center; font-size: 36px; background: var(--cream2); border: 1.5px solid var(--cream3); transition: all .2s; }
     .food-card input:checked + .food-content .emoji { background: #fdf0d5; border-color: rgba(200,149,28,0.3); }
     
@@ -129,10 +130,28 @@
       color: var(--gold); background-color: #fff; border-color: rgba(200,149,28,0.4); box-shadow: 0 3px 10px rgba(200,149,28,0.1);
       background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23c8951c%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E");
     }
-    .food-select:focus { border-color: var(--gold); }
 
-    .check { margin-left: auto; width: 52px; height: 52px; min-width: 52px; border-radius: 50%; border: 2px solid var(--cream3); display: grid; place-items: center; font-size: 23px; color: transparent; transition: all .2s ease; }
-    .food-card input:checked + .food-content .check { background: var(--gold); border-color: var(--gold); color: #fff; box-shadow: 0 0 15px rgba(200,149,28,0.35); }
+    /* QTY SELECTOR / STEPPER */
+    .check-placeholder {
+      margin-left: auto; width: 60px; height: 60px; min-width: 60px; border-radius: 50%;
+      border: 2px solid var(--cream3); transition: all .2s;
+    }
+    .qty-stepper { display: none; align-items: center; gap: 14px; margin-left: auto; }
+    
+    .food-card input:checked + .food-content .check-placeholder { display: none; }
+    .food-card input:checked + .food-content .qty-stepper { display: flex; }
+
+    .qty-btn {
+      width: 52px; height: 52px; border-radius: 50%; border: none;
+      background: var(--gold); color: #fff; font-size: 38px; font-weight: 400;
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+      transition: all .2s ease; box-shadow: 0 6px 18px rgba(200,149,28,0.25);
+      line-height: 0; padding-bottom: 4px; /* Optical vertical centering */
+    }
+    .qty-btn:active { transform: scale(0.9); }
+    .qty-val {
+      font-size: 30px; font-weight: 600; color: var(--gold); min-width: 24px; text-align: center;
+    }
 
     /* LIMIT COUNTER */
     .limit-counter { margin: 15px 20px 23px; padding: 15px; background: rgba(200,149,28,0.1); border-radius: 15px; text-align: center; font-size: 18px; font-weight: 500; color: var(--gold); border: 2px dashed var(--gold-border); transition: 0.3s;}
@@ -251,7 +270,6 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  // *** INSERISCI QUI IL TUO URL DI GOOGLE APPS SCRIPT ***
   const CONFIG = {
     webAppUrl: "https://script.google.com/macros/s/AKfycbzw-Jsstxe-RTU1Fg4OQDOchR5UpO9C3I_p158Y6STDwyJ0pfad-JeftyvnABtHMj8YPg/exec",
     oraRiapertura: 10
@@ -303,32 +321,31 @@
       return;
     }
 
-    // 1. FACCIAMO PARTIRE SUBITO IL CARICAMENTO DEI DATI DA GOOGLE IN BACKGROUND
+    // 1. CARICAMENTO IN BACKGROUND DA GOOGLE (Mentre l'utente guarda l'animazione)
     const url = `${CONFIG.webAppUrl}?action=init&struttura=${encodeURIComponent(state.struttura)}&camera=${encodeURIComponent(state.room)}&key=${encodeURIComponent(state.key)}&t=${Date.now()}`;
-    backgroundFetchPromise = fetch(url).then(res => res.json()).catch(err => ({ ok: false, error: "Errore di connessione al server." }));
+    backgroundFetchPromise = fetch(url).then(res => res.json()).catch(err => ({ ok: false, error: "Errore di connessione." }));
 
     // 2. FACCIAMO DURARE IL LOGO ESATTAMENTE 2.5 SECONDI
     await new Promise(resolve => setTimeout(resolve, 2500));
 
-    // 3. DOPO 2.5 SECONDI NASCONDIAMO IL LOGO E MOSTRIAMO IL POPUP DEGLI OSPITI
+    // 3. DOPO 2.5 SECONDI NASCONDIAMO IL LOGO E MOSTRIAMO IL POPUP OSPITI
     els.splash.classList.add("hidden");
     els.guestPopup.classList.remove("hidden");
   }
 
   // Funzione chiamata al click sui pulsanti del numero di ospiti
   window.selectGuests = async function(num) {
-    // 1. Aggiorniamo le regole di testo in base alla scelta
     state.ospiti = num;
     state.maxScelte = num * 2;
     
+    // Aggiorniamo le regole testuali
     els.dynamicRules.innerHTML = `
       Per garantire la massima freschezza e ridurre gli sprechi, invitiamo a compilare questo menù entro le ore 20:00.<br>
       <b>Puoi scegliere un massimo di ${state.maxScelte} pietanze (${num} per ospite).</b>`;
     
-    // 2. Nascondiamo il popup
     els.guestPopup.classList.add("hidden");
 
-    // 3. ATTENDIAMO CHE GOOGLE ABBIA FINITO (se ha già finito, caricherà all'istante)
+    // 4. ATTENDIAMO I DATI (Se google è stato veloce, appaiono all'istante)
     const data = await backgroundFetchPromise;
 
     if (!data || !data.ok) {
@@ -354,7 +371,7 @@
       startCountdown(data.ordine.secondiRimanenti);
       setEditMode(true);
     } else {
-      checkLimit(); // Inizializza il contatore visivo per i nuovi ordini
+      checkLimit(); // Inizializza il contatore visivo
     }
     
     els.roomNumber.textContent = "Camera " + state.room;
@@ -400,20 +417,28 @@
         let selectHtml = "";
         if (prod.varianti && prod.varianti.length > 0) {
           const options = prod.varianti.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
-          selectHtml = `<select class="food-select" onclick="event.stopPropagation()" onchange="this.closest('.food-card').querySelector('input').checked=true; checkLimit()">${options}</select>`;
+          selectHtml = `<select class="food-select" onclick="event.stopPropagation()" onchange="checkLimit()">${options}</select>`;
         } else {
           selectHtml = `<div style="font-size: 22px; color: var(--text-soft); margin-top:8px;">Ricetta classica</div>`;
         }
 
+        // Il nuovo sistema con la quantità a destra (Stepper)
         label.innerHTML = `
-          <input type="checkbox" name="food" value="${escapeHtml(prod.nome)}" onchange="checkLimit()">
+          <input type="checkbox" name="food" value="${escapeHtml(prod.nome)}" onchange="checkLimit(event)">
           <div class="food-content">
             <div class="emoji">${escapeHtml(prod.emoji || "🍽️")}</div>
             <div class="food-info">
               <div class="food-title">${escapeHtml(prod.nome)}</div>
               ${selectHtml}
             </div>
-            <div class="check">✓</div>
+            
+            <div class="check-placeholder"></div>
+            
+            <div class="qty-stepper">
+               <button type="button" class="qty-btn minus" onclick="event.preventDefault(); event.stopPropagation(); changeQty(this, -1)">-</button>
+               <span class="qty-val">1</span>
+               <button type="button" class="qty-btn plus" onclick="event.preventDefault(); event.stopPropagation(); changeQty(this, 1)">+</button>
+            </div>
           </div>`;
         
         foodsDiv.appendChild(label);
@@ -422,31 +447,93 @@
     });
   }
 
-  window.checkLimit = function() {
-    const checkboxes = document.querySelectorAll('input[name="food"]');
-    const checkedBoxes = Array.from(checkboxes).filter(cb => cb.checked);
-    const count = checkedBoxes.length;
+  // Gestione bottoni Più / Meno
+  window.changeQty = function(btn, delta) {
+    const card = btn.closest('.food-card');
+    const valSpan = card.querySelector('.qty-val');
+    const cb = card.querySelector('input[type="checkbox"]');
+    let current = parseInt(valSpan.textContent) || 1;
+
+    // Calcoliamo quanti prodotti totali ci sono GIA', escludendo la card corrente
+    const allCheckboxes = document.querySelectorAll('input[name="food"]:checked');
+    let totalQty = 0;
+    allCheckboxes.forEach(c => {
+       totalQty += parseInt(c.closest('.food-card').querySelector('.qty-val').textContent) || 1;
+    });
+
+    // Blocca se stiamo cercando di aggiungere ma abbiamo raggiunto il limite
+    if (delta > 0 && totalQty >= state.maxScelte) {
+       showToast(`Massimo ${state.maxScelte} pietanze consentite.`);
+       return; 
+    }
+
+    let newQty = current + delta;
+
+    if (newQty <= 0) {
+      cb.checked = false;
+      valSpan.textContent = "1"; // Resetta per la prossima volta
+    } else {
+      valSpan.textContent = newQty;
+    }
     
+    checkLimit();
+  };
+
+  // Ricalcola i limiti visivi basandosi sulle quantità
+  window.checkLimit = function(event) {
+    const checkboxes = document.querySelectorAll('input[name="food"]');
+    let count = 0;
+    
+    // Primo passaggio per contare
+    checkboxes.forEach(cb => {
+      if(cb.checked) {
+         count += parseInt(cb.closest('.food-card').querySelector('.qty-val').textContent) || 1;
+      }
+    });
+
+    // Se un utente prova a spuntare una card nuova ma è già al limite, la revertiamo!
+    if (count > state.maxScelte && event && event.target) {
+       event.target.checked = false;
+       showToast(`Hai raggiunto il limite di ${state.maxScelte} pietanze.`);
+       count -= 1; // rimuovi quello che ha appena cercato di aggiungere
+    }
+
     els.countNum.textContent = count;
 
     if (count >= state.maxScelte) {
       els.limitCounter.classList.add("maxed");
       els.limitCounter.innerHTML = `⚠️ Hai raggiunto il limite massimo (${state.maxScelte}/${state.maxScelte})`;
+      
+      // Scurisce quelle non selezionate
       checkboxes.forEach(cb => {
         if (!cb.checked) cb.closest('.food-card').classList.add('disabled');
+      });
+      // Disattiva graficamente i tasti "Più" 
+      document.querySelectorAll('.qty-btn.plus').forEach(btn => {
+        btn.style.opacity = "0.4"; btn.style.pointerEvents = "none";
       });
     } else {
       els.limitCounter.classList.remove("maxed");
       els.limitCounter.innerHTML = `Pietanze selezionate: <span id="countNum">${count}</span> / ${state.maxScelte}`;
+      
       checkboxes.forEach(cb => {
         cb.closest('.food-card').classList.remove('disabled');
+      });
+      document.querySelectorAll('.qty-btn.plus').forEach(btn => {
+        btn.style.opacity = "1"; btn.style.pointerEvents = "auto";
       });
     }
   };
 
+  // Se c'è già un ordine, rimette a posto spunte e quantità
   function applyOrdineToForm(ordine) {
     const pScelti = ordine.prodotti || [];
-    pScelti.forEach(stringaProdotto => {
+    const freq = {};
+    
+    // Contiamo quante volte appare ogni stringa per impostare la quantità
+    pScelti.forEach(p => { freq[p] = (freq[p] || 0) + 1; });
+
+    for (const [stringaProdotto, qty] of Object.entries(freq)) {
       const parts = stringaProdotto.split(" - ");
       const nomeBase = parts[0].trim();
       const sub = parts.length > 1 ? parts.slice(1).join(" - ").trim() : null;
@@ -458,8 +545,11 @@
           const select = cb.closest('.food-card').querySelector('select');
           if (select) select.value = sub;
         }
+        const valSpan = cb.closest('.food-card').querySelector('.qty-val');
+        if (valSpan) valSpan.textContent = qty;
       }
-    });
+    }
+    
     els.notes.value = ordine.note || "";
     checkLimit();
   }
@@ -508,13 +598,17 @@
 
   async function sendOrder(action) {
     const prodottiFinali = [];
+    
+    // Adesso per ogni card checked, prendiamo la quantità e aggiungiamo le righe all'array finale
     document.querySelectorAll('input[name="food"]:checked').forEach(cb => {
       const nome = cb.value;
       const select = cb.closest('.food-card').querySelector('select');
-      if (select && select.value) {
-        prodottiFinali.push(`${nome} - ${select.value}`);
-      } else {
-        prodottiFinali.push(nome);
+      const qty = parseInt(cb.closest('.food-card').querySelector('.qty-val').textContent) || 1;
+      
+      const riga = (select && select.value) ? `${nome} - ${select.value}` : nome;
+      
+      for (let i = 0; i < qty; i++) {
+         prodottiFinali.push(riga);
       }
     });
 
