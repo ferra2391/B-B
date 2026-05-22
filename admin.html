@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0a06" />
+  <title>LG Estate — Admin Colazioni</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --gold:#c8951c;
+      --gold2:#f0c84a;
+      --dark:#0c0a06;
+      --cream:#faf6ef;
+      --cream2:#f3ece0;
+      --cream3:#e8dece;
+      --white:#fff;
+      --text:#1a130a;
+      --muted:#8a7559;
+      --danger:#b83232;
+      --ok:#2f7d46;
+      --radius:22px;
+    }
+
+    * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    body { margin:0; font-family:Jost, sans-serif; background:var(--cream); color:var(--text); }
+
+    .topbar {
+      background:var(--dark);
+      color:white;
+      padding:22px 18px;
+      border-bottom:1px solid rgba(200,149,28,.35);
+      position:sticky;
+      top:0;
+      z-index:20;
+    }
+    .topbar-inner { max-width:1180px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; gap:14px; }
+    .brand { display:flex; align-items:center; gap:14px; }
+    .brand img { width:140px; max-height:56px; object-fit:contain; }
+    .brand-title { font-family:"Cormorant Garamond", serif; font-size:28px; color:var(--gold2); line-height:1; }
+    .brand-sub { font-size:12px; color:rgba(255,255,255,.55); letter-spacing:1.5px; text-transform:uppercase; margin-top:3px; }
+    .logout { width:auto; padding:11px 15px; border-radius:14px; background:transparent; color:var(--gold2); border:1px solid rgba(200,149,28,.55); }
+
+    .wrap { max-width:1180px; margin:0 auto; padding:18px; }
+
+    .login-card {
+      max-width:440px;
+      margin:54px auto;
+      background:var(--white);
+      border:1px solid var(--cream3);
+      border-radius:30px;
+      padding:30px;
+      box-shadow:0 20px 60px rgba(26,19,10,.10);
+    }
+    h1,h2,h3 { font-family:"Cormorant Garamond", serif; font-weight:600; margin:0; }
+    h1 { font-size:38px; color:var(--gold); }
+    h2 { font-size:31px; color:var(--text); }
+    h3 { font-size:25px; color:var(--gold); }
+    p { color:var(--muted); line-height:1.55; }
+
+    label { display:block; font-size:12px; font-weight:700; letter-spacing:1.1px; text-transform:uppercase; color:var(--muted); margin:13px 0 6px; }
+    input, select, textarea {
+      width:100%; border:1.5px solid var(--cream3); background:#fff; border-radius:15px;
+      padding:13px 14px; font-family:Jost, sans-serif; font-size:15px; outline:none;
+    }
+    input:focus, select:focus, textarea:focus { border-color:var(--gold); box-shadow:0 0 0 4px rgba(200,149,28,.10); }
+    textarea { min-height:84px; resize:vertical; }
+
+    button {
+      border:0; border-radius:16px; padding:13px 16px; font-family:Jost, sans-serif;
+      font-weight:700; cursor:pointer; transition:.18s ease; background:var(--gold); color:white;
+    }
+    button:active { transform:scale(.98); }
+    .btn-dark { background:var(--dark); color:var(--gold2); }
+    .btn-light { background:#fff8eb; color:var(--gold); border:1px solid rgba(200,149,28,.35); }
+    .btn-danger { background:#fff0ef; color:var(--danger); border:1px solid rgba(184,50,50,.25); }
+    .btn-ok { background:#edf8ef; color:var(--ok); border:1px solid rgba(47,125,70,.25); }
+    .btn-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+
+    .tabs { display:flex; gap:9px; overflow-x:auto; padding:2px 0 15px; position:sticky; top:103px; z-index:15; background:var(--cream); }
+    .tab-btn { white-space:nowrap; background:#fff; color:var(--muted); border:1px solid var(--cream3); }
+    .tab-btn.active { background:var(--dark); color:var(--gold2); border-color:var(--dark); }
+
+    .panel { display:none; }
+    .panel.active { display:block; }
+
+    .grid { display:grid; grid-template-columns:repeat(12,1fr); gap:14px; }
+    .card {
+      background:var(--white); border:1px solid var(--cream3); border-radius:var(--radius);
+      padding:18px; box-shadow:0 8px 30px rgba(26,19,10,.06);
+    }
+    .span-4 { grid-column:span 4; }
+    .span-6 { grid-column:span 6; }
+    .span-8 { grid-column:span 8; }
+    .span-12 { grid-column:span 12; }
+
+    .stat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px; }
+    .stat { background:#fff; border:1px solid var(--cream3); border-radius:20px; padding:16px; }
+    .stat .num { font-size:30px; color:var(--gold); font-weight:700; }
+    .stat .lbl { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+
+    .list { display:flex; flex-direction:column; gap:10px; }
+    .row-card {
+      background:#fff; border:1px solid var(--cream3); border-radius:18px; padding:14px;
+      display:grid; grid-template-columns:1.2fr 1.2fr .9fr .65fr auto; gap:10px; align-items:center;
+    }
+    .row-card.rooms { grid-template-columns:1fr .65fr .85fr .6fr 1.3fr auto; }
+    .row-card.orders { grid-template-columns:.9fr .7fr 1.4fr .5fr auto; }
+    .row-card input, .row-card select { padding:10px 11px; }
+    .pill { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; background:#fff8eb; color:var(--gold); font-weight:700; font-size:12px; }
+    .muted { color:var(--muted); }
+    .small { font-size:12px; }
+    .hidden { display:none !important; }
+    .switchline { display:flex; align-items:center; gap:9px; }
+    .switchline input { width:auto; }
+
+    .toast {
+      position:fixed; left:50%; top:50%; transform:translate(-50%,-50%) scale(.95);
+      max-width:420px; width:calc(100% - 40px); padding:20px; border-radius:24px; background:rgba(12,10,6,.97);
+      color:#fff; border:1px solid rgba(200,149,28,.45); box-shadow:0 24px 80px rgba(0,0,0,.35);
+      z-index:999; opacity:0; pointer-events:none; transition:.22s ease; text-align:center;
+    }
+    .toast.show { opacity:1; transform:translate(-50%,-50%) scale(1); }
+
+    @media (max-width:820px) {
+      .topbar-inner { align-items:flex-start; }
+      .brand img { width:118px; }
+      .brand-title { font-size:24px; }
+      .tabs { top:92px; }
+      .stat-grid { grid-template-columns:repeat(2,1fr); }
+      .span-4,.span-6,.span-8 { grid-column:span 12; }
+      .row-card, .row-card.rooms, .row-card.orders { grid-template-columns:1fr; }
+      .btn-row button { flex:1; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <img src="assets/LG_ESTATE_Logo_esteso_oro.png" alt="LG Estate">
+        <div>
+          <div class="brand-title">Admin Colazioni</div>
+          <div class="brand-sub">Gestione B&B</div>
+        </div>
+      </div>
+      <button id="logoutBtn" class="logout hidden">Esci</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="loginView" class="login-card">
+      <h1>Accesso Admin</h1>
+      <p>Entra con l’utente autorizzato su Supabase Auth.</p>
+      <label>Email</label>
+      <input id="loginEmail" type="email" placeholder="email admin">
+      <label>Password</label>
+      <input id="loginPassword" type="password" placeholder="password">
+      <div class="btn-row">
+        <button id="loginBtn" class="btn-dark">Accedi</button>
+      </div>
+      <p class="small">L’utente deve essere creato in Supabase Authentication e presente nella tabella <b>bb_admin_users</b>.</p>
+    </section>
+
+    <section id="adminView" class="hidden">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+        <button class="tab-btn" data-tab="menu">Menù</button>
+        <button class="tab-btn" data-tab="rooms">Camere</button>
+        <button class="tab-btn" data-tab="structures">Strutture</button>
+        <button class="tab-btn" data-tab="orders">Ordini</button>
+      </div>
+
+      <section id="tab-dashboard" class="panel active">
+        <div class="stat-grid">
+          <div class="stat"><div class="num" id="statMenu">0</div><div class="lbl">Prodotti menu</div></div>
+          <div class="stat"><div class="num" id="statRooms">0</div><div class="lbl">Camere</div></div>
+          <div class="stat"><div class="num" id="statOrdersToday">0</div><div class="lbl">Ordini oggi</div></div>
+          <div class="stat"><div class="num" id="statStructures">0</div><div class="lbl">Strutture</div></div>
+        </div>
+        <div class="card">
+          <h2>Gestione completa</h2>
+          <p>Da qui puoi modificare menù, camere, strutture e consultare gli ordini senza entrare manualmente nel database.</p>
+        </div>
+      </section>
+
+      <section id="tab-menu" class="panel">
+        <div class="grid">
+          <div class="card span-4">
+            <h3>Nuovo prodotto</h3>
+            <label>Tipologia / Categoria</label>
+            <input id="newTipologia" placeholder="Es. Il Dolce Risveglio">
+            <label>Prodotto</label>
+            <input id="newProdotto" placeholder="Es. Cornetto">
+            <label>Variante</label>
+            <input id="newSub" placeholder="Es. al pistacchio">
+            <label>Emoji</label>
+            <input id="newEmoji" placeholder="🥐">
+            <label>Ordine</label>
+            <input id="newSort" type="number" value="100">
+            <div class="switchline"><input id="newAttivo" type="checkbox" checked><span>Attivo</span></div>
+            <div class="btn-row"><button id="addMenuBtn" class="btn-dark">Aggiungi</button></div>
+          </div>
+          <div class="card span-8">
+            <h3>Menù esistente</h3>
+            <p class="small">Ogni riga rappresenta un prodotto o una variante.</p>
+            <div id="menuList" class="list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-rooms" class="panel">
+        <div class="grid">
+          <div class="card span-4">
+            <h3>Nuova camera</h3>
+            <label>Struttura</label>
+            <select id="roomStructure"></select>
+            <label>Numero camera</label>
+            <input id="roomNumero" placeholder="101">
+            <label>Codice QR</label>
+            <input id="roomCodice" placeholder="Q9R31">
+            <div class="btn-row">
+              <button id="generateCodeBtn" class="btn-light" type="button">Genera codice</button>
+              <button id="addRoomBtn" class="btn-dark" type="button">Aggiungi camera</button>
+            </div>
+          </div>
+          <div class="card span-8">
+            <h3>Camere e QR</h3>
+            <div id="roomsList" class="list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-structures" class="panel">
+        <div class="grid">
+          <div class="card span-4">
+            <h3>Nuova struttura</h3>
+            <label>Slug</label>
+            <input id="structureSlug" placeholder="Villa_Rosa">
+            <label>Nome visualizzato</label>
+            <input id="structureName" placeholder="Villa Rosa">
+            <div class="btn-row"><button id="addStructureBtn" class="btn-dark">Aggiungi struttura</button></div>
+          </div>
+          <div class="card span-8">
+            <h3>Strutture</h3>
+            <div id="structuresList" class="list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-orders" class="panel">
+        <div class="card">
+          <h3>Ordini recenti</h3>
+          <div class="btn-row"><button id="reloadOrdersBtn" class="btn-light">Aggiorna ordini</button></div>
+          <div id="ordersList" class="list" style="margin-top:14px;"></div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+<script>
+  const CONFIG = {
+    supabaseUrl: "https://mipbkhcszsdphbqhvdyr.supabase.co",
+    supabaseAnonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1pcGJraGNzenNkcGhicWh2ZHlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MjU2MDQsImV4cCI6MjA5NTAwMTYwNH0.sFIt4wtQaK9EeY_giODLeap7TAV7pZTxdV590Dl730c",
+    siteBaseUrl: "https://ferra2391.github.io/B-B/"
+  };
+
+  const sb = supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
+
+  const state = {
+    structures: [], rooms: [], menu: [], orders: []
+  };
+
+  const $ = id => document.getElementById(id);
+  let toastTimer = null;
+
+  function showToast(message) {
+    clearTimeout(toastTimer);
+    $("toast").textContent = message;
+    $("toast").classList.add("show");
+    toastTimer = setTimeout(() => $("toast").classList.remove("show"), 3500);
+  }
+
+  function escapeHtml(s) {
+    return String(s ?? "")
+      .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+  }
+
+  function randomCode(len = 6) {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let out = "";
+    for (let i=0; i<len; i++) out += chars[Math.floor(Math.random() * chars.length)];
+    return out;
+  }
+
+  function buildRoomLink(structureSlug, numero, codice) {
+    return `${CONFIG.siteBaseUrl}?struttura=${encodeURIComponent(structureSlug)}&room=${encodeURIComponent(numero)}&key=${encodeURIComponent(codice)}`;
+  }
+
+  async function requireAdmin() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return false;
+
+    const { data, error } = await sb.rpc("bb_is_admin");
+    if (error || data !== true) {
+      await sb.auth.signOut();
+      showToast("Utente non autorizzato come admin.");
+      return false;
+    }
+    return true;
+  }
+
+  async function boot() {
+    const ok = await requireAdmin();
+    if (ok) showAdmin();
+    else showLogin();
+  }
+
+  function showLogin() {
+    $("loginView").classList.remove("hidden");
+    $("adminView").classList.add("hidden");
+    $("logoutBtn").classList.add("hidden");
+  }
+
+  async function showAdmin() {
+    $("loginView").classList.add("hidden");
+    $("adminView").classList.remove("hidden");
+    $("logoutBtn").classList.remove("hidden");
+    await loadAll();
+  }
+
+  async function loadAll() {
+    await Promise.all([loadStructures(), loadMenu(), loadOrders()]);
+    await loadRooms();
+    renderAll();
+  }
+
+  async function loadStructures() {
+    const { data, error } = await sb.from("bb_structures").select("*").order("nome");
+    if (error) throwToast(error.message);
+    state.structures = data || [];
+  }
+
+  async function loadRooms() {
+    const { data, error } = await sb
+      .from("bb_rooms")
+      .select("*, bb_structures(id, slug, nome)")
+      .order("numero");
+    if (error) throwToast(error.message);
+    state.rooms = data || [];
+  }
+
+  async function loadMenu() {
+    const { data, error } = await sb
+      .from("bb_menu_items")
+      .select("*")
+      .order("sort_order", { ascending:true })
+      .order("tipologia", { ascending:true })
+      .order("prodotto", { ascending:true });
+    if (error) throwToast(error.message);
+    state.menu = data || [];
+  }
+
+  async function loadOrders() {
+    const { data, error } = await sb
+      .from("bb_orders")
+      .select("*, bb_structures(nome, slug), bb_rooms(numero)")
+      .order("data_invio", { ascending:false })
+      .limit(80);
+    if (error) throwToast(error.message);
+    state.orders = data || [];
+  }
+
+  function throwToast(message) {
+    showToast(message);
+    throw new Error(message);
+  }
+
+  function renderAll() {
+    renderStats();
+    renderStructureOptions();
+    renderMenu();
+    renderRooms();
+    renderStructures();
+    renderOrders();
+  }
+
+  function renderStats() {
+    const today = new Date().toISOString().slice(0,10);
+    $("statMenu").textContent = state.menu.length;
+    $("statRooms").textContent = state.rooms.length;
+    $("statStructures").textContent = state.structures.length;
+    $("statOrdersToday").textContent = state.orders.filter(o => String(o.data_invio || "").slice(0,10) === today).length;
+  }
+
+  function renderStructureOptions() {
+    $("roomStructure").innerHTML = state.structures.map(s => `<option value="${s.id}">${escapeHtml(s.nome)} / ${escapeHtml(s.slug)}</option>`).join("");
+  }
+
+  function renderMenu() {
+    $("menuList").innerHTML = state.menu.map(item => `
+      <div class="row-card" data-id="${item.id}">
+        <input data-field="tipologia" value="${escapeHtml(item.tipologia)}" placeholder="Tipologia">
+        <input data-field="prodotto" value="${escapeHtml(item.prodotto)}" placeholder="Prodotto">
+        <input data-field="sub_prodotto" value="${escapeHtml(item.sub_prodotto || "")}" placeholder="Variante">
+        <input data-field="emoji" value="${escapeHtml(item.emoji || "")}" placeholder="Emoji">
+        <div>
+          <label style="margin:0 0 5px">Ordine</label>
+          <input data-field="sort_order" type="number" value="${item.sort_order || 0}">
+          <div class="switchline" style="margin-top:8px"><input data-field="attivo" type="checkbox" ${item.attivo ? "checked" : ""}><span>Attivo</span></div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-ok" onclick="saveMenuItem('${item.id}')">Salva</button>
+          <button class="btn-danger" onclick="deleteMenuItem('${item.id}')">Elimina</button>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function renderRooms() {
+    $("roomsList").innerHTML = state.rooms.map(r => {
+      const s = r.bb_structures || {};
+      const link = buildRoomLink(s.slug || "", r.numero, r.codice);
+      return `
+        <div class="row-card rooms" data-id="${r.id}">
+          <select data-field="structure_id">
+            ${state.structures.map(st => `<option value="${st.id}" ${st.id === r.structure_id ? "selected" : ""}>${escapeHtml(st.slug)}</option>`).join("")}
+          </select>
+          <input data-field="numero" value="${escapeHtml(r.numero)}" placeholder="Camera">
+          <input data-field="codice" value="${escapeHtml(r.codice)}" placeholder="Codice">
+          <div class="switchline"><input data-field="attiva" type="checkbox" ${r.attiva ? "checked" : ""}><span>Attiva</span></div>
+          <input data-field="link" value="${escapeHtml(link)}" readonly>
+          <div class="btn-row">
+            <button class="btn-ok" onclick="saveRoom('${r.id}')">Salva</button>
+            <button class="btn-light" onclick="copyText('${escapeHtml(link)}')">Copia link</button>
+            <button class="btn-danger" onclick="deleteRoom('${r.id}')">Elimina</button>
+          </div>
+        </div>`;
+    }).join("");
+  }
+
+  function renderStructures() {
+    $("structuresList").innerHTML = state.structures.map(s => `
+      <div class="row-card" data-id="${s.id}" style="grid-template-columns:1fr 1fr .5fr auto">
+        <input data-field="slug" value="${escapeHtml(s.slug)}" placeholder="Slug">
+        <input data-field="nome" value="${escapeHtml(s.nome)}" placeholder="Nome">
+        <div class="switchline"><input data-field="attiva" type="checkbox" ${s.attiva ? "checked" : ""}><span>Attiva</span></div>
+        <div class="btn-row">
+          <button class="btn-ok" onclick="saveStructure('${s.id}')">Salva</button>
+          <button class="btn-danger" onclick="deleteStructure('${s.id}')">Elimina</button>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function renderOrders() {
+    $("ordersList").innerHTML = state.orders.map(o => {
+      const prodotti = Array.isArray(o.prodotti_json) && o.prodotti_json.length ? o.prodotti_json : String(o.prodotti || "").split("\n").filter(Boolean);
+      return `
+        <div class="row-card orders">
+          <div><b>${escapeHtml(o.bb_structures?.nome || "")}</b><div class="small muted">${new Date(o.data_invio).toLocaleString("it-IT")}</div></div>
+          <div><span class="pill">Camera ${escapeHtml(o.bb_rooms?.numero || "")}</span></div>
+          <div>${prodotti.map(p => `<div>• ${escapeHtml(p)}</div>`).join("")} ${o.note ? `<div class="small muted" style="margin-top:6px">Note: ${escapeHtml(o.note)}</div>` : ""}</div>
+          <div class="small"><b>${escapeHtml(o.stato)}</b><br>${o.ospiti || 1} ospiti</div>
+          <div><button class="btn-light" onclick="copyText('${escapeHtml(o.order_code)}')">Copia ID</button></div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function getCardPayload(id, fields) {
+    const card = document.querySelector(`[data-id="${id}"]`);
+    const payload = {};
+    for (const f of fields) {
+      const el = card.querySelector(`[data-field="${f}"]`);
+      if (!el) continue;
+      payload[f] = el.type === "checkbox" ? el.checked : el.value.trim();
+    }
+    return payload;
+  }
+
+  window.saveMenuItem = async function(id) {
+    const payload = getCardPayload(id, ["tipologia","prodotto","sub_prodotto","emoji","sort_order","attivo"]);
+    payload.sort_order = Number(payload.sort_order || 0);
+    payload.sub_prodotto = payload.sub_prodotto || null;
+    const { error } = await sb.from("bb_menu_items").update(payload).eq("id", id);
+    if (error) return showToast(error.message);
+    showToast("Prodotto salvato.");
+    await loadMenu(); renderMenu(); renderStats();
+  };
+
+  window.deleteMenuItem = async function(id) {
+    if (!confirm("Eliminare questo prodotto/variante?")) return;
+    const { error } = await sb.from("bb_menu_items").delete().eq("id", id);
+    if (error) return showToast(error.message);
+    showToast("Prodotto eliminato.");
+    await loadMenu(); renderMenu(); renderStats();
+  };
+
+  window.saveRoom = async function(id) {
+    const payload = getCardPayload(id, ["structure_id","numero","codice","attiva"]);
+    const structure = state.structures.find(s => s.id === payload.structure_id);
+    payload.link = buildRoomLink(structure?.slug || "", payload.numero, payload.codice);
+    const { error } = await sb.from("bb_rooms").update(payload).eq("id", id);
+    if (error) return showToast(error.message);
+    showToast("Camera salvata.");
+    await loadRooms(); renderRooms(); renderStats();
+  };
+
+  window.deleteRoom = async function(id) {
+    if (!confirm("Eliminare questa camera? Se ha ordini collegati potrebbe non essere possibile.")) return;
+    const { error } = await sb.from("bb_rooms").delete().eq("id", id);
+    if (error) return showToast(error.message);
+    showToast("Camera eliminata.");
+    await loadRooms(); renderRooms(); renderStats();
+  };
+
+  window.saveStructure = async function(id) {
+    const payload = getCardPayload(id, ["slug","nome","attiva"]);
+    const { error } = await sb.from("bb_structures").update(payload).eq("id", id);
+    if (error) return showToast(error.message);
+    showToast("Struttura salvata.");
+    await loadStructures(); await loadRooms(); renderAll();
+  };
+
+  window.deleteStructure = async function(id) {
+    if (!confirm("Eliminare questa struttura? Verranno eliminate anche camere collegate se non ci sono vincoli ordini.")) return;
+    const { error } = await sb.from("bb_structures").delete().eq("id", id);
+    if (error) return showToast(error.message);
+    showToast("Struttura eliminata.");
+    await loadStructures(); await loadRooms(); renderAll();
+  };
+
+  window.copyText = async function(text) {
+    try { await navigator.clipboard.writeText(text); showToast("Copiato negli appunti."); }
+    catch { showToast("Copia manualmente: " + text); }
+  };
+
+  $("loginBtn").addEventListener("click", async () => {
+    const email = $("loginEmail").value.trim();
+    const password = $("loginPassword").value;
+    if (!email || !password) return showToast("Inserisci email e password.");
+
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) return showToast(error.message);
+    const ok = await requireAdmin();
+    if (ok) await showAdmin();
+  });
+
+  $("logoutBtn").addEventListener("click", async () => {
+    await sb.auth.signOut();
+    showLogin();
+  });
+
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+      btn.classList.add("active");
+      $("tab-" + btn.dataset.tab).classList.add("active");
+    });
+  });
+
+  $("addMenuBtn").addEventListener("click", async () => {
+    const payload = {
+      tipologia: $("newTipologia").value.trim(),
+      prodotto: $("newProdotto").value.trim(),
+      sub_prodotto: $("newSub").value.trim() || null,
+      emoji: $("newEmoji").value.trim() || "🍽️",
+      sort_order: Number($("newSort").value || 0),
+      attivo: $("newAttivo").checked
+    };
+    if (!payload.tipologia || !payload.prodotto) return showToast("Tipologia e prodotto sono obbligatori.");
+    const { error } = await sb.from("bb_menu_items").insert(payload);
+    if (error) return showToast(error.message);
+    showToast("Prodotto aggiunto.");
+    $("newProdotto").value = ""; $("newSub").value = "";
+    await loadMenu(); renderMenu(); renderStats();
+  });
+
+  $("generateCodeBtn").addEventListener("click", () => {
+    $("roomCodice").value = randomCode(6);
+  });
+
+  $("addRoomBtn").addEventListener("click", async () => {
+    const structure_id = $("roomStructure").value;
+    const numero = $("roomNumero").value.trim();
+    const codice = $("roomCodice").value.trim() || randomCode(6);
+    const structure = state.structures.find(s => s.id === structure_id);
+    if (!structure_id || !numero) return showToast("Struttura e numero camera sono obbligatori.");
+    const payload = { structure_id, numero, codice, attiva:true, link: buildRoomLink(structure?.slug || "", numero, codice) };
+    const { error } = await sb.from("bb_rooms").insert(payload);
+    if (error) return showToast(error.message);
+    showToast("Camera aggiunta.");
+    $("roomNumero").value = ""; $("roomCodice").value = "";
+    await loadRooms(); renderRooms(); renderStats();
+  });
+
+  $("addStructureBtn").addEventListener("click", async () => {
+    const payload = {
+      slug: $("structureSlug").value.trim(),
+      nome: $("structureName").value.trim(),
+      attiva:true
+    };
+    if (!payload.slug || !payload.nome) return showToast("Slug e nome sono obbligatori.");
+    const { error } = await sb.from("bb_structures").insert(payload);
+    if (error) return showToast(error.message);
+    showToast("Struttura aggiunta.");
+    $("structureSlug").value = ""; $("structureName").value = "";
+    await loadStructures(); renderAll();
+  });
+
+  $("reloadOrdersBtn").addEventListener("click", async () => {
+    await loadOrders(); renderOrders(); renderStats(); showToast("Ordini aggiornati.");
+  });
+
+  boot();
+</script>
+</body>
+</html>
