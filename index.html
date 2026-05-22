@@ -34,20 +34,46 @@
       transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), transform 1.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.5s;
     }
     .splash-screen.hidden { opacity: 0; transform: scale(1.15); visibility: hidden; pointer-events: none; }
-    .splash-logo {
-      width: 100%; max-width: 450px; 
-      height: auto; margin-bottom: 62px;
-      filter: drop-shadow(0 0 32px rgba(200,149,28,0.15));
-      animation: pulseLogo 2.5s infinite alternate ease-in-out;
-    }
-    .splash-text {
-      font-family: "Cormorant Garamond", serif; font-size: 50px; 
-      color: var(--gold-bright); font-style: italic; line-height: 1.15;
-      opacity: 0; animation: fadeTextIn 1s 0.6s forwards;
-    }
-    @keyframes pulseLogo { from { filter: drop-shadow(0 0 20px rgba(200,149,28,0.1)); } to { filter: drop-shadow(0 0 52px rgba(200,149,28,0.4)); } }
-    @keyframes fadeTextIn { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(13px); } }
 
+    .splash-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 34px;
+  animation: splashIntro 0.9s ease both;
+}
+    
+    
+    .splash-logo {
+  width: 100%;
+  max-width: 430px;
+  height: auto;
+  margin: 0;
+  filter: drop-shadow(0 0 32px rgba(200,149,28,0.15));
+  animation: pulseLogo 2.5s infinite alternate ease-in-out;
+}
+    .splash-text {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(30px, 7vw, 50px);
+  color: var(--gold-bright);
+  font-style: italic;
+  line-height: 1.15;
+  opacity: 1;
+  text-align: center;
+  margin: 0;
+}
+
+@keyframes splashIntro {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
     /* GUEST POPUP INTERMEDIO */
     .guest-popup {
       position: fixed; inset: 0; z-index: 9000;
@@ -194,8 +220,13 @@
 
 <!-- SPLASH SCREEN INIZIALE -->
 <div id="splashScreen" class="splash-screen">
-  <img src="assets/LG_ESTATE_Logo_esteso_oro.png" alt="LG Estate" class="splash-logo">
-  <div class="splash-text">Benvenuto nel sistema di<br>prenotazione colazione</div>
+  <div class="splash-content">
+    <img src="assets/LG_ESTATE_Logo_esteso_oro.png" alt="LG Estate" class="splash-logo">
+    <div class="splash-text">
+      Benvenuto nel sistema di<br>
+      prenotazione colazione
+    </div>
+  </div>
 </div>
 
 <!-- POPUP INTERMEDIO OSPITI -->
