@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
 
   <style>
     :root {
@@ -127,6 +128,31 @@
     }
     .toast.show { opacity:1; transform:translate(-50%,-50%) scale(1); }
 
+
+
+    .order-editor {
+      display:grid;
+      grid-template-columns: 1fr 1fr 2fr 1fr auto;
+      gap:12px;
+      align-items:start;
+      padding:14px;
+      border:1px solid var(--cream3);
+      border-radius:18px;
+      background:#fff;
+      box-shadow:0 4px 18px rgba(26,19,10,.06);
+      margin-bottom:12px;
+    }
+    .order-editor textarea {
+      min-height:96px;
+      resize:vertical;
+      font-family:Jost, sans-serif;
+      font-size:13px;
+      line-height:1.35;
+    }
+    .order-editor .meta-title { font-weight:700; color:var(--text); }
+    .order-editor .meta-date { font-size:12px; color:var(--muted); margin-top:3px; }
+    .qr-preview-note { font-size:12px; color:var(--muted); margin-top:8px; line-height:1.4; }
+
     @media (max-width:820px) {
       .topbar-inner { align-items:flex-start; }
       .brand img { width:118px; }
@@ -134,7 +160,7 @@
       .tabs { top:92px; }
       .stat-grid { grid-template-columns:repeat(2,1fr); }
       .span-4,.span-6,.span-8 { grid-column:span 12; }
-      .row-card, .row-card.rooms, .row-card.orders { grid-template-columns:1fr; }
+      .row-card, .row-card.rooms, .row-card.orders, .order-editor { grid-template-columns:1fr; }
       .btn-row button { flex:1; }
     }
   </style>
@@ -442,8 +468,10 @@
           <div class="btn-row">
             <button class="btn-ok" onclick="saveRoom('${r.id}')">Salva</button>
             <button class="btn-light" onclick="copyText('${escapeHtml(link)}')">Copia link</button>
+            <button class="btn-light" onclick="downloadRoomQr('${r.id}')">Scarica QR</button>
             <button class="btn-danger" onclick="deleteRoom('${r.id}')">Elimina</button>
           </div>
+          <div class="qr-preview-note">Il QR viene generato in PNG con logo LG Estate al centro e dicitura struttura/camera in basso.</div>
         </div>`;
     }).join("");
   }
@@ -462,16 +490,48 @@
     `).join("");
   }
 
+  function getOrderProducts(o) {
+    if (Array.isArray(o.prodotti_json) && o.prodotti_json.length) return o.prodotti_json;
+    return String(o.prodotti || "")
+      .split(/\n|,/)
+      .map(x => x.trim())
+      .filter(Boolean);
+  }
+
   function renderOrders() {
     $("ordersList").innerHTML = state.orders.map(o => {
-      const prodotti = Array.isArray(o.prodotti_json) && o.prodotti_json.length ? o.prodotti_json : String(o.prodotti || "").split("\n").filter(Boolean);
+      const prodotti = getOrderProducts(o);
       return `
-        <div class="row-card orders">
-          <div><b>${escapeHtml(o.bb_structures?.nome || "")}</b><div class="small muted">${new Date(o.data_invio).toLocaleString("it-IT")}</div></div>
-          <div><span class="pill">Camera ${escapeHtml(o.bb_rooms?.numero || "")}</span></div>
-          <div>${prodotti.map(p => `<div>• ${escapeHtml(p)}</div>`).join("")} ${o.note ? `<div class="small muted" style="margin-top:6px">Note: ${escapeHtml(o.note)}</div>` : ""}</div>
-          <div class="small"><b>${escapeHtml(o.stato)}</b><br>${o.ospiti || 1} ospiti</div>
-          <div><button class="btn-light" onclick="copyText('${escapeHtml(o.order_code)}')">Copia ID</button></div>
+        <div class="order-editor" data-id="${o.id}">
+          <div>
+            <div class="meta-title">${escapeHtml(o.bb_structures?.nome || "")}</div>
+            <div class="meta-date">${new Date(o.data_invio).toLocaleString("it-IT")}</div>
+            <div class="small muted" style="margin-top:6px">ID: ${escapeHtml(o.order_code)}</div>
+          </div>
+          <div>
+            <label style="margin-top:0">Camera</label>
+            <div><span class="pill">Camera ${escapeHtml(o.bb_rooms?.numero || "")}</span></div>
+            <label>Ospiti</label>
+            <input data-field="ospiti" type="number" min="1" max="20" value="${o.ospiti || 1}">
+            <label>Stato</label>
+            <select data-field="stato">
+              ${["INVIATO","MODIFICATO","COMPLETATO","ANNULLATO"].map(st => `<option value="${st}" ${st === o.stato ? "selected" : ""}>${st}</option>`).join("")}
+            </select>
+          </div>
+          <div>
+            <label style="margin-top:0">Prodotti ordinati</label>
+            <textarea data-field="prodotti_text" placeholder="Un prodotto per riga">${escapeHtml(prodotti.join("\n"))}</textarea>
+            <div class="small muted">Una riga = una quantità. Per 2 cornetti, scrivi 2 righe.</div>
+          </div>
+          <div>
+            <label style="margin-top:0">Note</label>
+            <textarea data-field="note" placeholder="Note ordine">${escapeHtml(o.note || "")}</textarea>
+          </div>
+          <div class="btn-row" style="flex-direction:column; align-items:stretch">
+            <button class="btn-ok" onclick="saveOrder('${o.id}')">Salva ordine</button>
+            <button class="btn-light" onclick="copyText('${escapeHtml(o.order_code)}')">Copia ID</button>
+            <button class="btn-danger" onclick="deleteOrder('${o.id}')">Elimina ordine</button>
+          </div>
         </div>
       `;
     }).join("");
@@ -522,6 +582,115 @@
     if (error) return showToast(error.message);
     showToast("Camera eliminata.");
     await loadRooms(); renderRooms(); renderStats();
+  };
+
+  window.saveOrder = async function(id) {
+    const card = document.querySelector(`[data-id="${id}"]`);
+    if (!card) return showToast("Ordine non trovato nella pagina.");
+
+    const prodotti = card.querySelector('[data-field="prodotti_text"]').value
+      .split("\n")
+      .map(x => x.trim())
+      .filter(Boolean);
+
+    if (!prodotti.length) return showToast("Inserisci almeno un prodotto nell’ordine.");
+
+    const payload = {
+      prodotti: prodotti.join("\n"),
+      prodotti_json: prodotti,
+      note: card.querySelector('[data-field="note"]').value.trim() || null,
+      stato: card.querySelector('[data-field="stato"]').value,
+      ospiti: Number(card.querySelector('[data-field="ospiti"]').value || 1),
+      ultima_modifica: new Date().toISOString()
+    };
+
+    const { error } = await sb.from("bb_orders").update(payload).eq("id", id);
+    if (error) return showToast(error.message);
+    showToast("Ordine aggiornato manualmente.");
+    await loadOrders(); renderOrders(); renderStats();
+  };
+
+  window.deleteOrder = async function(id) {
+    if (!confirm("Eliminare definitivamente questo ordine? La camera potrà inviare un nuovo ordine per oggi.")) return;
+    const { error } = await sb.from("bb_orders").delete().eq("id", id);
+    if (error) return showToast(error.message);
+    showToast("Ordine eliminato.");
+    await loadOrders(); renderOrders(); renderStats();
+  };
+
+  function loadImage(src) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
+    });
+  }
+
+  function fitFontSize(ctx, text, maxWidth, startSize = 58, minSize = 24) {
+    let size = startSize;
+    while (size > minSize) {
+      ctx.font = `bold ${size}px Georgia, serif`;
+      if (ctx.measureText(text).width <= maxWidth) return size;
+      size -= 2;
+    }
+    return minSize;
+  }
+
+  window.downloadRoomQr = async function(id) {
+    try {
+      const room = state.rooms.find(r => r.id === id);
+      if (!room) return showToast("Camera non trovata.");
+      const structure = room.bb_structures || state.structures.find(s => s.id === room.structure_id) || {};
+      const link = buildRoomLink(structure.slug || "", room.numero, room.codice);
+      const label = `${String(structure.slug || "").replaceAll("_", " ")} - Camera ${room.numero}`;
+
+      const qrCanvas = document.createElement("canvas");
+      await QRCode.toCanvas(qrCanvas, link, {
+        errorCorrectionLevel: "H",
+        margin: 4,
+        width: 1000,
+        color: { dark: "#000000", light: "#ffffff" }
+      });
+
+      const finalCanvas = document.createElement("canvas");
+      finalCanvas.width = qrCanvas.width;
+      finalCanvas.height = qrCanvas.height + 150;
+      const ctx = finalCanvas.getContext("2d");
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+      ctx.drawImage(qrCanvas, 0, 0);
+
+      const logo = await loadImage("assets/LG_ESTATE_Logo_esteso_oro.png");
+      const logoW = Math.round(qrCanvas.width * 0.28);
+      const logoH = Math.round(logo.height * (logoW / logo.width));
+      const logoX = Math.round((qrCanvas.width - logoW) / 2);
+      const logoY = Math.round((qrCanvas.height - logoH) / 2);
+      const pad = 22;
+
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(logoX - pad, logoY - pad, logoW + pad * 2, logoH + pad * 2);
+      ctx.drawImage(logo, logoX, logoY, logoW, logoH);
+
+      ctx.fillStyle = "#000000";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      const fontSize = fitFontSize(ctx, label, finalCanvas.width - 80, 58, 26);
+      ctx.font = `bold ${fontSize}px Georgia, serif`;
+      ctx.fillText(label, finalCanvas.width / 2, qrCanvas.height + 36);
+
+      const a = document.createElement("a");
+      a.download = `QR_${String(structure.slug || "Struttura").replaceAll(" ", "_")}_Room_${room.numero}.png`;
+      a.href = finalCanvas.toDataURL("image/png");
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      showToast("QR scaricato in PNG.");
+    } catch (err) {
+      console.error(err);
+      showToast("Errore nella generazione del QR.");
+    }
   };
 
   window.saveStructure = async function(id) {
