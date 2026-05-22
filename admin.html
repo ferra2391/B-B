@@ -466,9 +466,11 @@
 
   function escapeAttr(s) {
     return String(s ?? "")
-      .replaceAll("\", "\\")
-      .replaceAll("'", "\'")
-      .replaceAll('"', "&quot;");
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
   }
 
   function randomCode(len = 6) {
