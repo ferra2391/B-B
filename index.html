@@ -362,7 +362,7 @@
     backgroundFetchPromise = loadInitialDataFromSupabase();
 
     // Splash breve: la pagina sembra premium, ma non blocca l'utente per troppi secondi.
-    await new Promise(resolve => setTimeout(resolve, 850));
+    await new Promise(resolve => setTimeout(resolve, 1500));
 
     els.splash.classList.add("hidden");
     els.guestPopup.classList.remove("hidden");
