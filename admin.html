@@ -3,1236 +3,799 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>LG Estate — Admin QR Colazioni</title>
+
   <meta name="theme-color" content="#0c0a06" />
-  <title>LG Estate — Admin Colazioni</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <style>
     :root {
-      --gold:#c8951c;
-      --gold2:#f0c84a;
-      --dark:#0c0a06;
-      --cream:#faf6ef;
-      --cream2:#f3ece0;
-      --cream3:#e8dece;
-      --white:#fff;
-      --text:#1a130a;
-      --muted:#8a7559;
-      --danger:#b83232;
-      --ok:#2f7d46;
-      --radius:22px;
+      --gold: #c8951c;
+      --gold-light: #dba832;
+      --gold-bright: #f0c84a;
+      --gold-border: rgba(200,149,28,0.42);
+      --dark: #0c0a06;
+      --dark2: #15120a;
+      --cream: #faf6ef;
+      --cream2: #f3ece0;
+      --cream3: #e8dece;
+      --card: #ffffff;
+      --text: #1a130a;
+      --muted: #8d7656;
+      --danger: #b3261e;
+      --ok: #1f7a3f;
+      --shadow: 0 18px 55px rgba(26,19,10,0.12);
+      --radius: 26px;
     }
 
-    * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-    body { margin:0; font-family:Jost, sans-serif; background:var(--cream); color:var(--text); }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(200,149,28,0.16), transparent 32%),
+        linear-gradient(180deg, #fffaf2, var(--cream));
+      color: var(--text);
+      font-family: "Jost", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
 
     .topbar {
-      background:var(--dark);
-      color:white;
-      padding:22px 18px;
-      border-bottom:1px solid rgba(200,149,28,.35);
-      position:sticky;
-      top:0;
-      z-index:20;
+      background: var(--dark);
+      color: white;
+      padding: 28px 18px 36px;
+      position: relative;
+      overflow: hidden;
     }
-    .topbar-inner { max-width:1180px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; gap:14px; }
-    .brand { display:flex; align-items:center; gap:14px; }
-    .brand img { width:140px; max-height:56px; object-fit:contain; }
-    .brand-title { font-family:"Cormorant Garamond", serif; font-size:28px; color:var(--gold2); line-height:1; }
-    .brand-sub { font-size:12px; color:rgba(255,255,255,.55); letter-spacing:1.5px; text-transform:uppercase; margin-top:3px; }
-    .logout { width:auto; padding:11px 15px; border-radius:14px; background:transparent; color:var(--gold2); border:1px solid rgba(200,149,28,.55); }
 
-    .wrap { max-width:1180px; margin:0 auto; padding:18px; }
-
-    .login-card {
-      max-width:440px;
-      margin:54px auto;
-      background:var(--white);
-      border:1px solid var(--cream3);
-      border-radius:30px;
-      padding:30px;
-      box-shadow:0 20px 60px rgba(26,19,10,.10);
+    .topbar::after {
+      content: "";
+      position: absolute;
+      left: 10%;
+      right: 10%;
+      bottom: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-border), transparent);
     }
-    h1,h2,h3 { font-family:"Cormorant Garamond", serif; font-weight:600; margin:0; }
-    h1 { font-size:38px; color:var(--gold); }
-    h2 { font-size:31px; color:var(--text); }
-    h3 { font-size:25px; color:var(--gold); }
-    p { color:var(--muted); line-height:1.55; }
 
-    label { display:block; font-size:12px; font-weight:700; letter-spacing:1.1px; text-transform:uppercase; color:var(--muted); margin:13px 0 6px; }
-    input, select, textarea {
-      width:100%; border:1.5px solid var(--cream3); background:#fff; border-radius:15px;
-      padding:13px 14px; font-family:Jost, sans-serif; font-size:15px; outline:none;
+    .top-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: grid;
+      gap: 14px;
+      align-items: center;
     }
-    input:focus, select:focus, textarea:focus { border-color:var(--gold); box-shadow:0 0 0 4px rgba(200,149,28,.10); }
-    textarea { min-height:84px; resize:vertical; }
 
-    button {
-      border:0; border-radius:16px; padding:13px 16px; font-family:Jost, sans-serif;
-      font-weight:700; cursor:pointer; transition:.18s ease; background:var(--gold); color:white;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
-    button:active { transform:scale(.98); }
-    .btn-dark { background:var(--dark); color:var(--gold2); }
-    .btn-light { background:#fff8eb; color:var(--gold); border:1px solid rgba(200,149,28,.35); }
-    .btn-danger { background:#fff0ef; color:var(--danger); border:1px solid rgba(184,50,50,.25); }
-    .btn-ok { background:#edf8ef; color:var(--ok); border:1px solid rgba(47,125,70,.25); }
-    .btn-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
 
-    .tabs { display:flex; gap:9px; overflow-x:auto; padding:2px 0 15px; position:sticky; top:103px; z-index:15; background:var(--cream); }
-    .tab-btn { white-space:nowrap; background:#fff; color:var(--muted); border:1px solid var(--cream3); }
-    .tab-btn.active { background:var(--dark); color:var(--gold2); border-color:var(--dark); }
-
-    .panel { display:none; }
-    .panel.active { display:block; }
-
-    .grid { display:grid; grid-template-columns:repeat(12,1fr); gap:14px; }
-    .card {
-      background:var(--white); border:1px solid var(--cream3); border-radius:var(--radius);
-      padding:18px; box-shadow:0 8px 30px rgba(26,19,10,.06);
+    .brand-mark {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      border: 1px solid var(--gold-border);
+      background: rgba(200,149,28,0.10);
+      display: grid;
+      place-items: center;
+      color: var(--gold-bright);
+      font-family: "Cormorant Garamond", serif;
+      font-size: 26px;
+      font-weight: 700;
     }
-    .span-4 { grid-column:span 4; }
-    .span-6 { grid-column:span 6; }
-    .span-8 { grid-column:span 8; }
-    .span-12 { grid-column:span 12; }
 
-    .stat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px; }
-    .stat { background:#fff; border:1px solid var(--cream3); border-radius:20px; padding:16px; }
-    .stat .num { font-size:30px; color:var(--gold); font-weight:700; }
-    .stat .lbl { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
-
-    .list { display:flex; flex-direction:column; gap:10px; }
-    .row-card {
-      background:#fff; border:1px solid var(--cream3); border-radius:18px; padding:14px;
-      display:grid; grid-template-columns:1.2fr 1.2fr .9fr .65fr auto; gap:10px; align-items:center;
+    h1 {
+      margin: 0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(32px, 6vw, 52px);
+      line-height: 1;
+      color: var(--gold-bright);
+      font-weight: 600;
     }
-    .row-card.rooms { grid-template-columns:1fr .65fr .85fr .6fr 1.3fr auto; }
-    .row-card.orders { grid-template-columns:.9fr .7fr 1.4fr .5fr auto; }
-    .row-card input, .row-card select { padding:10px 11px; }
-    .pill { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; background:#fff8eb; color:var(--gold); font-weight:700; font-size:12px; }
-    .muted { color:var(--muted); }
-    .small { font-size:12px; }
-    .hidden { display:none !important; }
-    .switchline { display:flex; align-items:center; gap:9px; }
-    .switchline input { width:auto; }
+
+    .subtitle {
+      margin: 6px 0 0;
+      color: rgba(255,255,255,0.62);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .admin-warning {
+      max-width: 1180px;
+      margin: -20px auto 0;
+      padding: 0 16px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .warning-card {
+      background: #fff8eb;
+      border: 1px solid rgba(200,149,28,0.38);
+      color: #5f4415;
+      border-radius: 20px;
+      padding: 14px 16px;
+      box-shadow: var(--shadow);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 22px auto 60px;
+      padding: 0 16px;
+    }
+
+    .controls {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr;
+      margin-bottom: 18px;
+    }
+
+    @media (min-width: 760px) {
+      .controls {
+        grid-template-columns: 1fr 220px 180px;
+        align-items: center;
+      }
+    }
+
+    .search,
+    .select,
+    .btn {
+      height: 50px;
+      border-radius: 16px;
+      border: 1px solid var(--cream3);
+      background: white;
+      font-family: "Jost", sans-serif;
+      font-size: 15px;
+      padding: 0 15px;
+      outline: none;
+      box-shadow: 0 6px 18px rgba(26,19,10,0.06);
+    }
+
+    .search:focus,
+    .select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(200,149,28,0.10);
+    }
+
+    .btn {
+      cursor: pointer;
+      border: none;
+      background: linear-gradient(135deg, #1a110a, #3d2a0f, var(--gold-light));
+      color: white;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    @media (min-width: 760px) {
+      .summary {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .summary-card {
+      background: white;
+      border: 1px solid var(--cream3);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 0 8px 25px rgba(26,19,10,0.07);
+    }
+
+    .summary-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .summary-value {
+      margin-top: 4px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 34px;
+      color: var(--gold);
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 760px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1080px) {
+      .grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .room-card {
+      background: white;
+      border: 1px solid var(--cream3);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .room-head {
+      padding: 18px 18px 14px;
+      background:
+        radial-gradient(circle at top right, rgba(200,149,28,0.14), transparent 42%),
+        #fff;
+      border-bottom: 1px solid var(--cream3);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .structure {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.8px;
+      color: var(--gold);
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .room-title {
+      margin: 0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 36px;
+      line-height: 1;
+      font-weight: 700;
+    }
+
+    .badge {
+      white-space: nowrap;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .badge.ok {
+      background: rgba(31,122,63,0.10);
+      color: var(--ok);
+      border: 1px solid rgba(31,122,63,0.20);
+    }
+
+    .badge.no {
+      background: rgba(179,38,30,0.10);
+      color: var(--danger);
+      border: 1px solid rgba(179,38,30,0.20);
+    }
+
+    .qr-wrap {
+      padding: 18px;
+      display: grid;
+      place-items: center;
+    }
+
+    .qr-box {
+      width: 210px;
+      height: 210px;
+      border-radius: 22px;
+      background: white;
+      border: 1px solid var(--cream3);
+      display: grid;
+      place-items: center;
+      padding: 14px;
+      box-shadow: 0 10px 25px rgba(26,19,10,0.08);
+    }
+
+    .qr-box img,
+    .qr-box canvas {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .details {
+      padding: 0 18px 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .field {
+      background: var(--cream);
+      border: 1px solid var(--cream3);
+      border-radius: 16px;
+      padding: 10px 12px;
+    }
+
+    .field-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .field-value {
+      font-size: 13px;
+      line-height: 1.35;
+      word-break: break-all;
+    }
+
+    .actions {
+      padding: 0 18px 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .action-btn {
+      border: none;
+      min-height: 42px;
+      border-radius: 14px;
+      font-family: "Jost", sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.7px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .action-btn:active {
+      transform: scale(0.97);
+    }
+
+    .copy-btn {
+      background: var(--dark);
+      color: white;
+    }
+
+    .open-btn {
+      background: #fff8eb;
+      color: var(--gold);
+      border: 1px solid rgba(200,149,28,0.35);
+    }
+
+    .download-btn {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: white;
+    }
+
+    .empty {
+      padding: 34px;
+      background: white;
+      border-radius: var(--radius);
+      border: 1px solid var(--cream3);
+      text-align: center;
+      color: var(--muted);
+      box-shadow: var(--shadow);
+    }
 
     .toast {
-      position:fixed; left:50%; top:50%; transform:translate(-50%,-50%) scale(.95);
-      max-width:420px; width:calc(100% - 40px); padding:20px; border-radius:24px; background:rgba(12,10,6,.97);
-      color:#fff; border:1px solid rgba(200,149,28,.45); box-shadow:0 24px 80px rgba(0,0,0,.35);
-      z-index:999; opacity:0; pointer-events:none; transition:.22s ease; text-align:center;
-    }
-    .toast.show { opacity:1; transform:translate(-50%,-50%) scale(1); }
-
-
-
-    .order-editor {
-      display:grid;
-      grid-template-columns: 1fr 1fr 2fr 1fr auto;
-      gap:12px;
-      align-items:start;
-      padding:14px;
-      border:1px solid var(--cream3);
-      border-radius:18px;
-      background:#fff;
-      box-shadow:0 4px 18px rgba(26,19,10,.06);
-      margin-bottom:12px;
-    }
-    .order-editor textarea {
-      min-height:96px;
-      resize:vertical;
-      font-family:Jost, sans-serif;
-      font-size:13px;
-      line-height:1.35;
-    }
-    .order-editor .meta-title { font-weight:700; color:var(--text); }
-    .order-editor .meta-date { font-size:12px; color:var(--muted); margin-top:3px; }
-    .qr-preview-note { font-size:12px; color:var(--muted); margin-top:8px; line-height:1.4; }
-
-
-    /* DASHBOARD MIGLIORATA */
-    .quick-grid {
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:14px;
-      margin:16px 0;
-    }
-    .quick-card {
-      background:#fff;
-      border:1px solid var(--cream3);
-      border-radius:22px;
-      padding:18px;
-      min-height:132px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      box-shadow:0 8px 28px rgba(26,19,10,.06);
-    }
-    .quick-ico { font-size:28px; line-height:1; }
-    .quick-title { font-family:"Cormorant Garamond", serif; font-size:25px; color:var(--gold); margin-top:10px; }
-    .quick-desc { font-size:12px; color:var(--muted); line-height:1.35; margin:6px 0 14px; }
-    .quick-card button { width:100%; padding:11px 12px; }
-
-    .today-list { display:grid; gap:10px; margin-top:12px; }
-    .today-order {
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      align-items:center;
-      border:1px solid var(--cream3);
-      background:#fff;
-      border-radius:16px;
-      padding:12px 14px;
-    }
-    .today-title { font-weight:700; }
-    .today-sub { font-size:12px; color:var(--muted); margin-top:2px; }
-
-    /* CAMERE - LAYOUT LEGGIBILE */
-    .room-admin-card {
-      background:#fff;
-      border:1px solid var(--cream3);
-      border-radius:24px;
-      padding:18px;
-      box-shadow:0 7px 26px rgba(26,19,10,.055);
-    }
-    .room-admin-head {
-      display:flex;
-      justify-content:space-between;
-      gap:14px;
-      align-items:flex-start;
-      margin-bottom:14px;
-      padding-bottom:12px;
-      border-bottom:1px solid var(--cream3);
-    }
-    .room-admin-title {
-      font-family:"Cormorant Garamond", serif;
-      font-size:28px;
-      color:var(--gold);
-      line-height:1.05;
-    }
-    .room-admin-sub { color:var(--muted); font-size:13px; margin-top:4px; }
-    .room-state { white-space:nowrap; }
-    .room-form-grid {
-      display:grid;
-      grid-template-columns:1.4fr .75fr 1fr .8fr;
-      gap:12px;
-      align-items:end;
-    }
-    .room-field label { margin-top:0; }
-    .room-field input, .room-field select { min-height:48px; }
-    .room-link-box {
-      margin-top:12px;
-      display:grid;
-      grid-template-columns:1fr auto;
-      gap:10px;
-      align-items:center;
-    }
-    .room-link-box input {
-      font-size:13px;
-      color:var(--muted);
-      background:#fffdf8;
-    }
-    .room-actions {
-      margin-top:14px;
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-    }
-    .room-actions button { min-width:130px; }
-    .room-qr-note {
-      margin-top:12px;
-      font-size:12px;
-      line-height:1.45;
-      color:var(--muted);
-      background:#fff8eb;
-      border:1px dashed rgba(200,149,28,.35);
-      border-radius:14px;
-      padding:10px 12px;
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(0.92);
+      width: calc(100% - 48px);
+      max-width: 390px;
+      padding: 22px 20px;
+      border-radius: 22px;
+      background: rgba(12,10,6,0.96);
+      border: 1px solid var(--gold-border);
+      color: rgba(255,255,255,0.94);
+      box-shadow: 0 24px 70px rgba(0,0,0,0.42);
+      font-size: 15px;
+      line-height: 1.45;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease, transform .25s ease;
+      text-align: center;
     }
 
-
-
-    /* MENU - LISTA COMPATTA E FILTRI */
-    .menu-toolbar {
-      display:grid;
-      grid-template-columns:1fr 1fr auto;
-      gap:12px;
-      align-items:end;
-      margin:12px 0 16px;
-      padding:12px;
-      background:#fffdf8;
-      border:1px solid var(--cream3);
-      border-radius:18px;
-    }
-    .menu-toolbar label { margin-top:0; }
-    .menu-toggle {
-      min-height:46px;
-      display:flex;
-      align-items:center;
-      gap:8px;
-      padding:0 10px;
-      white-space:nowrap;
-      color:var(--muted);
-      font-size:13px;
-      font-weight:700;
-    }
-    .menu-toggle input { width:auto; }
-    .menu-compact-list { display:flex; flex-direction:column; gap:14px; }
-    .menu-category-block {
-      border:1px solid var(--cream3);
-      border-radius:20px;
-      background:#fff;
-      overflow:hidden;
-    }
-    .menu-category-head {
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      padding:12px 14px;
-      background:#fff8eb;
-      border-bottom:1px solid var(--cream3);
-    }
-    .menu-category-title {
-      font-family:"Cormorant Garamond", serif;
-      font-size:24px;
-      color:var(--gold);
-      line-height:1.05;
-    }
-    .menu-category-count {
-      color:var(--muted);
-      font-size:12px;
-      font-weight:700;
-      white-space:nowrap;
-    }
-    .menu-item-row {
-      display:grid;
-      grid-template-columns:64px 1.1fr 1.1fr 1.15fr auto;
-      gap:10px;
-      align-items:center;
-      padding:10px 12px;
-      border-bottom:1px solid #f0e6d7;
-    }
-    .menu-item-row:last-child { border-bottom:0; }
-    .menu-item-row.inactive { opacity:.55; background:#fffafa; }
-    .menu-emoji-input { text-align:center; font-size:20px; padding:9px 8px; }
-    .menu-mini-label { display:none; }
-    .menu-active-line {
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:6px;
-      font-size:12px;
-      font-weight:700;
-      color:var(--muted);
-      white-space:nowrap;
-    }
-    .menu-active-line input { width:auto; }
-    .menu-row-actions { display:flex; gap:7px; justify-content:flex-end; }
-    .menu-row-actions button { padding:10px 12px; white-space:nowrap; }
-    .menu-empty {
-      padding:18px;
-      color:var(--muted);
-      text-align:center;
-      border:1px dashed var(--cream3);
-      border-radius:18px;
-      background:#fffdf8;
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
     }
 
-    @media (max-width:1050px) {
-      .quick-grid { grid-template-columns:repeat(2,1fr); }
-      .room-form-grid { grid-template-columns:1fr 1fr; }
-      .menu-toolbar { grid-template-columns:1fr 1fr; }
-      .menu-toggle { grid-column:span 2; }
-      .menu-item-row { grid-template-columns:54px 1fr 1fr; }
-      .menu-item-row select[data-field="tipologia"] { grid-column:2 / 4; }
-      .menu-active-line { justify-content:flex-start; }
-      .menu-row-actions { grid-column:1 / 4; justify-content:flex-start; }
+    .loading {
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 16px;
     }
 
-    @media (max-width:820px) {
-      .topbar-inner { align-items:flex-start; }
-      .brand img { width:118px; }
-      .brand-title { font-size:24px; }
-      .tabs { top:92px; }
-      .stat-grid { grid-template-columns:repeat(2,1fr); }
-      .span-4,.span-6,.span-8 { grid-column:span 12; }
-      .row-card, .row-card.rooms, .row-card.orders, .order-editor { grid-template-columns:1fr; }
-      .quick-grid { grid-template-columns:1fr; }
-      .room-admin-head { flex-direction:column; }
-      .room-form-grid, .room-link-box { grid-template-columns:1fr; }
-      .room-actions button { flex:1 1 100%; }
-      .menu-toolbar { grid-template-columns:1fr; }
-      .menu-toggle { grid-column:auto; }
-      .menu-item-row { grid-template-columns:48px 1fr; align-items:start; }
-      .menu-item-row input[data-field="prodotto"], .menu-item-row input[data-field="sub_prodotto"], .menu-item-row select[data-field="tipologia"], .menu-active-line, .menu-row-actions { grid-column:1 / 3; }
-      .menu-mini-label { display:block; font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--muted); font-weight:700; margin-bottom:4px; }
-      .menu-row-actions button { flex:1; }
-      .btn-row button { flex:1; }
+    .small {
+      font-size: 12px;
+      color: var(--muted);
     }
   </style>
 </head>
-<body>
 
+<body>
   <header class="topbar">
-    <div class="topbar-inner">
+    <div class="top-inner">
       <div class="brand">
-        <img src="assets/LG_ESTATE_Logo_esteso_oro.png" alt="LG Estate">
+        <div class="brand-mark">LG</div>
         <div>
-          <div class="brand-title">Admin Colazioni</div>
-          <div class="brand-sub">Gestione B&B</div>
+          <h1>Admin QR Colazioni</h1>
+          <p class="subtitle">
+            Gestione link e QR camere LG Estate. I QR vengono generati usando il link salvato nel database Supabase.
+          </p>
         </div>
       </div>
-      <button id="logoutBtn" class="logout hidden">Esci</button>
     </div>
   </header>
 
-  <main class="wrap">
-    <section id="loginView" class="login-card">
-      <h1>Accesso Admin</h1>
-      <p>Entra con l’utente autorizzato su Supabase Auth.</p>
-      <label>Email</label>
-      <input id="loginEmail" type="email" placeholder="email admin">
-      <label>Password</label>
-      <input id="loginPassword" type="password" placeholder="password">
-      <div class="btn-row">
-        <button id="loginBtn" class="btn-dark">Accedi</button>
-      </div>
-      <p class="small">L’utente deve essere creato in Supabase Authentication e presente nella tabella <b>bb_admin_users</b>.</p>
+  <section class="admin-warning">
+    <div class="warning-card">
+      Attenzione: questa pagina mostra link QR e codici camera. Non inserire mai la service role key in questo file.
+      Usa solo la anon public key di Supabase.
+    </div>
+  </section>
+
+  <main class="container">
+    <section class="controls">
+      <input class="search" id="searchInput" type="search" placeholder="Cerca struttura, camera, codice..." />
+      <select class="select" id="structureFilter">
+        <option value="">Tutte le strutture</option>
+      </select>
+      <button class="btn" id="reloadBtn" type="button">Ricarica</button>
     </section>
 
-    <section id="adminView" class="hidden">
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
-        <button class="tab-btn" data-tab="menu">Menù</button>
-        <button class="tab-btn" data-tab="rooms">Camere</button>
-        <button class="tab-btn" data-tab="structures">Strutture</button>
-        <button class="tab-btn" data-tab="orders">Ordini</button>
+    <section class="summary">
+      <div class="summary-card">
+        <div class="summary-label">Strutture</div>
+        <div class="summary-value" id="sumStructures">0</div>
       </div>
+      <div class="summary-card">
+        <div class="summary-label">Camere</div>
+        <div class="summary-value" id="sumRooms">0</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Attive</div>
+        <div class="summary-value" id="sumActive">0</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Con link</div>
+        <div class="summary-value" id="sumLinks">0</div>
+      </div>
+    </section>
 
-      <section id="tab-dashboard" class="panel active">
-        <div class="stat-grid">
-          <div class="stat"><div class="num" id="statMenu">0</div><div class="lbl">Prodotti menu</div></div>
-          <div class="stat"><div class="num" id="statRooms">0</div><div class="lbl">Camere</div></div>
-          <div class="stat"><div class="num" id="statOrdersToday">0</div><div class="lbl">Ordini oggi</div></div>
-          <div class="stat"><div class="num" id="statStructures">0</div><div class="lbl">Strutture</div></div>
-        </div>
-
-        <div class="quick-grid">
-          <div class="quick-card">
-            <div><div class="quick-ico">🍽️</div><div class="quick-title">Menù</div><div class="quick-desc">Aggiungi prodotti, varianti, emoji e disponibilità.</div></div>
-            <button class="btn-dark" onclick="openTab('menu')">Gestisci menù</button>
-          </div>
-          <div class="quick-card">
-            <div><div class="quick-ico">🛎️</div><div class="quick-title">Camere</div><div class="quick-desc">Modifica camere, link e scarica QR con logo.</div></div>
-            <button class="btn-dark" onclick="openTab('rooms')">Gestisci camere</button>
-          </div>
-          <div class="quick-card">
-            <div><div class="quick-ico">📩</div><div class="quick-title">Ordini</div><div class="quick-desc">Controlla, correggi o elimina gli ordini ricevuti.</div></div>
-            <button class="btn-dark" onclick="openTab('orders')">Vedi ordini</button>
-          </div>
-          <div class="quick-card">
-            <div><div class="quick-ico">🏡</div><div class="quick-title">Strutture</div><div class="quick-desc">Aggiungi o aggiorna gli immobili collegati.</div></div>
-            <button class="btn-dark" onclick="openTab('structures')">Gestisci strutture</button>
-          </div>
-        </div>
-
-        <div class="grid">
-          <div class="card span-6">
-            <h2>Ordini di oggi</h2>
-            <p class="small">Ultimi ordini ricevuti nella giornata corrente.</p>
-            <div id="todayOrdersList" class="today-list"></div>
-          </div>
-          <div class="card span-6">
-            <h2>Azioni rapide</h2>
-            <p class="small">Operazioni frequenti senza cercare nei tab.</p>
-            <div class="btn-row">
-              <button class="btn-light" onclick="openTab('rooms')">Scarica QR camere</button>
-              <button class="btn-light" onclick="openTab('menu')">Aggiungi prodotto</button>
-              <button class="btn-light" onclick="openPublicSite()">Apri sito ospite</button>
-              <button class="btn-light" onclick="reloadEverything()">Aggiorna dati</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="tab-menu" class="panel">
-        <div class="grid">
-          <div class="card span-4">
-            <h3>Nuovo prodotto</h3>
-            <label>Tipologia / Categoria</label>
-            <input id="newTipologia" placeholder="Es. Il Dolce Risveglio">
-            <label>Prodotto</label>
-            <input id="newProdotto" placeholder="Es. Cornetto">
-            <label>Variante</label>
-            <input id="newSub" placeholder="Es. al pistacchio">
-            <label>Emoji</label>
-            <input id="newEmoji" placeholder="🥐">
-            <p class="small muted">L’ordine di visualizzazione viene gestito automaticamente. Non devi compilarlo a mano.</p>
-            <div class="switchline"><input id="newAttivo" type="checkbox" checked><span>Attivo</span></div>
-            <div class="btn-row"><button id="addMenuBtn" class="btn-dark">Aggiungi</button></div>
-          </div>
-          <div class="card span-8">
-            <h3>Menù esistente</h3>
-            <p class="small">Lista compatta. Filtra per categoria o cerca prodotto/variante. L’ordine progressivo resta nel database solo per ordinare la visualizzazione, ma non viene più mostrato.</p>
-            <div class="menu-toolbar">
-              <div>
-                <label>Filtra tipologia / categoria</label>
-                <select id="menuCategoryFilter"><option value="">Tutte le categorie</option></select>
-              </div>
-              <div>
-                <label>Cerca prodotto</label>
-                <input id="menuSearch" placeholder="Es. cornetto, pistacchio, caffè">
-              </div>
-              <label class="menu-toggle"><input id="menuShowInactive" type="checkbox" checked> Mostra disattivati</label>
-            </div>
-            <div id="menuList" class="menu-compact-list"></div>
-          </div>
-        </div>
-      </section>
-
-      <section id="tab-rooms" class="panel">
-        <div class="grid">
-          <div class="card span-4">
-            <h3>Nuova camera</h3>
-            <label>Struttura</label>
-            <select id="roomStructure"></select>
-            <label>Numero camera</label>
-            <input id="roomNumero" placeholder="101">
-            <label>Codice QR</label>
-            <input id="roomCodice" placeholder="Q9R31">
-            <div class="btn-row">
-              <button id="generateCodeBtn" class="btn-light" type="button">Genera codice</button>
-              <button id="addRoomBtn" class="btn-dark" type="button">Aggiungi camera</button>
-            </div>
-          </div>
-          <div class="card span-8">
-            <h3>Camere e QR</h3>
-            <div id="roomsList" class="list"></div>
-          </div>
-        </div>
-      </section>
-
-      <section id="tab-structures" class="panel">
-        <div class="grid">
-          <div class="card span-4">
-            <h3>Nuova struttura</h3>
-            <label>Slug</label>
-            <input id="structureSlug" placeholder="Villa_Rosa">
-            <label>Nome visualizzato</label>
-            <input id="structureName" placeholder="Villa Rosa">
-            <div class="btn-row"><button id="addStructureBtn" class="btn-dark">Aggiungi struttura</button></div>
-          </div>
-          <div class="card span-8">
-            <h3>Strutture</h3>
-            <div id="structuresList" class="list"></div>
-          </div>
-        </div>
-      </section>
-
-      <section id="tab-orders" class="panel">
-        <div class="card">
-          <h3>Ordini recenti</h3>
-          <div class="btn-row"><button id="reloadOrdersBtn" class="btn-light">Aggiorna ordini</button></div>
-          <div id="ordersList" class="list" style="margin-top:14px;"></div>
-        </div>
-      </section>
+    <section id="roomsGrid" class="grid">
+      <div class="loading">Caricamento camere...</div>
     </section>
   </main>
 
-  <div id="toast" class="toast"></div>
+  <div class="toast" id="toast"></div>
 
-<script>
-  const CONFIG = {
-    supabaseUrl: "https://mipbkhcszsdphbqhvdyr.supabase.co",
-    supabaseAnonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1pcGJraGNzenNkcGhicWh2ZHlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MjU2MDQsImV4cCI6MjA5NTAwMTYwNH0.sFIt4wtQaK9EeY_giODLeap7TAV7pZTxdV590Dl730c",
-    siteBaseUrl: "https://ferra2391.github.io/B-B/"
-  };
+  <script>
+    const SUPABASE_URL = "INCOLLA_QUI_SUPABASE_URL";
+    const SUPABASE_ANON_KEY = "INCOLLA_QUI_SUPABASE_ANON_KEY";
 
-  const sb = supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  const state = {
-    structures: [], rooms: [], menu: [], orders: []
-  };
-
-  const $ = id => document.getElementById(id);
-  let toastTimer = null;
-
-  function showToast(message) {
-    clearTimeout(toastTimer);
-    $("toast").textContent = message;
-    $("toast").classList.add("show");
-    toastTimer = setTimeout(() => $("toast").classList.remove("show"), 3500);
-  }
-
-  function escapeHtml(s) {
-    return String(s ?? "")
-      .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;").replaceAll("'","&#039;");
-  }
-
-  function escapeAttr(s) {
-    return String(s ?? "")
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-  }
-
-  function randomCode(len = 6) {
-    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-    let out = "";
-    for (let i=0; i<len; i++) out += chars[Math.floor(Math.random() * chars.length)];
-    return out;
-  }
-
-  function buildRoomLink(structureSlug, numero, codice) {
-    return `${CONFIG.siteBaseUrl}?struttura=${encodeURIComponent(structureSlug)}&room=${encodeURIComponent(numero)}&key=${encodeURIComponent(codice)}`;
-  }
-
-  async function requireAdmin() {
-    const { data: { session } } = await sb.auth.getSession();
-    if (!session) return false;
-
-    const { data, error } = await sb.rpc("bb_is_admin");
-    if (error || data !== true) {
-      await sb.auth.signOut();
-      showToast("Utente non autorizzato come admin.");
-      return false;
-    }
-    return true;
-  }
-
-  async function boot() {
-    const ok = await requireAdmin();
-    if (ok) showAdmin();
-    else showLogin();
-  }
-
-  function showLogin() {
-    $("loginView").classList.remove("hidden");
-    $("adminView").classList.add("hidden");
-    $("logoutBtn").classList.add("hidden");
-  }
-
-  async function showAdmin() {
-    $("loginView").classList.add("hidden");
-    $("adminView").classList.remove("hidden");
-    $("logoutBtn").classList.remove("hidden");
-    await loadAll();
-  }
-
-  async function loadAll() {
-    await Promise.all([loadStructures(), loadMenu(), loadOrders()]);
-    await loadRooms();
-    renderAll();
-  }
-
-  async function loadStructures() {
-    const { data, error } = await sb.from("bb_structures").select("*").order("nome");
-    if (error) throwToast(error.message);
-    state.structures = data || [];
-  }
-
-  async function loadRooms() {
-    const { data, error } = await sb
-      .from("bb_rooms")
-      .select("*, bb_structures(id, slug, nome)")
-      .order("numero");
-    if (error) throwToast(error.message);
-    state.rooms = data || [];
-  }
-
-  async function loadMenu() {
-    const { data, error } = await sb
-      .from("bb_menu_items")
-      .select("*")
-      .order("sort_order", { ascending:true })
-      .order("tipologia", { ascending:true })
-      .order("prodotto", { ascending:true });
-    if (error) throwToast(error.message);
-    state.menu = data || [];
-  }
-
-  async function loadOrders() {
-    const { data, error } = await sb
-      .from("bb_orders")
-      .select("*, bb_structures(nome, slug), bb_rooms(numero)")
-      .order("data_invio", { ascending:false })
-      .limit(80);
-    if (error) throwToast(error.message);
-    state.orders = data || [];
-  }
-
-  function throwToast(message) {
-    showToast(message);
-    throw new Error(message);
-  }
-
-  function renderAll() {
-    renderStats();
-    renderStructureOptions();
-    renderMenu();
-    renderRooms();
-    renderStructures();
-    renderOrders();
-    renderTodayOrders();
-  }
-
-  function renderStats() {
-    const today = new Date().toISOString().slice(0,10);
-    $("statMenu").textContent = state.menu.length;
-    $("statRooms").textContent = state.rooms.length;
-    $("statStructures").textContent = state.structures.length;
-    $("statOrdersToday").textContent = state.orders.filter(o => String(o.data_invio || "").slice(0,10) === today).length;
-  }
-
-
-  function renderTodayOrders() {
-    const box = $("todayOrdersList");
-    if (!box) return;
-    const today = new Date().toISOString().slice(0,10);
-    const todays = state.orders.filter(o => String(o.data_invio || "").slice(0,10) === today).slice(0,6);
-    if (!todays.length) {
-      box.innerHTML = `<div class="small muted">Nessun ordine ricevuto oggi.</div>`;
-      return;
-    }
-    box.innerHTML = todays.map(o => {
-      const prodotti = getOrderProducts(o);
-      return `
-        <div class="today-order">
-          <div>
-            <div class="today-title">${escapeHtml(o.bb_structures?.nome || "")} · Camera ${escapeHtml(o.bb_rooms?.numero || "")}</div>
-            <div class="today-sub">${new Date(o.data_invio).toLocaleTimeString("it-IT", {hour:"2-digit", minute:"2-digit"})} · ${prodotti.length} pietanze · ${escapeHtml(o.stato || "")}</div>
-          </div>
-          <button class="btn-light" onclick="openTab('orders')">Apri</button>
-        </div>`;
-    }).join("");
-  }
-
-  window.openTab = function(tabName) {
-    const btn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
-    if (btn) btn.click();
-  };
-
-  window.openPublicSite = function() {
-    window.open(CONFIG.siteBaseUrl, "_blank", "noopener,noreferrer");
-  };
-
-  window.reloadEverything = async function() {
-    await loadAll();
-    showToast("Dati aggiornati.");
-  };
-
-  function renderStructureOptions() {
-    $("roomStructure").innerHTML = state.structures.map(s => `<option value="${s.id}">${escapeHtml(s.nome)} / ${escapeHtml(s.slug)}</option>`).join("");
-  }
-
-  function getMenuCategories() {
-    return [...new Set(state.menu.map(x => x.tipologia).filter(Boolean))]
-      .sort((a,b) => a.localeCompare(b, "it"));
-  }
-
-  function syncMenuFilterOptions() {
-    const sel = $("menuCategoryFilter");
-    if (!sel) return;
-    const current = sel.value;
-    const categories = getMenuCategories();
-    sel.innerHTML = `<option value="">Tutte le categorie</option>` +
-      categories.map(c => `<option value="${escapeAttr(c)}">${escapeHtml(c)}</option>`).join("");
-    if (categories.includes(current)) sel.value = current;
-  }
-
-  function renderMenu() {
-    syncMenuFilterOptions();
-
-    const selectedCategory = $("menuCategoryFilter")?.value || "";
-    const query = ($("menuSearch")?.value || "").trim().toLowerCase();
-    const showInactive = $("menuShowInactive")?.checked !== false;
-
-    let items = [...state.menu];
-
-    if (selectedCategory) {
-      items = items.filter(item => item.tipologia === selectedCategory);
-    }
-
-    if (!showInactive) {
-      items = items.filter(item => item.attivo);
-    }
-
-    if (query) {
-      items = items.filter(item => [item.tipologia, item.prodotto, item.sub_prodotto, item.emoji]
-        .map(x => String(x || "").toLowerCase())
-        .some(x => x.includes(query))
-      );
-    }
-
-    items.sort((a,b) => {
-      const cat = String(a.tipologia || "").localeCompare(String(b.tipologia || ""), "it");
-      if (cat) return cat;
-      const sort = Number(a.sort_order || 0) - Number(b.sort_order || 0);
-      if (sort) return sort;
-      return String(a.prodotto || "").localeCompare(String(b.prodotto || ""), "it");
-    });
-
-    if (!items.length) {
-      $("menuList").innerHTML = `<div class="menu-empty">Nessun prodotto trovato con questi filtri.</div>`;
-      return;
-    }
-
-    const categories = getMenuCategories();
-    const grouped = new Map();
-    for (const item of items) {
-      const cat = item.tipologia || "Senza categoria";
-      if (!grouped.has(cat)) grouped.set(cat, []);
-      grouped.get(cat).push(item);
-    }
-
-    $("menuList").innerHTML = Array.from(grouped.entries()).map(([category, rows]) => `
-      <div class="menu-category-block">
-        <div class="menu-category-head">
-          <div class="menu-category-title">${escapeHtml(category)}</div>
-          <div class="menu-category-count">${rows.length} voci</div>
-        </div>
-        ${rows.map(item => `
-          <div class="menu-item-row ${item.attivo ? "" : "inactive"}" data-id="${item.id}">
-            <div>
-              <div class="menu-mini-label">Emoji</div>
-              <input class="menu-emoji-input" data-field="emoji" value="${escapeAttr(item.emoji || "")}" placeholder="🍽️">
-            </div>
-            <div>
-              <div class="menu-mini-label">Prodotto</div>
-              <input data-field="prodotto" value="${escapeAttr(item.prodotto)}" placeholder="Prodotto">
-            </div>
-            <div>
-              <div class="menu-mini-label">Variante</div>
-              <input data-field="sub_prodotto" value="${escapeAttr(item.sub_prodotto || "")}" placeholder="Variante / dettaglio">
-            </div>
-            <div>
-              <div class="menu-mini-label">Categoria</div>
-              <select data-field="tipologia">
-                ${categories.map(c => `<option value="${escapeAttr(c)}" ${c === item.tipologia ? "selected" : ""}>${escapeHtml(c)}</option>`).join("")}
-                ${categories.includes(item.tipologia) ? "" : `<option value="${escapeAttr(item.tipologia || "Senza categoria")}" selected>${escapeHtml(item.tipologia || "Senza categoria")}</option>`}
-              </select>
-            </div>
-            <label class="menu-active-line">
-              <input data-field="attivo" type="checkbox" ${item.attivo ? "checked" : ""}> Attivo
-            </label>
-            <div class="menu-row-actions">
-              <button class="btn-ok" onclick="saveMenuItem('${item.id}')">Salva</button>
-              <button class="btn-danger" onclick="deleteMenuItem('${item.id}')">Elimina</button>
-            </div>
-          </div>
-        `).join("")}
-      </div>
-    `).join("");
-  }
-
-  function renderRooms() {
-    $("roomsList").innerHTML = state.rooms.map(r => {
-      const s = r.bb_structures || state.structures.find(st => st.id === r.structure_id) || {};
-      const link = buildRoomLink(s.slug || "", r.numero, r.codice);
-      const title = `${s.nome || s.slug || "Struttura"} · Camera ${r.numero}`;
-      return `
-        <div class="room-admin-card" data-id="${r.id}">
-          <div class="room-admin-head">
-            <div>
-              <div class="room-admin-title">${escapeHtml(title)}</div>
-              <div class="room-admin-sub">Codice QR: <b>${escapeHtml(r.codice)}</b></div>
-            </div>
-            <div class="room-state pill">${r.attiva ? "✅ Attiva" : "⛔ Non attiva"}</div>
-          </div>
-
-          <div class="room-form-grid">
-            <div class="room-field">
-              <label>Struttura</label>
-              <select data-field="structure_id">
-                ${state.structures.map(st => `<option value="${st.id}" ${st.id === r.structure_id ? "selected" : ""}>${escapeHtml(st.nome)} / ${escapeHtml(st.slug)}</option>`).join("")}
-              </select>
-            </div>
-            <div class="room-field">
-              <label>Camera</label>
-              <input data-field="numero" value="${escapeHtml(r.numero)}" placeholder="101">
-            </div>
-            <div class="room-field">
-              <label>Codice QR</label>
-              <input data-field="codice" value="${escapeHtml(r.codice)}" placeholder="Q9R31">
-            </div>
-            <div class="room-field">
-              <label>Stato</label>
-              <div class="switchline" style="height:48px">
-                <input data-field="attiva" type="checkbox" ${r.attiva ? "checked" : ""}>
-                <span>Camera attiva</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="room-link-box">
-            <input data-field="link" value="${escapeHtml(link)}" readonly>
-            <button class="btn-light" onclick="copyText('${escapeAttr(link)}')">Copia link</button>
-          </div>
-
-          <div class="room-actions">
-            <button class="btn-ok" onclick="saveRoom('${r.id}')">Salva modifiche</button>
-            <button class="btn-light" onclick="downloadRoomQr('${r.id}')">Scarica QR PNG</button>
-            <button class="btn-danger" onclick="deleteRoom('${r.id}')">Elimina camera</button>
-          </div>
-
-          <div class="room-qr-note">Il QR viene generato in PNG con il logo LG Estate al centro e la dicitura struttura/camera in basso.</div>
-        </div>`;
-    }).join("");
-  }
-
-  function renderStructures() {
-    $("structuresList").innerHTML = state.structures.map(s => `
-      <div class="row-card" data-id="${s.id}" style="grid-template-columns:1fr 1fr .5fr auto">
-        <input data-field="slug" value="${escapeHtml(s.slug)}" placeholder="Slug">
-        <input data-field="nome" value="${escapeHtml(s.nome)}" placeholder="Nome">
-        <div class="switchline"><input data-field="attiva" type="checkbox" ${s.attiva ? "checked" : ""}><span>Attiva</span></div>
-        <div class="btn-row">
-          <button class="btn-ok" onclick="saveStructure('${s.id}')">Salva</button>
-          <button class="btn-danger" onclick="deleteStructure('${s.id}')">Elimina</button>
-        </div>
-      </div>
-    `).join("");
-  }
-
-  function getOrderProducts(o) {
-    if (Array.isArray(o.prodotti_json) && o.prodotti_json.length) return o.prodotti_json;
-    return String(o.prodotti || "")
-      .split(/\n|,/)
-      .map(x => x.trim())
-      .filter(Boolean);
-  }
-
-  function renderOrders() {
-    $("ordersList").innerHTML = state.orders.map(o => {
-      const prodotti = getOrderProducts(o);
-      return `
-        <div class="order-editor" data-id="${o.id}">
-          <div>
-            <div class="meta-title">${escapeHtml(o.bb_structures?.nome || "")}</div>
-            <div class="meta-date">${new Date(o.data_invio).toLocaleString("it-IT")}</div>
-            <div class="small muted" style="margin-top:6px">ID: ${escapeHtml(o.order_code)}</div>
-          </div>
-          <div>
-            <label style="margin-top:0">Camera</label>
-            <div><span class="pill">Camera ${escapeHtml(o.bb_rooms?.numero || "")}</span></div>
-            <label>Ospiti</label>
-            <input data-field="ospiti" type="number" min="1" max="20" value="${o.ospiti || 1}">
-            <label>Stato</label>
-            <select data-field="stato">
-              ${["INVIATO","MODIFICATO","COMPLETATO","ANNULLATO"].map(st => `<option value="${st}" ${st === o.stato ? "selected" : ""}>${st}</option>`).join("")}
-            </select>
-          </div>
-          <div>
-            <label style="margin-top:0">Prodotti ordinati</label>
-            <textarea data-field="prodotti_text" placeholder="Un prodotto per riga">${escapeHtml(prodotti.join("\n"))}</textarea>
-            <div class="small muted">Una riga = una quantità. Per 2 cornetti, scrivi 2 righe.</div>
-          </div>
-          <div>
-            <label style="margin-top:0">Note</label>
-            <textarea data-field="note" placeholder="Note ordine">${escapeHtml(o.note || "")}</textarea>
-          </div>
-          <div class="btn-row" style="flex-direction:column; align-items:stretch">
-            <button class="btn-ok" onclick="saveOrder('${o.id}')">Salva ordine</button>
-            <button class="btn-light" onclick="copyText('${escapeHtml(o.order_code)}')">Copia ID</button>
-            <button class="btn-danger" onclick="deleteOrder('${o.id}')">Elimina ordine</button>
-          </div>
-        </div>
-      `;
-    }).join("");
-  }
-
-  function getCardPayload(id, fields) {
-    const card = document.querySelector(`[data-id="${id}"]`);
-    const payload = {};
-    for (const f of fields) {
-      const el = card.querySelector(`[data-field="${f}"]`);
-      if (!el) continue;
-      payload[f] = el.type === "checkbox" ? el.checked : el.value.trim();
-    }
-    return payload;
-  }
-
-  window.saveMenuItem = async function(id) {
-    const payload = getCardPayload(id, ["tipologia","prodotto","sub_prodotto","emoji","attivo"]);
-    payload.sub_prodotto = payload.sub_prodotto || null;
-    if (!payload.tipologia || !payload.prodotto) return showToast("Categoria e prodotto sono obbligatori.");
-    const { error } = await sb.from("bb_menu_items").update(payload).eq("id", id);
-    if (error) return showToast(error.message);
-    showToast("Prodotto salvato.");
-    await loadMenu(); renderMenu(); renderStats();
-  };
-
-  window.deleteMenuItem = async function(id) {
-    if (!confirm("Eliminare questo prodotto/variante?")) return;
-    const { error } = await sb.from("bb_menu_items").delete().eq("id", id);
-    if (error) return showToast(error.message);
-    showToast("Prodotto eliminato.");
-    await loadMenu(); renderMenu(); renderStats();
-  };
-
-  window.saveRoom = async function(id) {
-    const payload = getCardPayload(id, ["structure_id","numero","codice","attiva"]);
-    const structure = state.structures.find(s => s.id === payload.structure_id);
-    payload.link = buildRoomLink(structure?.slug || "", payload.numero, payload.codice);
-    const { error } = await sb.from("bb_rooms").update(payload).eq("id", id);
-    if (error) return showToast(error.message);
-    showToast("Camera salvata.");
-    await loadRooms(); renderRooms(); renderStats();
-  };
-
-  window.deleteRoom = async function(id) {
-    if (!confirm("Eliminare questa camera? Se ha ordini collegati potrebbe non essere possibile.")) return;
-    const { error } = await sb.from("bb_rooms").delete().eq("id", id);
-    if (error) return showToast(error.message);
-    showToast("Camera eliminata.");
-    await loadRooms(); renderRooms(); renderStats();
-  };
-
-  window.saveOrder = async function(id) {
-    const card = document.querySelector(`[data-id="${id}"]`);
-    if (!card) return showToast("Ordine non trovato nella pagina.");
-
-    const prodotti = card.querySelector('[data-field="prodotti_text"]').value
-      .split("\n")
-      .map(x => x.trim())
-      .filter(Boolean);
-
-    if (!prodotti.length) return showToast("Inserisci almeno un prodotto nell’ordine.");
-
-    const payload = {
-      prodotti: prodotti.join("\n"),
-      prodotti_json: prodotti,
-      note: card.querySelector('[data-field="note"]').value.trim() || null,
-      stato: card.querySelector('[data-field="stato"]').value,
-      ospiti: Number(card.querySelector('[data-field="ospiti"]').value || 1),
-      ultima_modifica: new Date().toISOString()
+    const state = {
+      rooms: [],
+      filtered: []
     };
 
-    const { error } = await sb.from("bb_orders").update(payload).eq("id", id);
-    if (error) return showToast(error.message);
-    showToast("Ordine aggiornato manualmente.");
-    await loadOrders(); renderOrders(); renderStats(); renderTodayOrders();
-  };
+    const els = {
+      grid: document.getElementById("roomsGrid"),
+      search: document.getElementById("searchInput"),
+      structureFilter: document.getElementById("structureFilter"),
+      reloadBtn: document.getElementById("reloadBtn"),
+      toast: document.getElementById("toast"),
+      sumStructures: document.getElementById("sumStructures"),
+      sumRooms: document.getElementById("sumRooms"),
+      sumActive: document.getElementById("sumActive"),
+      sumLinks: document.getElementById("sumLinks")
+    };
 
-  window.deleteOrder = async function(id) {
-    if (!confirm("Eliminare definitivamente questo ordine? La camera potrà inviare un nuovo ordine per oggi.")) return;
-    const { error } = await sb.from("bb_orders").delete().eq("id", id);
-    if (error) return showToast(error.message);
-    showToast("Ordine eliminato.");
-    await loadOrders(); renderOrders(); renderStats(); renderTodayOrders();
-  };
+    init();
 
-  function loadImage(src) {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.onload = () => resolve(img);
-      img.onerror = reject;
-      img.src = src;
-    });
-  }
-
-  function fitFontSize(ctx, text, maxWidth, startSize = 58, minSize = 24) {
-    let size = startSize;
-    while (size > minSize) {
-      ctx.font = `bold ${size}px Georgia, serif`;
-      if (ctx.measureText(text).width <= maxWidth) return size;
-      size -= 2;
+    async function init() {
+      bindEvents();
+      await loadRooms();
     }
-    return minSize;
-  }
 
-  window.downloadRoomQr = async function(id) {
-    try {
-      if (typeof QRious === "undefined") {
-        return showToast("Libreria QR non caricata. Ricarica la pagina e riprova.");
+    function bindEvents() {
+      els.reloadBtn.addEventListener("click", loadRooms);
+      els.search.addEventListener("input", applyFilters);
+      els.structureFilter.addEventListener("change", applyFilters);
+    }
+
+    async function loadRooms() {
+      try {
+        els.grid.innerHTML = "<div class='loading'>Caricamento camere...</div>";
+
+        const { data, error } = await supabaseClient.rpc("bb_admin_get_rooms");
+
+        if (error) {
+          console.error(error);
+          showToast("Errore caricamento camere da Supabase.");
+          els.grid.innerHTML = "<div class='empty'>Errore caricamento camere.</div>";
+          return;
+        }
+
+        state.rooms = Array.isArray(data) ? data : [];
+        state.filtered = state.rooms;
+
+        populateStructureFilter();
+        updateSummary();
+        renderRooms();
+
+      } catch (err) {
+        console.error(err);
+        showToast("Errore di collegamento.");
+        els.grid.innerHTML = "<div class='empty'>Errore di collegamento.</div>";
       }
+    }
 
-      const room = state.rooms.find(r => r.id === id);
-      if (!room) return showToast("Camera non trovata.");
-      const structure = room.bb_structures || state.structures.find(s => s.id === room.structure_id) || {};
-      const link = buildRoomLink(structure.slug || "", room.numero, room.codice);
-      const label = `${String(structure.slug || "").replaceAll("_", " ")} - Camera ${room.numero}`;
+    function populateStructureFilter() {
+      const current = els.structureFilter.value;
 
-      const qrCanvas = document.createElement("canvas");
-      new QRious({
-        element: qrCanvas,
-        value: link,
-        size: 1100,
-        level: "H",
-        background: "white",
-        foreground: "black",
-        padding: 50
+      const structures = [...new Set(state.rooms.map(r => r.struttura).filter(Boolean))]
+        .sort((a, b) => String(a).localeCompare(String(b)));
+
+      els.structureFilter.innerHTML = "<option value=''>Tutte le strutture</option>";
+
+      structures.forEach(s => {
+        const opt = document.createElement("option");
+        opt.value = s;
+        opt.textContent = s;
+        els.structureFilter.appendChild(opt);
       });
 
-      const qrSize = qrCanvas.width;
-      const footerH = 170;
-      const finalCanvas = document.createElement("canvas");
-      finalCanvas.width = qrSize;
-      finalCanvas.height = qrSize + footerH;
-      const ctx = finalCanvas.getContext("2d");
+      if (structures.includes(current)) {
+        els.structureFilter.value = current;
+      }
+    }
 
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
-      ctx.drawImage(qrCanvas, 0, 0);
+    function updateSummary() {
+      const structures = new Set(state.rooms.map(r => r.struttura).filter(Boolean));
+      const active = state.rooms.filter(r => !!r.attiva).length;
+      const withLink = state.rooms.filter(r => !!r.link).length;
 
-      const logo = await loadImage("assets/LG_ESTATE_Logo_esteso_oro.png");
-      const logoW = Math.round(qrSize * 0.30);
-      const logoH = Math.round(logo.height * (logoW / logo.width));
-      const logoX = Math.round((qrSize - logoW) / 2);
-      const logoY = Math.round((qrSize - logoH) / 2);
-      const padX = 36;
-      const padY = 26;
+      els.sumStructures.textContent = structures.size;
+      els.sumRooms.textContent = state.rooms.length;
+      els.sumActive.textContent = active;
+      els.sumLinks.textContent = withLink;
+    }
 
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(logoX - padX, logoY - padY, logoW + padX * 2, logoH + padY * 2);
-      ctx.drawImage(logo, logoX, logoY, logoW, logoH);
+    function applyFilters() {
+      const q = els.search.value.trim().toLowerCase();
+      const selectedStructure = els.structureFilter.value;
 
-      ctx.fillStyle = "#000000";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "top";
-      const fontSize = fitFontSize(ctx, label, finalCanvas.width - 90, 62, 30);
-      ctx.font = `bold ${fontSize}px Georgia, serif`;
-      ctx.fillText(label, finalCanvas.width / 2, qrSize + 44);
+      state.filtered = state.rooms.filter(room => {
+        const matchesStructure = !selectedStructure || room.struttura === selectedStructure;
+
+        const text = [
+          room.struttura,
+          room.camera,
+          room.codice,
+          room.link
+        ].join(" ").toLowerCase();
+
+        const matchesSearch = !q || text.includes(q);
+
+        return matchesStructure && matchesSearch;
+      });
+
+      renderRooms();
+    }
+
+    function renderRooms() {
+      els.grid.innerHTML = "";
+
+      if (!state.filtered.length) {
+        els.grid.innerHTML = "<div class='empty'>Nessuna camera trovata.</div>";
+        return;
+      }
+
+      state.filtered.forEach((room, index) => {
+        const card = document.createElement("article");
+        card.className = "room-card";
+
+        const qrId = "qr_" + index + "_" + String(room.camera).replace(/[^a-zA-Z0-9]/g, "");
+
+        card.innerHTML = `
+          <div class="room-head">
+            <div>
+              <div class="structure">${escapeHtml(room.struttura || "")}</div>
+              <h2 class="room-title">Camera ${escapeHtml(room.camera || "")}</h2>
+            </div>
+            <div class="badge ${room.attiva ? "ok" : "no"}">
+              ${room.attiva ? "Attiva" : "Disattiva"}
+            </div>
+          </div>
+
+          <div class="qr-wrap">
+            <div class="qr-box" id="${qrId}">
+              ${room.link ? "" : "<span class='small'>Link mancante</span>"}
+            </div>
+          </div>
+
+          <div class="details">
+            <div class="field">
+              <div class="field-label">Codice</div>
+              <div class="field-value">${escapeHtml(room.codice || "")}</div>
+            </div>
+
+            <div class="field">
+              <div class="field-label">Link ufficiale database</div>
+              <div class="field-value">${escapeHtml(room.link || "Link mancante")}</div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="action-btn copy-btn" type="button" data-action="copy">Copia link</button>
+            <button class="action-btn open-btn" type="button" data-action="open">Apri</button>
+            <button class="action-btn download-btn" type="button" data-action="download">Scarica QR</button>
+          </div>
+        `;
+
+        els.grid.appendChild(card);
+
+        if (room.link) {
+          new QRCode(document.getElementById(qrId), {
+            text: room.link,
+            width: 180,
+            height: 180,
+            colorDark: "#0c0a06",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+          });
+        }
+
+        card.querySelector('[data-action="copy"]').addEventListener("click", () => copyLink(room.link));
+        card.querySelector('[data-action="open"]').addEventListener("click", () => openLink(room.link));
+        card.querySelector('[data-action="download"]').addEventListener("click", () => downloadQr(qrId, room));
+      });
+    }
+
+    async function copyLink(link) {
+      if (!link) {
+        showToast("Link mancante.");
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(link);
+        showToast("Link copiato.");
+      } catch {
+        fallbackCopy(link);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.style.position = "fixed";
+      area.style.left = "-9999px";
+      document.body.appendChild(area);
+      area.focus();
+      area.select();
+
+      try {
+        document.execCommand("copy");
+        showToast("Link copiato.");
+      } catch {
+        showToast("Impossibile copiare il link.");
+      }
+
+      document.body.removeChild(area);
+    }
+
+    function openLink(link) {
+      if (!link) {
+        showToast("Link mancante.");
+        return;
+      }
+
+      window.open(link, "_blank", "noopener,noreferrer");
+    }
+
+    function downloadQr(qrId, room) {
+      if (!room.link) {
+        showToast("Link mancante.");
+        return;
+      }
+
+      const qrBox = document.getElementById(qrId);
+      const canvas = qrBox.querySelector("canvas");
+      const img = qrBox.querySelector("img");
+
+      let dataUrl = "";
+
+      if (canvas) {
+        dataUrl = canvas.toDataURL("image/png");
+      } else if (img) {
+        dataUrl = img.src;
+      }
+
+      if (!dataUrl) {
+        showToast("QR non disponibile.");
+        return;
+      }
 
       const a = document.createElement("a");
-      a.download = `QR_${String(structure.slug || "Struttura").replaceAll(" ", "_")}_Room_${room.numero}.png`;
-      a.href = finalCanvas.toDataURL("image/png");
+      const safeStructure = safeFileName(room.struttura || "struttura");
+      const safeRoom = safeFileName(room.camera || "camera");
+
+      a.href = dataUrl;
+      a.download = `qr_${safeStructure}_${safeRoom}.png`;
       document.body.appendChild(a);
       a.click();
-      a.remove();
-      showToast("QR scaricato in PNG.");
-    } catch (err) {
-      console.error(err);
-      showToast("Errore nella generazione del QR: " + (err?.message || err));
+      document.body.removeChild(a);
+
+      showToast("QR scaricato.");
     }
-  };
 
-  window.saveStructure = async function(id) {
-    const payload = getCardPayload(id, ["slug","nome","attiva"]);
-    const { error } = await sb.from("bb_structures").update(payload).eq("id", id);
-    if (error) return showToast(error.message);
-    showToast("Struttura salvata.");
-    await loadStructures(); await loadRooms(); renderAll();
-  };
+    function safeFileName(value) {
+      return String(value)
+        .trim()
+        .replace(/[^a-zA-Z0-9_-]+/g, "_")
+        .replace(/^_+|_+$/g, "");
+    }
 
-  window.deleteStructure = async function(id) {
-    if (!confirm("Eliminare questa struttura? Verranno eliminate anche camere collegate se non ci sono vincoli ordini.")) return;
-    const { error } = await sb.from("bb_structures").delete().eq("id", id);
-    if (error) return showToast(error.message);
-    showToast("Struttura eliminata.");
-    await loadStructures(); await loadRooms(); renderAll();
-  };
+    let toastTimer = null;
 
-  window.copyText = async function(text) {
-    try { await navigator.clipboard.writeText(text); showToast("Copiato negli appunti."); }
-    catch { showToast("Copia manualmente: " + text); }
-  };
+    function showToast(message) {
+      clearTimeout(toastTimer);
+      els.toast.textContent = message;
+      els.toast.classList.add("show");
 
-  $("loginBtn").addEventListener("click", async () => {
-    const email = $("loginEmail").value.trim();
-    const password = $("loginPassword").value;
-    if (!email || !password) return showToast("Inserisci email e password.");
+      toastTimer = setTimeout(() => {
+        els.toast.classList.remove("show");
+      }, 4000);
+    }
 
-    const { error } = await sb.auth.signInWithPassword({ email, password });
-    if (error) return showToast(error.message);
-    const ok = await requireAdmin();
-    if (ok) await showAdmin();
-  });
-
-  $("logoutBtn").addEventListener("click", async () => {
-    await sb.auth.signOut();
-    showLogin();
-  });
-
-  document.querySelectorAll(".tab-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-      document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
-      btn.classList.add("active");
-      $("tab-" + btn.dataset.tab).classList.add("active");
-    });
-  });
-
-
-  function getNextMenuSortOrder(tipologia) {
-    const sameCategory = state.menu.filter(item => String(item.tipologia || "") === String(tipologia || ""));
-    if (!sameCategory.length) return (state.menu.length + 1) * 10;
-    const maxSort = Math.max(...sameCategory.map(item => Number(item.sort_order || 0)));
-    return maxSort + 10;
-  }
-
-  $("addMenuBtn").addEventListener("click", async () => {
-    const payload = {
-      tipologia: $("newTipologia").value.trim(),
-      prodotto: $("newProdotto").value.trim(),
-      sub_prodotto: $("newSub").value.trim() || null,
-      emoji: $("newEmoji").value.trim() || "🍽️",
-      sort_order: getNextMenuSortOrder($("newTipologia").value.trim()),
-      attivo: $("newAttivo").checked
-    };
-    if (!payload.tipologia || !payload.prodotto) return showToast("Tipologia e prodotto sono obbligatori.");
-    const { error } = await sb.from("bb_menu_items").insert(payload);
-    if (error) return showToast(error.message);
-    showToast("Prodotto aggiunto.");
-    $("newProdotto").value = ""; $("newSub").value = "";
-    await loadMenu(); renderMenu(); renderStats();
-  });
-
-  $("generateCodeBtn").addEventListener("click", () => {
-    $("roomCodice").value = randomCode(6);
-  });
-
-  $("addRoomBtn").addEventListener("click", async () => {
-    const structure_id = $("roomStructure").value;
-    const numero = $("roomNumero").value.trim();
-    const codice = $("roomCodice").value.trim() || randomCode(6);
-    const structure = state.structures.find(s => s.id === structure_id);
-    if (!structure_id || !numero) return showToast("Struttura e numero camera sono obbligatori.");
-    const payload = { structure_id, numero, codice, attiva:true, link: buildRoomLink(structure?.slug || "", numero, codice) };
-    const { error } = await sb.from("bb_rooms").insert(payload);
-    if (error) return showToast(error.message);
-    showToast("Camera aggiunta.");
-    $("roomNumero").value = ""; $("roomCodice").value = "";
-    await loadRooms(); renderRooms(); renderStats();
-  });
-
-  $("addStructureBtn").addEventListener("click", async () => {
-    const payload = {
-      slug: $("structureSlug").value.trim(),
-      nome: $("structureName").value.trim(),
-      attiva:true
-    };
-    if (!payload.slug || !payload.nome) return showToast("Slug e nome sono obbligatori.");
-    const { error } = await sb.from("bb_structures").insert(payload);
-    if (error) return showToast(error.message);
-    showToast("Struttura aggiunta.");
-    $("structureSlug").value = ""; $("structureName").value = "";
-    await loadStructures(); renderAll();
-  });
-
-  $("reloadOrdersBtn").addEventListener("click", async () => {
-    await loadOrders(); renderOrders(); renderStats(); renderTodayOrders(); showToast("Ordini aggiornati.");
-  });
-
-
-  ["menuCategoryFilter", "menuSearch", "menuShowInactive"].forEach(id => {
-    const el = $(id);
-    if (!el) return;
-    el.addEventListener("input", renderMenu);
-    el.addEventListener("change", renderMenu);
-  });
-
-
-  boot();
-</script>
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+  </script>
 </body>
 </html>
