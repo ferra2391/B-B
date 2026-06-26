@@ -140,56 +140,55 @@
 
     /* FOOD CARDS & QTY SELECTOR */
     .foods { display: flex; flex-direction: column; gap: 15px; padding: 0 20px; margin-bottom: 23px;}
-    .food-card { position: relative; }
-    .food-card input[type="checkbox"] { display: none; }
-    
-    .food-content { cursor: pointer; border-radius: var(--r-md); background: var(--card-bg); border: 2px solid var(--cream3); padding: 23px 29px; display: flex; gap: 26px; align-items: center; transition: all .2s ease; user-select: none; box-shadow: 0 3px 13px rgba(26,19,10,0.06); }
-    .food-content:active { transform: scale(0.985); }
-    
-    .food-card.disabled .food-content { opacity: 0.5; filter: grayscale(100%); pointer-events: none; }
 
-    .food-card input:checked + .food-content { border-color: var(--gold); background: #fffbf2; box-shadow: 0 0 0 2px rgba(200,149,28,0.15), 0 8px 31px rgba(200,149,28,0.12); }
-    
-    .emoji { width: 80px; height: 80px; min-width: 80px; border-radius: 23px; display: grid; place-items: center; font-size: 36px; background: var(--cream2); border: 1.5px solid var(--cream3); transition: all .2s; }
-    .food-card input:checked + .food-content .emoji { background: #fdf0d5; border-color: rgba(200,149,28,0.3); }
-    
-    .food-info { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
-    .food-title { font-family: "Cormorant Garamond", serif; font-weight: 600; font-size: 32px; line-height: 1.2; color: var(--text-dark); }
-    
-    /* MENU A TENDINA PRODOTTI */
-    .food-select { 
-      margin-top: 10px; font-family: "Jost", sans-serif; font-size: 22px; color: var(--text-mid); background-color: var(--cream);
-      border: 2px solid var(--cream3); border-radius: 16px; padding: 13px 60px 13px 20px; width: fit-content; max-width: 100%;
-      outline: none; cursor: pointer; font-weight: 500; appearance: none; -webkit-appearance: none; 
-      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23a08060%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E"); 
-      background-repeat: no-repeat; background-position: right 18px center; background-size: 28px auto; transition: all 0.2s ease; box-shadow: 0 3px 6px rgba(0,0,0,0.02);
-    }
-    .food-card input:checked + .food-content .food-select { 
-      color: var(--gold); background-color: #fff; border-color: rgba(200,149,28,0.4); box-shadow: 0 3px 10px rgba(200,149,28,0.1);
-      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23c8951c%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E");
-    }
+    /* GRUPPO PRODOTTO (accordion) */
+    .prod-group { border-radius: var(--r-md); background: var(--card-bg); border: 2px solid var(--cream3); box-shadow: 0 3px 13px rgba(26,19,10,0.06); overflow: hidden; transition: border-color .2s ease, box-shadow .2s ease; }
+    .prod-group.has-selection { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(200,149,28,0.15), 0 8px 31px rgba(200,149,28,0.12); }
 
-    /* QTY SELECTOR / STEPPER */
-    .check-placeholder {
-      margin-left: auto; width: 60px; height: 60px; min-width: 60px; border-radius: 50%;
-      border: 2px solid var(--cream3); transition: all .2s;
-    }
-    .qty-stepper { display: none; align-items: center; gap: 14px; margin-left: auto; }
-    
-    .food-card input:checked + .food-content .check-placeholder { display: none; }
-    .food-card input:checked + .food-content .qty-stepper { display: flex; }
+    .prod-header { cursor: pointer; padding: 23px 26px; display: flex; gap: 22px; align-items: center; user-select: none; -webkit-user-select: none; }
+    .prod-header:active { transform: scale(0.99); }
+    .emoji { width: 72px; height: 72px; min-width: 72px; border-radius: 21px; display: grid; place-items: center; font-size: 34px; background: var(--cream2); border: 1.5px solid var(--cream3); transition: all .2s; }
+    .prod-group.has-selection .emoji { background: #fdf0d5; border-color: rgba(200,149,28,0.3); }
 
+    .prod-head-info { flex: 1; min-width: 0; }
+    .prod-title { font-family: "Cormorant Garamond", serif; font-weight: 600; font-size: 30px; line-height: 1.15; color: var(--text-dark); }
+    .prod-group.no-variants .prod-header { gap: 16px; }
+    .prod-group.no-variants .prod-title { font-size: 26px; }
+    .prod-group.no-variants .qty-stepper { flex-shrink: 0; }
+    .prod-badge { display: inline-block; margin-top: 6px; font-size: 16px; font-weight: 600; color: var(--gold); font-family: "Jost", sans-serif; }
+    .prod-badge:empty { display: none; }
+
+    .prod-chevron { width: 34px; height: 34px; min-width: 34px; color: var(--gold); transition: transform .25s ease; }
+    .prod-group.open .prod-chevron { transform: rotate(180deg); }
+
+    /* corpo varianti (collassato di default) */
+    .prod-body { display: none; padding: 4px 26px 20px; border-top: 1px solid var(--cream3); }
+    .prod-group.open .prod-body { display: block; }
+
+    .variant-row { display: flex; align-items: center; gap: 16px; padding: 16px 2px; border-bottom: 1px solid var(--cream2); }
+    .variant-row:last-child { border-bottom: 0; }
+    .variant-name { flex: 1; min-width: 0; font-size: 21px; font-weight: 500; color: var(--text-mid); line-height: 1.3; }
+    .variant-row.active .variant-name { color: var(--gold); font-weight: 600; }
+
+    /* singolo prodotto senza varianti: riga semplice nell'header */
+    .prod-group.no-variants .prod-header { cursor: default; }
+    .prod-group.no-variants .prod-chevron { display: none; }
+    .prod-classic { font-size: 18px; color: var(--text-soft); margin-top: 4px; }
+
+    /* QTY STEPPER */
+    .qty-stepper { display: flex; align-items: center; gap: 14px; }
     .qty-btn {
-      width: 52px; height: 52px; border-radius: 50%; border: none;
-      background: var(--gold); color: #fff; font-size: 38px; font-weight: 400;
+      width: 46px; height: 46px; border-radius: 50%; border: none;
+      background: var(--gold); color: #fff; font-size: 32px; font-weight: 400;
       display: flex; align-items: center; justify-content: center; cursor: pointer;
       transition: all .2s ease; box-shadow: 0 6px 18px rgba(200,149,28,0.25);
-      line-height: 0; padding-bottom: 4px; /* Optical vertical centering */
+      line-height: 0; padding-bottom: 3px;
     }
+    .qty-btn.minus { background: #fff; color: var(--gold); border: 2px solid var(--gold-border); box-shadow: none; }
     .qty-btn:active { transform: scale(0.9); }
-    .qty-val {
-      font-size: 30px; font-weight: 600; color: var(--gold); min-width: 24px; text-align: center;
-    }
+    .qty-btn.disabled { opacity: 0.35; pointer-events: none; }
+    .qty-val { font-size: 26px; font-weight: 600; color: var(--gold); min-width: 26px; text-align: center; }
+    .variant-row:not(.active) .qty-val { color: var(--cream3); }
 
     /* LIMIT COUNTER */
     .limit-counter { margin: 15px 20px 23px; padding: 15px; background: rgba(200,149,28,0.1); border-radius: 15px; text-align: center; font-size: 18px; font-weight: 500; color: var(--gold); border: 2px dashed var(--gold-border); transition: 0.3s;}
@@ -352,6 +351,7 @@
       editBtn: "Modifica ordine",
       sendDisabled: "Nuovo ordine non disponibile",
       classicRecipe: "Ricetta classica",
+      badgeOne: "scelto", badgeMany: "scelti",
       loadingMenu: "Caricamento menù in corso...",
       noMenu: "Nessun menù disponibile.",
       toastMaxQty: (max) => `Massimo ${max} pietanze consentite.`,
@@ -403,6 +403,7 @@
       editBtn: "Edit order",
       sendDisabled: "New order not available",
       classicRecipe: "Classic recipe",
+      badgeOne: "selected", badgeMany: "selected",
       loadingMenu: "Loading menu...",
       noMenu: "No menu available.",
       toastMaxQty: (max) => `Maximum ${max} items allowed.`,
@@ -663,174 +664,174 @@
       foodsDiv.className = "foods";
 
       (cat.prodotti || []).forEach(prod => {
-        const label = document.createElement("label");
-        label.className = "food-card";
+        const hasVar = prod.varianti && prod.varianti.length > 0;
+        const group = document.createElement("div");
+        group.className = "prod-group" + (hasVar ? "" : " no-variants");
+        group.dataset.prod = prod.nome; // nome IT, invariato per payload
 
-        let selectHtml = "";
-        if (prod.varianti && prod.varianti.length > 0) {
-          // value = IT (per payload/applyOrdine), testo = lingua scelta
-          const options = prod.varianti
-            .map((v, i) => `<option value="${escapeHtml(v)}">${escapeHtml(locVar(prod, i))}</option>`)
-            .join("");
-          selectHtml = `<select class="food-select" onclick="event.stopPropagation()" onchange="checkLimit()">${options}</select>`;
+        const chevron = `<svg class="prod-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
+
+        if (hasVar) {
+          // gruppo con varianti: header cliccabile + corpo a righe
+          const rows = prod.varianti.map((v, i) => `
+            <div class="variant-row" data-sub="${escapeHtml(v)}">
+              <div class="variant-name">${escapeHtml(locVar(prod, i))}</div>
+              <div class="qty-stepper">
+                <button type="button" class="qty-btn minus" onclick="changeVarQty(this, -1)">−</button>
+                <span class="qty-val">0</span>
+                <button type="button" class="qty-btn plus" onclick="changeVarQty(this, 1)">+</button>
+              </div>
+            </div>`).join("");
+
+          group.innerHTML = `
+            <div class="prod-header" onclick="toggleGroup(this)">
+              <div class="emoji">${escapeHtml(prod.emoji || "🍽️")}</div>
+              <div class="prod-head-info">
+                <div class="prod-title">${escapeHtml(locProd(prod))}</div>
+                <div class="prod-badge"></div>
+              </div>
+              ${chevron}
+            </div>
+            <div class="prod-body">${rows}</div>`;
         } else {
-          selectHtml = `<div style="font-size: 22px; color: var(--text-soft); margin-top:8px;">${t("classicRecipe")}</div>`;
+          // prodotto singolo: header con stepper diretto, nessun corpo
+          group.innerHTML = `
+            <div class="prod-header">
+              <div class="emoji">${escapeHtml(prod.emoji || "🍽️")}</div>
+              <div class="prod-head-info">
+                <div class="prod-title">${escapeHtml(locProd(prod))}</div>
+                <div class="prod-classic">${t("classicRecipe")}</div>
+              </div>
+              <div class="qty-stepper" data-sub="">
+                <button type="button" class="qty-btn minus" onclick="changeVarQty(this, -1)">−</button>
+                <span class="qty-val">0</span>
+                <button type="button" class="qty-btn plus" onclick="changeVarQty(this, 1)">+</button>
+              </div>
+            </div>`;
         }
 
-        label.innerHTML = `
-          <input type="checkbox" name="food" value="${escapeHtml(prod.nome)}" onchange="checkLimit(event)">
-          <div class="food-content">
-            <div class="emoji">${escapeHtml(prod.emoji || "🍽️")}</div>
-            <div class="food-info">
-              <div class="food-title">${escapeHtml(locProd(prod))}</div>
-              ${selectHtml}
-            </div>
-            <div class="check-placeholder"></div>
-            <div class="qty-stepper">
-               <button type="button" class="qty-btn minus" onclick="event.preventDefault(); event.stopPropagation(); changeQty(this, -1)">-</button>
-               <span class="qty-val">1</span>
-               <button type="button" class="qty-btn plus" onclick="event.preventDefault(); event.stopPropagation(); changeQty(this, 1)">+</button>
-            </div>
-          </div>`;
-
-        foodsDiv.appendChild(label);
+        foodsDiv.appendChild(group);
       });
 
       els.menuContainer.appendChild(foodsDiv);
     });
   }
 
-  // Cattura/ripristina selezione (per switch lingua a menù aperto)
-  function snapshotSelection() {
-    const snap = [];
-    document.querySelectorAll('input[name="food"]:checked').forEach(cb => {
-      const card = cb.closest(".food-card");
-      const select = card.querySelector("select");
-      const qty = parseInt(card.querySelector(".qty-val").textContent, 10) || 1;
-      snap.push({ value: cb.value, sub: select ? select.value : null, qty });
-    });
-    return snap;
-  }
-  function restoreSelection(snap) {
-    snap.forEach(item => {
-      const inputs = Array.from(document.querySelectorAll('input[name="food"]'));
-      const cb = inputs.find(i => i.value === item.value);
-      if (!cb) return;
-      cb.checked = true;
-      const card = cb.closest(".food-card");
-      if (item.sub) { const s = card.querySelector("select"); if (s) s.value = item.sub; }
-      const vs = card.querySelector(".qty-val"); if (vs) vs.textContent = String(item.qty);
-    });
+  // Apri/chiudi gruppo (accordion: uno solo aperto per volta)
+  window.toggleGroup = function(headerEl) {
+    const group = headerEl.closest(".prod-group");
+    const wasOpen = group.classList.contains("open");
+    document.querySelectorAll(".prod-group.open").forEach(g => g.classList.remove("open"));
+    if (!wasOpen) group.classList.add("open");
+  };
+
+  // Conta tutti i pezzi selezionati (somma di tutti gli stepper)
+  function totalSelected() {
+    let n = 0;
+    document.querySelectorAll(".qty-val").forEach(s => { n += parseInt(s.textContent, 10) || 0; });
+    return n;
   }
 
-  window.changeQty = function(btn, delta) {
-    const card = btn.closest(".food-card");
-    const valSpan = card.querySelector(".qty-val");
-    const cb = card.querySelector('input[type="checkbox"]');
-    let current = parseInt(valSpan.textContent, 10) || 1;
+  // +/- su una singola variante (o prodotto singolo)
+  window.changeVarQty = function(btn, delta) {
+    const stepper = btn.closest(".qty-stepper");
+    const valSpan = stepper.querySelector(".qty-val");
+    let current = parseInt(valSpan.textContent, 10) || 0;
 
-    const allCheckboxes = document.querySelectorAll('input[name="food"]:checked');
-    let totalQty = 0;
-
-    allCheckboxes.forEach(c => {
-       totalQty += parseInt(c.closest(".food-card").querySelector(".qty-val").textContent, 10) || 1;
-    });
-
-    if (delta > 0 && totalQty >= state.maxScelte) {
-       showToast(t("toastMaxQty")(state.maxScelte));
-       return;
+    if (delta > 0 && totalSelected() >= state.maxScelte) {
+      showToast(t("toastMaxQty")(state.maxScelte));
+      return;
     }
+    const next = Math.max(0, current + delta);
+    valSpan.textContent = String(next);
 
-    const newQty = current + delta;
-
-    if (newQty <= 0) {
-      cb.checked = false;
-      valSpan.textContent = "1";
-    } else {
-      valSpan.textContent = String(newQty);
-    }
+    // stato visivo riga variante
+    const row = btn.closest(".variant-row");
+    if (row) row.classList.toggle("active", next > 0);
 
     checkLimit();
   };
 
-  window.checkLimit = function(event) {
-    const checkboxes = document.querySelectorAll('input[name="food"]');
-    let count = 0;
-
-    checkboxes.forEach(cb => {
-      if (cb.checked) {
-        count += parseInt(cb.closest(".food-card").querySelector(".qty-val").textContent, 10) || 1;
-      }
+  // Cattura/ripristina selezione (per switch lingua a menù aperto)
+  function snapshotSelection() {
+    const snap = [];
+    document.querySelectorAll(".prod-group").forEach(group => {
+      const prod = group.dataset.prod;
+      group.querySelectorAll(".qty-stepper").forEach(st => {
+        const qty = parseInt(st.querySelector(".qty-val").textContent, 10) || 0;
+        if (qty > 0) {
+          const row = st.closest(".variant-row");
+          const sub = row ? row.dataset.sub : (st.dataset.sub || "");
+          snap.push({ prod, sub, qty });
+        }
+      });
     });
+    return snap;
+  }
+  function restoreSelection(snap) {
+    snap.forEach(item => applyQtyTo(item.prod, item.sub, item.qty));
+  }
 
-    if (count > state.maxScelte && event && event.target) {
-      event.target.checked = false;
-      showToast(t("toastLimit")(state.maxScelte));
-      count = Math.max(0, count - 1);
+  // Imposta una quantità su (prodotto, variante) — usata da restore e da ordine esistente
+  function applyQtyTo(prodNome, sub, qty) {
+    const groups = Array.from(document.querySelectorAll(".prod-group"));
+    const group = groups.find(g => g.dataset.prod === prodNome);
+    if (!group) return false;
+
+    let stepper = null;
+    if (sub) {
+      const row = Array.from(group.querySelectorAll(".variant-row")).find(r => r.dataset.sub === sub);
+      if (row) { stepper = row.querySelector(".qty-stepper"); row.classList.add("active"); }
+    } else {
+      stepper = group.querySelector(".prod-header > .qty-stepper") || group.querySelector(".qty-stepper");
     }
+    if (!stepper) return false;
+    stepper.querySelector(".qty-val").textContent = String(qty);
+    return true;
+  }
 
+  window.checkLimit = function() {
+    const count = totalSelected();
     if (els.countNum) els.countNum.textContent = String(count);
 
-    if (count >= state.maxScelte) {
+    // badge per ogni gruppo + classe has-selection
+    document.querySelectorAll(".prod-group").forEach(group => {
+      let g = 0;
+      group.querySelectorAll(".qty-val").forEach(s => { g += parseInt(s.textContent, 10) || 0; });
+      group.classList.toggle("has-selection", g > 0);
+      const badge = group.querySelector(".prod-badge");
+      if (badge) badge.textContent = g > 0 ? `${g} ${g === 1 ? t("badgeOne") : t("badgeMany")}` : "";
+    });
+
+    const maxed = count >= state.maxScelte;
+    if (maxed) {
       els.limitCounter.classList.add("maxed");
       els.limitCounter.innerHTML = t("limitMaxed")(state.maxScelte);
-
-      checkboxes.forEach(cb => {
-        if (!cb.checked) cb.closest(".food-card").classList.add("disabled");
-      });
-
-      document.querySelectorAll(".qty-btn.plus").forEach(btn => {
-        btn.style.opacity = "0.4";
-        btn.style.pointerEvents = "none";
-      });
     } else {
       els.limitCounter.classList.remove("maxed");
       els.limitCounter.innerHTML = `<span id="limitLabel">${t("limitLabel")}</span> <span id="countNum">${count}</span> / ${state.maxScelte}`;
       els.countNum = document.getElementById("countNum");
-
-      checkboxes.forEach(cb => {
-        cb.closest(".food-card").classList.remove("disabled");
-      });
-
-      document.querySelectorAll(".qty-btn.plus").forEach(btn => {
-        btn.style.opacity = "1";
-        btn.style.pointerEvents = "auto";
-      });
     }
+
+    // blocca i "+" quando si è al limite (lasciando i "−" sempre attivi)
+    document.querySelectorAll(".qty-btn.plus").forEach(btn => {
+      btn.classList.toggle("disabled", maxed);
+    });
   };
 
   function applyOrdineToForm(ordine) {
     const pScelti = ordine.prodotti || [];
     const freq = {};
-
-    pScelti.forEach(p => {
-      freq[p] = (freq[p] || 0) + 1;
-    });
+    pScelti.forEach(p => { freq[p] = (freq[p] || 0) + 1; });
 
     for (const [stringaProdotto, qty] of Object.entries(freq)) {
       const parts = stringaProdotto.split(" - ");
       const nomeBase = parts[0].trim();
-      const sub = parts.length > 1 ? parts.slice(1).join(" - ").trim() : null;
-
-      const inputs = Array.from(document.querySelectorAll('input[name="food"]'));
-      const cb = inputs.find(input => input.value === nomeBase);
-
-      if (cb) {
-        cb.checked = true;
-
-        if (sub) {
-          const select = cb.closest(".food-card").querySelector("select");
-          if (select) select.value = sub;
-        }
-
-        const valSpan = cb.closest(".food-card").querySelector(".qty-val");
-        if (valSpan) valSpan.textContent = String(qty);
-      }
+      const sub = parts.length > 1 ? parts.slice(1).join(" - ").trim() : "";
+      applyQtyTo(nomeBase, sub, qty);
     }
 
-    if (pScelti.length > state.maxScelte) {
-      state.maxScelte = pScelti.length;
-    }
+    if (pScelti.length > state.maxScelte) state.maxScelte = pScelti.length;
 
     els.notes.value = ordine.note || "";
     checkLimit();
@@ -894,15 +895,16 @@
   async function sendOrder(action) {
     const prodottiFinali = [];
 
-    document.querySelectorAll('input[name="food"]:checked').forEach(cb => {
-      const nome = cb.value;
-      const select = cb.closest(".food-card").querySelector("select");
-      const qty = parseInt(cb.closest(".food-card").querySelector(".qty-val").textContent, 10) || 1;
-      const riga = (select && select.value) ? `${nome} - ${select.value}` : nome;
-
-      for (let i = 0; i < qty; i++) {
-         prodottiFinali.push(riga);
-      }
+    document.querySelectorAll(".prod-group").forEach(group => {
+      const nome = group.dataset.prod; // nome IT
+      group.querySelectorAll(".qty-stepper").forEach(st => {
+        const qty = parseInt(st.querySelector(".qty-val").textContent, 10) || 0;
+        if (qty <= 0) return;
+        const row = st.closest(".variant-row");
+        const sub = row ? row.dataset.sub : (st.dataset.sub || "");
+        const riga = sub ? `${nome} - ${sub}` : nome; // formato invariato per cucina/email
+        for (let i = 0; i < qty; i++) prodottiFinali.push(riga);
+      });
     });
 
     const note = els.notes.value.trim();
