@@ -311,12 +311,14 @@
     }
     .menu-item-row {
       display:grid;
-      grid-template-columns:64px 1.1fr 1.1fr 1.15fr auto;
+      grid-template-columns:64px 1.1fr 1.1fr 1.15fr auto auto;
       gap:10px;
-      align-items:center;
+      align-items:start;
       padding:10px 12px;
       border-bottom:1px solid #f0e6d7;
     }
+    .menu-item-row .menu-emoji-input { margin-top:0; }
+    .menu-active-line { padding-top:10px; }
     .menu-item-row:last-child { border-bottom:0; }
     .menu-item-row.inactive { opacity:.55; background:#fffafa; }
     .menu-emoji-input { text-align:center; font-size:20px; padding:9px 8px; }
@@ -332,7 +334,7 @@
       white-space:nowrap;
     }
     .menu-active-line input { width:auto; }
-    .menu-row-actions { display:flex; gap:7px; justify-content:flex-end; }
+    .menu-row-actions { display:flex; flex-direction:column; gap:7px; justify-content:flex-start; align-self:start; }
     .menu-row-actions button { padding:10px 12px; white-space:nowrap; }
     .menu-empty {
       padding:18px;
@@ -350,8 +352,8 @@
       .menu-toggle { grid-column:span 2; }
       .menu-item-row { grid-template-columns:54px 1fr 1fr; }
       .menu-item-row select[data-field="tipologia"] { grid-column:2 / 4; }
-      .menu-active-line { justify-content:flex-start; }
-      .menu-row-actions { grid-column:1 / 4; justify-content:flex-start; }
+      .menu-active-line { justify-content:flex-start; grid-column:1 / 4; padding-top:0; }
+      .menu-row-actions { grid-column:1 / 4; flex-direction:row; justify-content:flex-start; }
     }
 
     @media (max-width:820px) {
@@ -369,7 +371,9 @@
       .menu-toolbar { grid-template-columns:1fr; }
       .menu-toggle { grid-column:auto; }
       .menu-item-row { grid-template-columns:48px 1fr; align-items:start; }
-      .menu-item-row input[data-field="prodotto"], .menu-item-row input[data-field="sub_prodotto"], .menu-item-row select[data-field="tipologia"], .menu-active-line, .menu-row-actions { grid-column:1 / 3; }
+      .menu-item-row input[data-field="prodotto"], .menu-item-row input[data-field="prodotto_en"], .menu-item-row input[data-field="sub_prodotto"], .menu-item-row input[data-field="sub_prodotto_en"], .menu-item-row select[data-field="tipologia"], .menu-active-line, .menu-row-actions { grid-column:1 / 3; }
+      .menu-active-line { padding-top:0; }
+      .menu-row-actions { flex-direction:row; }
       .menu-mini-label { display:block; font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--muted); font-weight:700; margin-bottom:4px; }
       .menu-row-actions button { flex:1; }
       .btn-row button { flex:1; }
