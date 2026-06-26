@@ -466,10 +466,16 @@
             <h3>Nuovo prodotto</h3>
             <label>Tipologia / Categoria</label>
             <input id="newTipologia" placeholder="Es. Il Dolce Risveglio">
+            <label class="muted" style="font-size:13px;">🇬🇧 Categoria EN <span style="opacity:.6;">(opzionale)</span></label>
+            <input id="newTipologiaEn" placeholder="Es. Sweet Awakening">
             <label>Prodotto</label>
             <input id="newProdotto" placeholder="Es. Cornetto">
+            <label class="muted" style="font-size:13px;">🇬🇧 Prodotto EN <span style="opacity:.6;">(vuoto = resta in italiano)</span></label>
+            <input id="newProdottoEn" placeholder="Es. lascia vuoto per Cornetto">
             <label>Variante</label>
             <input id="newSub" placeholder="Es. al pistacchio">
+            <label class="muted" style="font-size:13px;">🇬🇧 Variante EN <span style="opacity:.6;">(opzionale)</span></label>
+            <input id="newSubEn" placeholder="Es. pistachio">
             <label>Emoji</label>
             <input id="newEmoji" placeholder="🥐">
             <p class="small muted">L’ordine di visualizzazione viene gestito automaticamente. Non devi compilarlo a mano.</p>
@@ -808,10 +814,12 @@
             <div>
               <div class="menu-mini-label">Prodotto</div>
               <input data-field="prodotto" value="${escapeAttr(item.prodotto)}" placeholder="Prodotto">
+              <input data-field="prodotto_en" value="${escapeAttr(item.prodotto_en || "")}" placeholder="🇬🇧 EN (vuoto = IT)" style="margin-top:4px; font-size:13px; opacity:.85;">
             </div>
             <div>
               <div class="menu-mini-label">Variante</div>
               <input data-field="sub_prodotto" value="${escapeAttr(item.sub_prodotto || "")}" placeholder="Variante / dettaglio">
+              <input data-field="sub_prodotto_en" value="${escapeAttr(item.sub_prodotto_en || "")}" placeholder="🇬🇧 EN (opzionale)" style="margin-top:4px; font-size:13px; opacity:.85;">
             </div>
             <div>
               <div class="menu-mini-label">Categoria</div>
@@ -963,8 +971,10 @@
   }
 
   window.saveMenuItem = async function(id) {
-    const payload = getCardPayload(id, ["tipologia","prodotto","sub_prodotto","emoji","attivo"]);
+    const payload = getCardPayload(id, ["tipologia","prodotto","sub_prodotto","prodotto_en","sub_prodotto_en","emoji","attivo"]);
     payload.sub_prodotto = payload.sub_prodotto || null;
+    payload.prodotto_en = payload.prodotto_en || null;
+    payload.sub_prodotto_en = payload.sub_prodotto_en || null;
     if (!payload.tipologia || !payload.prodotto) return showToast("Categoria e prodotto sono obbligatori.");
     const { error } = await sb.from("bb_menu_items").update(payload).eq("id", id);
     if (error) return showToast(error.message);
@@ -1175,8 +1185,11 @@
   $("addMenuBtn").addEventListener("click", async () => {
     const payload = {
       tipologia: $("newTipologia").value.trim(),
+      tipologia_en: $("newTipologiaEn").value.trim() || null,
       prodotto: $("newProdotto").value.trim(),
+      prodotto_en: $("newProdottoEn").value.trim() || null,
       sub_prodotto: $("newSub").value.trim() || null,
+      sub_prodotto_en: $("newSubEn").value.trim() || null,
       emoji: $("newEmoji").value.trim() || "🍽️",
       sort_order: getNextMenuSortOrder($("newTipologia").value.trim()),
       attivo: $("newAttivo").checked
@@ -1186,6 +1199,7 @@
     if (error) return showToast(error.message);
     showToast("Prodotto aggiunto.");
     $("newProdotto").value = ""; $("newSub").value = "";
+    $("newProdottoEn").value = ""; $("newSubEn").value = "";
     await loadMenu(); renderMenu(); renderStats();
   });
 
